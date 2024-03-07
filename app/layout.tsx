@@ -17,9 +17,9 @@ export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {
   const dynamicMetadata: Metadata = {};
-  if (params["valid-number"]) {
+  if (params["valid-id"]) {
     // get profile
-    dynamicMetadata.title = `user ${params["valid-number"]}| ${siteConfig.title}`;
+    dynamicMetadata.title = `user ${params["valid-id"]}| ${siteConfig.title}`;
   }
 
   return {

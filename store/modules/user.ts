@@ -1,18 +1,31 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable } from "mobx";
+import { localPasskey } from "@/utils";
 
 export default class User {
-  name: string;
+  id: string | null;
+  profile: Record<string, any> | undefined;
 
   constructor() {
-    this.name = '张三';
+    this.id = localPasskey();
+
+    if (this.id) {
+      this.getProfile();
+    }
+
     makeAutoObservable(this);
   }
 
-  get firstName() {
-    return this.name.slice(0, 1);
+  async getProfile() {
+    if (!this.id) {
+      this.profile = undefined;
+    }
+
+    const user = await fetch(`/api/exampleGET?id=${this.id}`);
+    this.profile = await user.json();
   }
 
-  changeName() {
-    this.name = `李${Math.floor(Math.random() * 10)}`;
+  setUser(id: string) {
+    this.id = id;
+    this.getProfile();
   }
 }
