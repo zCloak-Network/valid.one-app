@@ -1,3 +1,7 @@
 export const localPasskey = () => {
-  return window.localStorage.getItem("valid-id");
+  if (typeof window !== "undefined") {
+    return window.localStorage.getItem("valid-id");
+  }
+  
+  return null;
 };
