@@ -12,8 +12,12 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@dfinity/agent": "^1.0.1",
+    "@dfinity/candid": "^1.0.1",
+    "@dfinity/principal": "^1.0.1",
     "@simplewebauthn/browser": "^9.0.1",
     "axios": "^1.6.7",
+    "isomorphic-fetch": "^3.0.0",
     "mobx": "^6.12.0",
     "mobx-react-lite": "^4.0.5",
     "next": "14.1.0",
@@ -24,6 +28,7 @@
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",
+    "@types/isomorphic-fetch": "^0.0.39",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
