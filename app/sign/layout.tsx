@@ -46,7 +46,7 @@ function HeadTab(
 
   return (
     <div {...props}>
-      <div role="tablist" className="tabs-boxed tabs ">
+      <div role="tablist" className="tabs-boxed tabs rounded-xl">
         {tabs.map((tab, index) => (
           <a
             key={"sign_tabs_" + index}
@@ -68,7 +68,7 @@ export default function SignLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div>
+    <div className="p-4">
       <HeadTab className="my-4 px-8" />
       {children}
     </div>
