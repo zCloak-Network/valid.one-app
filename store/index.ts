@@ -1,6 +1,6 @@
-import { enableStaticRendering, observer } from 'mobx-react-lite';
+import { enableStaticRendering, observer } from "mobx-react-lite";
 
-import User from './modules/user';
+import User from "./modules/user";
 
 const isServer = !process.browser;
 enableStaticRendering(isServer);
@@ -13,7 +13,7 @@ class Store {
   }
 }
 
-interface StoreData {
+export interface StoreData {
   User: User;
 }
 

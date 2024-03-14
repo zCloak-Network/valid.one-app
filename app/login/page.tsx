@@ -1,9 +1,11 @@
 "use client";
 
 import { default as useStore, observer } from "@/store";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import fetch from "isomorphic-fetch";
+import { axiosRouter } from "@/utils/axiosRouter";
+import { useRouter } from "next/navigation";
 
 export const idlFactory = ({ IDL }: { IDL: any }) => {
   return IDL.Service({ greet: IDL.Func([IDL.Text], [IDL.Text], ["query"]) });
@@ -17,6 +19,9 @@ const actor = Actor.createActor(idlFactory, { agent, canisterId });
 
 export default observer(function HomePage() {
   const [greeting, setGreeting] = useState("");
+  const store = useStore();
+
+  const router = useRouter();
 
   async function handleSubmit(event: any) {
     event.preventDefault();
@@ -36,6 +41,16 @@ export default observer(function HomePage() {
 
     return false;
   }
+
+  const handleRegister = useCallback(async () => {
+    const userId = "1234567";
+
+    await axiosRouter.post("/api/userId", { userId });
+
+    store.User.setUser(userId);
+
+    router.replace("/");
+  }, [store]);
 
   return (
     <div
@@ -67,7 +82,7 @@ export default observer(function HomePage() {
         </div>
 
         <button className="btn w-full">Create an account</button>
-        <button className="btn btn-primary w-full">
+        <button className="btn btn-primary w-full" onClick={handleRegister}>
           Sign up or Log in using Passkey
         </button>
 
