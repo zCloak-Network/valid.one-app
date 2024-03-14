@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import type { SignType } from "@/types";
+import SignatureResult from "./SignatureResult";
 
 export default function Signer() {
   const [type, setType] = useState<SignType>("message");
+  const [openResult, setOpenResult] = useState(false);
 
   const signTypes: Array<{ label: string; type: SignType }> = [
     {
@@ -73,7 +75,15 @@ export default function Signer() {
 
       <div className="my-4 border"></div>
 
-      <button className="btn btn-neutral btn-block">Sign</button>
+      <button
+        className="btn btn-neutral btn-block"
+        onClick={() => setOpenResult(true)}
+      >
+        Sign
+      </button>
+
+      {/* SignatureResult */}
+      <SignatureResult open={openResult} onClose={() => setOpenResult(false)} />
     </div>
   );
 }
