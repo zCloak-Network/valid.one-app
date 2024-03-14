@@ -54,7 +54,7 @@ export default observer(function HomePage() {
 
   return (
     <div
-      className="relative mx-auto h-[750px] w-96 bg-white"
+      className="relative mx-auto h-full w-full bg-white min-h-[780px]"
       style={{
         backgroundImage: "url(../../svg/onboarding.svg)",
         backgroundPosition: "center top 10%",
@@ -70,9 +70,9 @@ export default observer(function HomePage() {
           backgroundSize: "cover",
         }}
       >
-        <div className="h-16 w-40">
+        <div className="">
           <div className="text-center font-['Poppins'] text-2xl font-semibold text-white">
-            Slogan
+            Defending trust and privacy in the age of AGI.
           </div>
         </div>
         <div className="h-24 w-72 text-center font-['Poppins'] text-sm font-medium text-neutral-400">
