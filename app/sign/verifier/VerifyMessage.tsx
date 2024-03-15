@@ -3,6 +3,7 @@ import { ActionModal, TextareaWithCopy } from "@/components";
 import { useState, useEffect } from "react";
 import IconSign from "@/public/svg/icon_sign.svg";
 import IconCloak from "@/public/svg/clock.svg";
+import UserCard from "./UserCard";
 
 export default function VerifyMessage(props: {
   open: boolean;
@@ -15,7 +16,7 @@ export default function VerifyMessage(props: {
 
   return (
     <ActionModal
-      title="Signature Result"
+      title="Result"
       open={openResult}
       closeByModal
       onClose={props.onClose}
@@ -42,6 +43,8 @@ export default function VerifyMessage(props: {
         </div>
 
         <div className="border-t"></div>
+
+        <UserCard validId={"11111"} />
 
         <div className="h-[21.67px] w-[335px]">
           <span className="font-['Manrope'] text-xs font-semibold leading-tight text-slate-400">
