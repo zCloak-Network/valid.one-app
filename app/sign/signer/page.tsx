@@ -1,9 +1,11 @@
 "use client";
 import { useState } from "react";
 import type { SignType } from "@/types";
+import SignatureResult from "./SignatureResult";
 
 export default function Signer() {
   const [type, setType] = useState<SignType>("message");
+  const [openResult, setOpenResult] = useState(false);
 
   const signTypes: Array<{ label: string; type: SignType }> = [
     {
@@ -31,7 +33,10 @@ export default function Signer() {
         </div>
         <div className="flex w-full items-center">
           {signTypes.map((signType) => (
-            <label className="label flex-1 cursor-pointer justify-normal gap-2">
+            <label
+              className="label flex-1 cursor-pointer justify-normal gap-2"
+              key={signType.type}
+            >
               <input
                 type="radio"
                 name="radio-10"
@@ -53,27 +58,40 @@ export default function Signer() {
           ></textarea>
         )}
         {type === "file" && (
-          <input type="file" className="file-input w-full max-w-xs" />
+          <div className="form-control min-h-40">
+            <label className="label cursor-pointer gap-2"></label>
+            <input type="file" className="file-input w-full max-w-xs" />
+          </div>
         )}
       </div>
 
-      <div className="form-control">
-        <label className="label cursor-pointer gap-2">
-          <input
-            type="checkbox"
-            defaultChecked
-            className="checkbox-primary checkbox"
-          />
-          <span className="label-text text-xs">
-            Select this and we'll create a shareable link for your signed
-            message. Note: we'll store your message.
-          </span>
-        </label>
-      </div>
+      {type === "message" && (
+        <div className="form-control">
+          <label className="label cursor-pointer gap-2">
+            <input
+              type="checkbox"
+              defaultChecked
+              className="checkbox-primary checkbox"
+            />
+            <span className="label-text text-xs">
+              Select this and we'll create a shareable link for your signed
+              message. Note: we'll store your message.
+            </span>
+          </label>
+        </div>
+      )}
 
       <div className="my-4 border"></div>
 
-      <button className="btn btn-neutral btn-block">Sign</button>
+      <button
+        className="btn btn-neutral btn-block"
+        onClick={() => setOpenResult(true)}
+      >
+        Sign
+      </button>
+
+      {/* SignatureResult */}
+      <SignatureResult open={openResult} onClose={() => setOpenResult(false)} />
     </div>
   );
 }
