@@ -1,9 +1,11 @@
 "use client";
 
 import { default as useStore, observer } from "@/store";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Actor, HttpAgent } from "@dfinity/agent";
 import fetch from "isomorphic-fetch";
+import { axiosRouter } from "@/utils/axiosRouter";
+import { useRouter } from "next/navigation";
 
 export const idlFactory = ({ IDL }: { IDL: any }) => {
   return IDL.Service({ greet: IDL.Func([IDL.Text], [IDL.Text], ["query"]) });
@@ -17,6 +19,9 @@ const actor = Actor.createActor(idlFactory, { agent, canisterId });
 
 export default observer(function HomePage() {
   const [greeting, setGreeting] = useState("");
+  const store = useStore();
+
+  const router = useRouter();
 
   async function handleSubmit(event: any) {
     event.preventDefault();
@@ -37,9 +42,19 @@ export default observer(function HomePage() {
     return false;
   }
 
+  const handleRegister = useCallback(async () => {
+    const userId = "1234567";
+
+    await axiosRouter.post("/api/userId", { userId });
+
+    store.User.setUser(userId);
+
+    router.replace("/");
+  }, [store]);
+
   return (
     <div
-      className="relative mx-auto h-[750px] w-96 bg-white"
+      className="relative mx-auto h-full w-full bg-white min-h-[780px]"
       style={{
         backgroundImage: "url(../../svg/onboarding.svg)",
         backgroundPosition: "center top 10%",
@@ -55,9 +70,9 @@ export default observer(function HomePage() {
           backgroundSize: "cover",
         }}
       >
-        <div className="h-16 w-40">
+        <div className="">
           <div className="text-center font-['Poppins'] text-2xl font-semibold text-white">
-            Slogan
+            Defending trust and privacy in the age of AGI.
           </div>
         </div>
         <div className="h-24 w-72 text-center font-['Poppins'] text-sm font-medium text-neutral-400">
@@ -67,7 +82,7 @@ export default observer(function HomePage() {
         </div>
 
         <button className="btn w-full">Create an account</button>
-        <button className="btn btn-primary w-full">
+        <button className="btn btn-primary w-full" onClick={handleRegister}>
           Sign up or Log in using Passkey
         </button>
 
