@@ -28,19 +28,19 @@ const navTabs: NavTab[] = [
   },
   {
     label: "ConneX",
-    pathname: "/connex",
+    pathname: "/connex/",
     activeIcon: <ConnexAcIcon />,
     unActiveIcon: <ConnexIcon />,
   },
   {
     label: "Sign",
-    pathname: "/sign",
+    pathname: "/sign/signer",
     activeIcon: <SignAcIcon />,
     unActiveIcon: <SignIcon />,
   },
   {
     label: "Account",
-    pathname: "/account",
+    pathname: "/account/",
     activeIcon: <ProfileAcIcon />,
     unActiveIcon: <ProfileIcon />,
   },
