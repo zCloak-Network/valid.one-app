@@ -13,6 +13,8 @@ export default function SignatureResult(props: {
     setOpenResult(props.open);
   }, [props]);
 
+  const [signature, setSignature] = useState<string>("Message");
+
   return (
     <ActionModal
       title="Signature Result"
@@ -35,7 +37,7 @@ export default function SignatureResult(props: {
           </div>
         </div>
         <label className="form-control">
-          <TextareaWithCopy value={"message"} />
+          <TextareaWithCopy value={signature} />
         </label>
         <div className="border-t"></div>
 
