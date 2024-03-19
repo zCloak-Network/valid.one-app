@@ -2,7 +2,7 @@ import axios from "axios";
 
 // 创建请求实例
 export const axiosRouter = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_VALID_ID_URL,
+  baseURL: import.meta.env.VITE_APP_VALID_ID_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -48,5 +48,5 @@ axiosRouter.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );

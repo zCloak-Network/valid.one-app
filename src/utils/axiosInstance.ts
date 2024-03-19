@@ -7,36 +7,9 @@ declare module "axios" {
   }
 }
 
-export const DID_SERVICE =
-  process.env.MODE === "production"
-    ? "https://did-service.zkid.app"
-    : "https://did-service.zkid.xyz";
-
-export const CARD_SERVICE =
-  process.env.MODE === "production"
-    ? "https://card-service.zkid.app"
-    : "https://card-service.zkid.xyz";
-
-export const VALID_SERVICE =
-  process.env.MODE === "production"
-    ? "https://valid3-service.valid3.id"
-    : "https://valid3-service.zkid.xyz";
-
-export const TWEET_SERVICE = "https://tweet-service.zkid.app";
-
-export const WALLET_URL =
-  process.env.MODE === "production"
-    ? "https://wallet.zkid.app"
-    : "https://wallet.zkid.xyz";
-
-export const W_SERVICE =
-  process.env.MODE === "production"
-    ? "https://w.zkid.app"
-    : "https://wallet-service.zkid.xyz";
-
 // 创建请求实例
 export const axiosInstance = axios.create({
-  baseURL: CARD_SERVICE,
+  baseURL: import.meta.env.VITE_APP_VALID_ID_URL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
@@ -90,5 +63,5 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
