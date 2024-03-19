@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.39",
+    "@types/node": "^20.11.29",
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@typescript-eslint/eslint-plugin": "^7.2.0",

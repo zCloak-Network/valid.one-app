@@ -1,8 +1,9 @@
+import { USER_VALID_ID } from "@/constants";
 import { axiosRouter } from "@/utils/axiosRouter";
 import { makeAutoObservable } from "mobx";
 
 export default class User {
-  id: string | null;
+  id: number | null;
   profile: Record<string, any> | null;
 
   constructor() {
@@ -15,7 +16,7 @@ export default class User {
   }
 
   async initUser() {
-    await this.getUserId();
+    this.getUserId();
 
     if (this.id) {
       await this.getProfile();
@@ -28,21 +29,24 @@ export default class User {
       return;
     }
 
-    const result = await axiosRouter.get<Record<string, any> | null>(
-      `/api/exampleGET?id=${this.id}`,
-    );
+    const result = await axiosRouter.get<Record<string, any> | null>(`/api/exampleGET?id=${this.id}`);
 
     this.profile = result.data;
   }
 
-  async getUserId() {
-    const result = await axiosRouter.get<{ userId: string }>("/api/userId");
+  private getUserId() {
+    const result = localStorage.getItem(USER_VALID_ID);
 
-    this.id = result.data.userId;
+    this.id = result ? (JSON.parse(result) as number) : null;
   }
 
-  setUser(id: string) {
+  private saveUser(userId: number) {
+    localStorage.setItem(USER_VALID_ID, JSON.stringify(userId));
+  }
+
+  setUser(id: number) {
     this.id = id;
     this.getProfile();
+    this.saveUser(id);
   }
 }

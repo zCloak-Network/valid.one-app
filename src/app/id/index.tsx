@@ -1,9 +1,14 @@
+import WithAuth from "@/components/WithAuth";
 import IdPage from "./page";
 
 const routers = [
   {
     path: "id",
-    element: <IdPage />,
+    element: (
+      <WithAuth>
+        <IdPage />
+      </WithAuth>
+    ),
   },
 ];
 
