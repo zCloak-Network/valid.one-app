@@ -1,16 +1,15 @@
-import Layout from "./layout";
+import SignLayout from "./layout";
 import Signer from "./signer/page";
 import Verifier from "./verifier/page";
 
 const routers = [
   {
     path: "sign",
-    component: Layout,
+    element: <SignLayout />,
     children: [
       {
         path: "signer",
         element: <Signer />,
-        index: true,
       },
       {
         path: "verifier",

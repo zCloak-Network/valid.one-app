@@ -1,20 +1,22 @@
 "use client";
-
+import { useLoaderData } from "react-router-dom";
 import Drawer from "@/components/Drawer";
 import { default as useStore, observer } from "@/store";
 import { useState } from "react";
 
-export default observer(function User({
-  params,
-}: {
-  params: { validId: string };
-}) {
+export async function loader(params: { validId: string }) {
+  const { validId } = params;
+  return { validId };
+}
+
+export default observer(function User() {
   const { User } = useStore();
   const [isDrawerOpen, setDrawerOpen] = useState(true);
+  const { validId } = useLoaderData() as { validId: string };
 
   return (
     <div>
-      <div>User: {params["validId"]}</div>
+      <div>User: {validId}</div>
 
       <div className="bg-white border flex flex-col border-blue-950 rounded-2xl h-56 pb-4 overflow-hidden">
         <div className="flex bg-gray-800 h-11 px-4 items-center justify-between">

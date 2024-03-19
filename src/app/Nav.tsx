@@ -20,7 +20,7 @@ interface NavTab {
 const navTabs: NavTab[] = [
   {
     label: "ID",
-    pathname: "/",
+    pathname: "/id/",
     activeIcon: <IDAcIcon />,
     unActiveIcon: <IDIcon />,
   },
@@ -32,7 +32,7 @@ const navTabs: NavTab[] = [
   },
   {
     label: "Sign",
-    pathname: "/sign/signer",
+    pathname: "/sign/",
     activeIcon: <SignAcIcon />,
     unActiveIcon: <SignIcon />,
   },

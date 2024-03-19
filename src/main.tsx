@@ -4,8 +4,6 @@ import "./global.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import rootRoute from "./app/";
 
-console.log(rootRoute);
-
 const router = createBrowserRouter(rootRoute, {
   basename: import.meta.env.BASE_URL,
 });

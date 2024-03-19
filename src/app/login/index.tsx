@@ -2,7 +2,7 @@ import LoginPage from "./page";
 
 const routers = [
   {
-    path: "login",
+    path: "/login",
     element: <LoginPage />,
   },
 ];

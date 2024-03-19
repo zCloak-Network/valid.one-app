@@ -1,4 +1,5 @@
 import { Outlet } from "react-router-dom";
+
 import {
   ClassAttributes,
   HTMLAttributes,
@@ -35,12 +36,16 @@ function HeadTab(
   ];
 
   useEffect(() => {
-    setActiveTab(
-      {
-        "/sign/signer": 0,
-        "/sign/verifier": 1,
-      }[pathname] || 0
-    );
+    if (pathname === "/sign" || pathname === "/sign/") {
+      navigate(tabs[0].route);
+    } else {
+      setActiveTab(
+        {
+          "/sign/signer": 0,
+          "/sign/verifier": 1,
+        }[pathname] || 0
+      );
+    }
   }, [pathname]);
 
   return (
@@ -67,7 +72,7 @@ function HeadTab(
 
 export default function SignLayout() {
   return (
-    <div className="p-4">
+    <div className="p-4 signLayout">
       <HeadTab className="my-4 px-8" />
       <Outlet />
     </div>

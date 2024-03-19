@@ -3,7 +3,7 @@ import User from "./page";
 const routers = [
   {
     path: "user/:validId",
-    component: User,
+    element: <User />,
   },
 ];
 

@@ -1,9 +1,11 @@
 import RootLayout from "./layout";
 
-import Index from "./page";
-import NoFound from "./not-found";
+import LandingPage from "./page";
 import Login from "./login";
+import NoFound from "./not-found";
+import Id from "./id";
 import Sign from "./sign";
+import Account from "./account";
 import User from "./user";
 
 const rootRouter = [
@@ -13,13 +15,16 @@ const rootRouter = [
     children: [
       {
         path: "/",
-        element: <Index />,
+        element: <LandingPage />,
+        index: true,
       },
-      ...Login,
+      ...Id,
       ...Sign,
       ...User,
+      ...Account,
     ],
   },
+  ...Login,
   {
     path: "*",
     element: <NoFound />,
