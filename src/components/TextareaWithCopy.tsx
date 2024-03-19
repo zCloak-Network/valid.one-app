@@ -18,7 +18,9 @@ export const TextareaWithCopy = function (props: { value: string }) {
           disabled
         ></textarea>
         <div
-          className={`absolute bottom-0 right-0 z-10 bg-white ${state.value ? "tooltip" : ""}`}
+          className={`absolute bottom-0 right-0 z-10 bg-white ${
+            state.value ? "tooltip" : ""
+          }`}
           data-tip={state.value ? "Copied" : ""}
         >
           <button
