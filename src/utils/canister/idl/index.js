@@ -6,12 +6,12 @@ export { idlFactory } from "./valid_one_backend.did.js";
 
 /* CANISTER_ID is replaced by webpack based on node environment
  * Note: canister environment variable will be standardized as
- * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
+ * import.meta.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
 export const canisterId =
-  process.env.CANISTER_ID_VALID_ONE_BACKEND ||
-  process.env.VALID_ONE_BACKEND_CANISTER_ID;
+  import.meta.env.CANISTER_ID_VALID_ONE_BACKEND ||
+  import.meta.env.VALID_ONE_BACKEND_CANISTER_ID;
 
 export const createActor = (canisterId, options = {}) => {
   const agent = options.agent || new HttpAgent({ ...options.agentOptions });
@@ -23,7 +23,7 @@ export const createActor = (canisterId, options = {}) => {
   }
 
   // Fetch root key for certificate validation during development
-  if (process.env.DFX_NETWORK !== "ic") {
+  if (import.meta.env.DFX_NETWORK !== "ic") {
     agent.fetchRootKey().catch((err) => {
       console.warn(
         "Unable to fetch root key. Check to ensure that your local replica is running"
@@ -40,4 +40,6 @@ export const createActor = (canisterId, options = {}) => {
   });
 };
 
-export const valid_one_backend = canisterId ? createActor(canisterId) : undefined;
+export const valid_one_backend = canisterId
+  ? createActor(canisterId)
+  : undefined;
