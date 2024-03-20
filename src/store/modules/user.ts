@@ -1,10 +1,11 @@
 import { USER_VALID_ID } from "@/constants";
-import { axiosRouter } from "@/utils/axiosRouter";
+import { actor } from "@/utils/canister";
+import { UserProfile } from "@/utils/canister/idl/valid_one_backend.did";
 import { makeAutoObservable } from "mobx";
 
 export default class User {
   id: number | null;
-  profile: Record<string, any> | null;
+  profile: UserProfile | null;
 
   constructor() {
     this.id = null;
@@ -29,9 +30,9 @@ export default class User {
       return;
     }
 
-    const result = await axiosRouter.get<Record<string, any> | null>(`/api/exampleGET?id=${this.id}`);
+    const result = await actor.user_profile_get(this.id);
 
-    this.profile = result.data;
+    this.profile = result[0] || null;
   }
 
   private getUserId() {
