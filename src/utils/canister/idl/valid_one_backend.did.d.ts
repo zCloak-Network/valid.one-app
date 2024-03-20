@@ -22,13 +22,11 @@ export interface UserProfile {
   'avatar' : string,
 }
 export interface _SERVICE {
-  'finish_authentication' : ActorMethod<[string, string], boolean>,
-  'finish_authentication_new' : ActorMethod<[string], boolean>,
-  'finish_register' : ActorMethod<[string, string], boolean>,
+  'finish_authentication_new' : ActorMethod<[string], number>,
   'finish_register_new' : ActorMethod<[string], number>,
   'get_allow_credentials' : ActorMethod<[number], string>,
-  'get_list' : ActorMethod<[number], string>,
-  'greet' : ActorMethod<[string], string>,
+  'get_valid_id_by_credential' : ActorMethod<[string], [] | [number]>,
+  'greet' : ActorMethod<[string], { 'Ok' : string } | { 'Err' : string }>,
   'map_get' : ActorMethod<[bigint], [] | [bigint]>,
   'map_insert' : ActorMethod<[bigint, bigint], [] | [bigint]>,
   'public_key' : ActorMethod<
@@ -42,12 +40,20 @@ export interface _SERVICE {
       { 'Err' : string }
   >,
   'sign_get' : ActorMethod<[number], string>,
-  'sign_insert' : ActorMethod<[string], [] | [Sign]>,
-  'start_authentication' : ActorMethod<[string], string>,
+  'sign_insert' : ActorMethod<
+    [string, number, string, string, string],
+    { 'Ok' : Sign } |
+      { 'Err' : string }
+  >,
+  'sign_paginate' : ActorMethod<[number, number], Array<Sign>>,
   'start_authentication_new' : ActorMethod<[number], string>,
-  'start_register' : ActorMethod<[string, string], string>,
   'start_register_new' : ActorMethod<[], string>,
   'user_current_id' : ActorMethod<[], number>,
+  'user_profile_edit' : ActorMethod<
+    [string, string, string, string],
+    { 'Ok' : string } |
+      { 'Err' : string }
+  >,
   'user_profile_get' : ActorMethod<[number], [] | [UserProfile]>,
   'user_profile_insert' : ActorMethod<[string], [] | [UserProfile]>,
   'verify' : ActorMethod<

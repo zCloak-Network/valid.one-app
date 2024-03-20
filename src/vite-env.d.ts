@@ -5,6 +5,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_VALID_ID_URL: string;
   readonly VITE_APP_CANISTER_ID: string;
   readonly VITE_APP_CANISTER_HOST: string;
+  readonly VITE_APP_CARD_SERVICE: string;
 }
 
 interface ImportMeta {
