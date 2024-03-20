@@ -24,7 +24,7 @@ export default observer(function HomePage() {
   return (
     <main>
       <section className="bg-white">
-        <div className="layout relative flex min-h-screen flex-col items-center justify-center py-12 text-center">
+        <div className="layout relative flex flex-col items-center justify-center py-12 text-center">
           <Logo className="w-16" />
           <h1>Hi, {User.id}</h1>
           <h1 className="mt-4">
