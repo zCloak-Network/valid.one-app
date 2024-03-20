@@ -1,22 +1,12 @@
 "use client";
 import { useState } from "react";
 import type { SignType } from "@/types";
+import { signTypes } from "@/constants";
 import SignatureResult from "./SignatureResult";
 
 export default function Signer() {
   const [type, setType] = useState<SignType>("message");
   const [openResult, setOpenResult] = useState(false);
-
-  const signTypes: Array<{ label: string; type: SignType }> = [
-    {
-      label: "Message",
-      type: "message",
-    },
-    {
-      label: "File",
-      type: "file",
-    },
-  ];
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
