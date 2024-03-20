@@ -2,21 +2,11 @@
 import { useState } from "react";
 // import { default as useStore, observer } from "@/store";
 import type { SignType } from "@/types";
+import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
 
 export default function Verifier() {
   const [type, setType] = useState<SignType>("message");
-
-  const signTypes: Array<{ label: string; type: SignType }> = [
-    {
-      label: "Message",
-      type: "message",
-    },
-    {
-      label: "File",
-      type: "file",
-    },
-  ];
 
   const [openResult, setOpenResult] = useState(false);
 
