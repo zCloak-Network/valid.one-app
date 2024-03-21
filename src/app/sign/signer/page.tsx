@@ -25,6 +25,7 @@ export default observer(function Signer() {
         ICPSignResult
       );
     }
+    return undefined;
   }, [ICPSignResult, messageCont]);
 
   const handleSign = async () => {
@@ -125,7 +126,10 @@ export default observer(function Signer() {
       <SignatureResult
         open={openStatus}
         signatureResult={signatureResult}
-        onClose={() => setOpenStatus(false)}
+        onClose={() => {
+          setOpenStatus(false);
+          setICPSignResult("");
+        }}
       />
     </div>
   );
