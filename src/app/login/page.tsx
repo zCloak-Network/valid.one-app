@@ -83,7 +83,7 @@ export default observer(function HomePage() {
   return (
     <ResponseLayout>
       <div
-        className="relative mx-auto h-full w-full bg-white min-h-[780px]"
+        className="relative mx-auto h-full w-full bg-white"
         style={{
           backgroundImage: `url(${OnBoarding})`,
           backgroundPosition: "center top 10%",
@@ -92,7 +92,7 @@ export default observer(function HomePage() {
         }}
       >
         <div
-          className="absolute bottom-0 flex h-[55%] w-full  flex-col items-center justify-between px-6 py-10"
+          className="absolute bottom-0 flex h-[65%] w-full  flex-col items-center justify-between px-6 py-10"
           style={{
             backgroundImage: `url(${LoginBg})`,
             backgroundRepeat: "no-repeat",

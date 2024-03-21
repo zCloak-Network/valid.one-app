@@ -15,13 +15,14 @@ const EditProfile = () => {
   const [loading, toggle] = useToggle(false);
 
   const handelSave = useCallback(async () => {
-    if (!avatarFile) return;
+    if (!avatarFile) return console.warn("avatar is required");
     try {
       console.log("[ avatarFile ] >", avatarFile);
       console.log("[ name ] >", name);
       console.log("[ bio ] >", bio);
       toggle();
       const authRequest = await auth();
+      console.log("[ authRequest ] >", authRequest);
       // TODO fix s3 upload
       // const formData = new FormData();
       // formData.append("file", avatarFile, avatarFile.name);
@@ -47,17 +48,18 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="px-5">
+    <div className="px-5 flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center py-4 relative">
         <button className="absolute rounded-lg border border-zinc-300 p-2">
           <IconBack />
         </button>
         <p className="text-gray-800 text-lg font-bold mx-auto">Edit Profile</p>
       </div>
-      <div>
+      <div className="flex-1 overflow-auto">
         <p className="w-full text-neutral-400 text-sm font-medium mt-5">
-          Here, you'll merge different elements of your digital identity to create a complete online profile. Note that
-          we'll verify the details you provide
+          Here, you'll merge different elements of your digital identity to
+          create a complete online profile. Note that we'll verify the details
+          you provide
         </p>
 
         <div className="flex w-full justify-center mt-8">
