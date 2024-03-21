@@ -12,7 +12,7 @@ export default observer(function User() {
   const { validId } = useLoaderData() as { validId: string };
 
   return (
-    <div>
+    <div className="flex-1">
       <div>User: {validId}</div>
     </div>
   );

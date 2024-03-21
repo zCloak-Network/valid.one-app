@@ -48,10 +48,16 @@ const hiddenPaths = ["/login", "/user/:validId"];
 const Nav = () => {
   const pathNow = location.pathname;
 
-  const shouldHideNav = hiddenPaths.some((pathPattern) => matchPath(pathPattern, pathNow));
+  const shouldHideNav = hiddenPaths.some((pathPattern) =>
+    matchPath(pathPattern, pathNow)
+  );
 
   return (
-    <div className={`fixed inset-x-0 bottom-0 bg-white shadow-lg ${shouldHideNav ? "hidden" : "block"} px-3`}>
+    <div
+      className={`h-20 bg-white shadow-lg ${
+        shouldHideNav ? "hidden" : "block"
+      } px-3`}
+    >
       <nav className="flex mx-auto max-w-md p-4 justify-between">
         {navTabs.map(({ pathname, activeIcon, unActiveIcon, label }) => {
           const isActive = pathNow === pathname;
@@ -59,7 +65,9 @@ const Nav = () => {
             <a
               key={label}
               href={pathname}
-              className={`flex flex-col items-center text-xs ${isActive ? "text-blue-700" : "text-slate-400"}`}
+              className={`flex flex-col items-center text-xs ${
+                isActive ? "text-blue-700" : "text-slate-400"
+              }`}
             >
               {isActive ? activeIcon : unActiveIcon}
               <span className="my-1">{label}</span>
