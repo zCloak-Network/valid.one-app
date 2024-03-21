@@ -6,14 +6,18 @@ import IconCloak from "@/assets/svg/clock.svg?react";
 
 export default function SignatureResult(props: {
   open: boolean;
+  signatureHex?: string;
   onClose: () => void;
 }) {
   const [openResult, setOpenResult] = useState(false);
+  const [signature, setSignature] = useState<string>("");
+
   useEffect(() => {
+    if (props.open && props.signatureHex) {
+      setSignature(props.signatureHex);
+    }
     setOpenResult(props.open);
   }, [props]);
-
-  const [signature, setSignature] = useState<string>("Message");
 
   return (
     <ActionModal

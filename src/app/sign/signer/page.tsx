@@ -1,12 +1,39 @@
 "use client";
 import { useState } from "react";
+import { default as useStore, observer } from "@/store";
 import type { SignType } from "@/types";
 import { signTypes } from "@/constants";
 import SignatureResult from "./SignatureResult";
+import { actor } from "@/utils/canister";
+import { useNavigate } from "react-router-dom";
 
-export default function Signer() {
+export default observer(function Signer() {
+  const navigate = useNavigate();
+  const { User } = useStore();
   const [type, setType] = useState<SignType>("message");
-  const [openResult, setOpenResult] = useState(false);
+  const [messageCont, setMessageCont] = useState("");
+  // const [fileCont, setFileCont] = useState("");
+  const [openStatus, setOpenStatus] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState("");
+
+  const handleSign = async () => {
+    if (!User.id) {
+      return navigate("/login");
+    }
+    setLoading(true);
+
+    const res = await actor.sign(User.id, messageCont);
+
+    if ((res as any)["Ok"]?.signature_hex) {
+      setResult((res as any)["Ok"].signature_hex);
+      setOpenStatus(true);
+    } else {
+      console.warn("sign fail", res);
+    }
+
+    setLoading(false);
+  };
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
@@ -14,7 +41,7 @@ export default function Signer() {
         <div className="relative h-6 w-6">
           <div className="absolute left-[1px] top-[1px] h-[22px] w-[22px] rounded-full bg-zinc-300" />
         </div>
-        <div className="text-sm font-medium text-gray-900">1124731</div>
+        <div className="text-sm font-medium text-gray-900">{User.id}</div>
       </div>
 
       <div className="mb-4 flex flex-col gap-4">
@@ -45,6 +72,8 @@ export default function Signer() {
           <textarea
             className="textarea-border textarea w-full"
             placeholder="Please enter your message here"
+            value={messageCont}
+            onChange={(e) => setMessageCont(e.target.value)}
           ></textarea>
         )}
         {type === "file" && (
@@ -75,13 +104,19 @@ export default function Signer() {
 
       <button
         className="btn btn-neutral btn-block"
-        onClick={() => setOpenResult(true)}
+        disabled={loading}
+        onClick={() => handleSign()}
       >
+        {loading && <span className="loading loading-spinner"></span>}
         Sign
       </button>
 
       {/* SignatureResult */}
-      <SignatureResult open={openResult} onClose={() => setOpenResult(false)} />
+      <SignatureResult
+        open={openStatus}
+        signatureHex={result}
+        onClose={() => setOpenStatus(false)}
+      />
     </div>
   );
-}
+});
