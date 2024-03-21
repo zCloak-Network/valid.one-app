@@ -72,7 +72,7 @@ function HeadTab(
 
 export default function SignLayout() {
   return (
-    <div className="p-4 signLayout">
+    <div className="p-4 flex-1">
       <HeadTab className="my-4 px-8" />
       <Outlet />
     </div>

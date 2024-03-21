@@ -6,5 +6,5 @@ export default observer(function Id() {
   console.log("[ User.profile ] >", User.profile);
   const isSetProfile = !!User.profile || true;
   console.log("[ isSetProfile ] >", isSetProfile);
-  return <>{isSetProfile ? <></> : <SetProfile />}</>;
+  return <div className="flex-1">{isSetProfile ? <></> : <SetProfile />}</div>;
 });
