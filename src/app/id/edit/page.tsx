@@ -1,44 +1,48 @@
 import IconBack from "@/assets/svg/icon/icon_back.svg?react";
 import UploadAvatar from "./UploadAvatar";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import LoadingButton from "@/components/LoadingButton";
-import { usePasskeyAuth } from "@/hooks";
+import { usePasskeyAuth, useStore } from "@/hooks";
 import { actor } from "@/utils/canister";
+import { observer } from "@/store";
 import { useToggle } from "react-use";
+import { axiosCardService } from "@/utils/axiosCardService";
+import { Link, useNavigate } from "react-router-dom";
 const maxLength = 200;
 
 const EditProfile = () => {
+  const { User } = useStore();
   const [avatarFile, setAvatarFile] = useState<File>();
-  const [bio, setBio] = useState("");
-  const [name, setName] = useState("");
+  const [bio, setBio] = useState(User.profile?.bio || "");
+  const [name, setName] = useState(User.profile?.name || "");
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(
+    User.profile?.avatar === "" ? undefined : User.profile?.avatar
+  );
   const { auth } = usePasskeyAuth();
   const [loading, toggle] = useToggle(false);
-
+  const navigate = useNavigate();
+  useEffect(() => {
+    setName(User.profile?.name || "");
+    setBio(User.profile?.bio || "");
+    setAvatarUrl(User.profile?.avatar === "" ? undefined : User.profile?.avatar);
+  }, [User.profile]);
   const handelSave = useCallback(async () => {
     if (!avatarFile) return console.warn("avatar is required");
     try {
-      console.log("[ avatarFile ] >", avatarFile);
-      console.log("[ name ] >", name);
-      console.log("[ bio ] >", bio);
       toggle();
       const authRequest = await auth();
-      console.log("[ authRequest ] >", authRequest);
-      // TODO fix s3 upload
-      // const formData = new FormData();
-      // formData.append("file", avatarFile, avatarFile.name);
-      // const avatarResult = await axiosCardService.post("/api/s3/upload", formData);
-      const data = await actor.user_profile_edit(
-        authRequest,
-        "https://zcloak.s3.us-east-2.amazonaws.com/dev/1691735099606_jpTx8UnhPm.png",
-        name,
-        bio
-      );
+      const formData = new FormData();
+      formData.append("file", avatarFile, avatarFile.name);
+      const avatarResult = await axiosCardService.post("/api/s3/upload", formData);
+      const data = await actor.user_profile_edit(authRequest, avatarResult.data, name, bio);
+      await User.getProfile();
+      navigate("/id");
       console.log("[ data ] >", data);
       toggle();
     } catch (error) {
       console.log(error);
     }
-  }, [auth, avatarFile, name, bio, toggle]);
+  }, [auth, avatarFile, name, bio, toggle, navigate]);
 
   const handleChange = (event: any) => {
     setBio(event.target.value);
@@ -50,25 +54,25 @@ const EditProfile = () => {
   return (
     <div className="px-5 flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center py-4 relative">
-        <button className="absolute rounded-lg border border-zinc-300 p-2">
+        <Link className="absolute rounded-lg border border-zinc-300 p-2" to={"/id"} replace>
           <IconBack />
-        </button>
+        </Link>
         <p className="text-gray-800 text-lg font-bold mx-auto">Edit Profile</p>
       </div>
       <div className="flex-1 overflow-auto">
         <p className="w-full text-neutral-400 text-sm font-medium mt-5">
-          Here, you'll merge different elements of your digital identity to
-          create a complete online profile. Note that we'll verify the details
-          you provide
+          Here, you'll merge different elements of your digital identity to create a complete online profile. Note that
+          we'll verify the details you provide
         </p>
 
         <div className="flex w-full justify-center mt-8">
-          <UploadAvatar onChange={setAvatarFile} />
+          <UploadAvatar onChange={setAvatarFile} url={avatarUrl} />
         </div>
         <div className="flex flex-col gap-2 mt-8">
           <label htmlFor="name">Name</label>
           <input
             id="name"
+            value={name}
             type="text"
             placeholder="Type here"
             className="input input-bordered w-full"
@@ -105,4 +109,4 @@ const EditProfile = () => {
   );
 };
 
-export default EditProfile;
+export default observer(EditProfile);

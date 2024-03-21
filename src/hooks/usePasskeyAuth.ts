@@ -19,9 +19,9 @@ export function usePasskeyAuth() {
       ...authOptions,
     });
 
-    let authResult = await actor.finish_authentication_new(JSON.stringify(asseResp));
+    // let authResult = await actor.finish_authentication_new(JSON.stringify(asseResp));
 
-    return JSON.stringify(authResult);
+    return JSON.stringify(asseResp);
   }, [User]);
 
   return { auth };

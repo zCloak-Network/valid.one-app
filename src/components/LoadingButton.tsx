@@ -8,7 +8,7 @@ interface LoadingButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 const LoadingButton = forwardRef<HTMLButtonElement, LoadingButtonProps>(
   ({ loading, className, children, ...props }, ref) => {
     return (
-      <button ref={ref} className={`btn ${loading ? "btn-disabled" : ""} ${className || ""}`} {...props}>
+      <button ref={ref} className={`btn ${loading ? "pointer-events-none" : ""} ${className || ""}`} {...props}>
         {loading ? <span className="loading loading-dots loading-md"></span> : children}
       </button>
     );

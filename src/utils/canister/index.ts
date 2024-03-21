@@ -1,8 +1,9 @@
 import { Actor, ActorSubclass, HttpAgent } from "@dfinity/agent";
 import { CreateActorOptions, idlFactory } from "./idl";
 import { Principal } from "@dfinity/principal";
-import { _SERVICE } from "./idl/valid_one_backend.did";
+
 import fetch from "isomorphic-fetch";
+import { _SERVICE } from "./idl/valid_one_backend.did";
 
 const canisterId = import.meta.env.VITE_APP_CANISTER_ID;
 const canisterHost = import.meta.env.VITE_APP_CANISTER_HOST;
