@@ -1,8 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { default as useStore, observer } from "@/store";
 import type { SignType } from "@/types";
-import { signTypes } from "@/constants";
+import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,17 @@ export default observer(function Signer() {
   // const [fileCont, setFileCont] = useState("");
   const [openStatus, setOpenStatus] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState("");
+  const [ICPSignResult, setICPSignResult] = useState("");
+
+  const signatureResult = useMemo(() => {
+    if (messageCont && ICPSignResult) {
+      return signatureResultTemplate(
+        User.profile?.public_key || "test_key",
+        messageCont,
+        ICPSignResult
+      );
+    }
+  }, [ICPSignResult, messageCont]);
 
   const handleSign = async () => {
     if (!User.id) {
@@ -26,7 +36,7 @@ export default observer(function Signer() {
     const res = await actor.sign(User.id, messageCont);
 
     if ((res as any)["Ok"]?.signature_hex) {
-      setResult((res as any)["Ok"].signature_hex);
+      setICPSignResult((res as any)["Ok"].signature_hex);
       setOpenStatus(true);
     } else {
       console.warn("sign fail", res);
@@ -104,7 +114,7 @@ export default observer(function Signer() {
 
       <button
         className="btn btn-neutral btn-block"
-        disabled={loading}
+        disabled={loading || !messageCont}
         onClick={() => handleSign()}
       >
         {loading && <span className="loading loading-spinner"></span>}
@@ -114,7 +124,7 @@ export default observer(function Signer() {
       {/* SignatureResult */}
       <SignatureResult
         open={openStatus}
-        signatureHex={result}
+        signatureResult={signatureResult}
         onClose={() => setOpenStatus(false)}
       />
     </div>

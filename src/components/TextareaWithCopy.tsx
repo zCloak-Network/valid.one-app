@@ -1,19 +1,26 @@
 import { useCopyToClipboard } from "react-use";
 import { IoCopyOutline } from "react-icons/io5";
+import { useState, useEffect } from "react";
 
 export const TextareaWithCopy = function (props: { value: string }) {
   const [state, copyToClipboard] = useCopyToClipboard();
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    setText(props.value);
+  }, [props]);
+
   const handleCopy = () => {
-    copyToClipboard(props.value);
+    copyToClipboard(text);
+    console.log("copy ", text, state);
   };
 
   return (
     <>
       <div className="relative mt-4 overflow-hidden rounded-lg border ">
         <textarea
-          className={"textarea textarea-bordered block w-full"}
-          placeholder="present police twin quality river sail coach link give distance palm paddle"
-          rows={4}
+          className={"textarea textarea-bordered block w-full leading-normal"}
+          rows={8}
           value={props.value}
           disabled
         ></textarea>

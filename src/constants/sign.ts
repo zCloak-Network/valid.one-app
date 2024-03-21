@@ -10,3 +10,14 @@ export const signTypes: Array<{ label: string; type: SignType }> = [
     type: "file",
   },
 ];
+
+export const signatureResultTemplate = (
+  public_key: string,
+  cont: string,
+  hex: string
+) => `${cont}
+===
+Valid Sign from valid3.id
+===
+${public_key},
+sig:0x${hex}`;
