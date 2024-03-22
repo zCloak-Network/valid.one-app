@@ -29,13 +29,13 @@ export const ActionModal = function (props: Props) {
 
   return (
     <>
-      <dialog id={domId.current} className="modal items-end">
-        <div className="modal-box w-full max-w-full overflow-hidden rounded-bl-none rounded-br-none">
+      <dialog id={domId.current} className="modal items-end ">
+        <div className="rounded-bl-none rounded-br-none max-w-full w-full modal-box overflow-hidden sm:w-[460px]">
           {!props.closeByModal && !props.modal && (
             <form method="dialog">
               {/* if there is a button in form, it will close the modal */}
               <button
-                className="btn btn-circle btn-ghost btn-sm absolute right-2 top-2"
+                className="top-2 right-2 btn btn-circle btn-ghost btn-sm absolute"
                 onClick={() => props.onClose && props.onClose()}
               >
                 ✕
@@ -43,9 +43,9 @@ export const ActionModal = function (props: Props) {
             </form>
           )}
           {props.title && (
-            <h5 className="-mt-2 mb-2 text-lg font-normal">{props.title}</h5>
+            <h5 className="font-normal -mt-2 text-lg mb-2">{props.title}</h5>
           )}
-          <div className="mb-4 border-t"></div>
+          <div className="border-t mb-4"></div>
           {props.children}
         </div>
 
