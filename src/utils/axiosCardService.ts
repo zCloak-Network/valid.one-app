@@ -4,9 +4,6 @@ import axios from "axios";
 export const axiosCardService = axios.create({
   baseURL: import.meta.env.VITE_APP_CARD_SERVICE,
   timeout: 10000,
-  headers: {
-    "Content-Type": "application/json",
-  },
 });
 
 // 响应后处理

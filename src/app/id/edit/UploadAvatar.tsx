@@ -4,10 +4,11 @@ import EditAvatar from "@/assets/svg/icon/icon_edit_ava.svg?react";
 
 interface Props {
   onChange: (files: File) => void;
+  url?: string;
 }
 
-const UploadAvatar: React.FC<Props> = ({ onChange }) => {
-  const [previewUrls, setPreviewUrls] = useState<string>(); // 存储图片预览 URL
+const UploadAvatar: React.FC<Props> = ({ onChange, url }) => {
+  const [previewUrls, setPreviewUrls] = useState<string | undefined>(); // 存储图片预览 URL
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
@@ -33,7 +34,7 @@ const UploadAvatar: React.FC<Props> = ({ onChange }) => {
       <input {...getInputProps()} />
       <div className="avatar">
         <div className="w-24 rounded-full">
-          <img src={previewUrls} />
+          <img src={previewUrls || url} />
         </div>
       </div>
       <div className="bg-white w-8 h-8 rounded-full shadow absolute flex items-center justify-center bottom-0 right-[-4px]">

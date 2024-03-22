@@ -7,7 +7,7 @@ import IDAcIcon from "@/assets/svg/icon/icon_id_s.svg?react";
 import ConnexAcIcon from "@/assets/svg/icon/icon_connex_s.svg?react";
 import SignAcIcon from "@/assets/svg/icon/icon_sign_s.svg?react";
 import ProfileAcIcon from "@/assets/svg/icon/icon_profile_s.svg?react";
-import { matchPath } from "react-router-dom";
+import { matchPath, useLocation } from "react-router-dom";
 
 interface NavTab {
   label: string;
@@ -43,31 +43,24 @@ const navTabs: NavTab[] = [
   },
 ];
 
-const hiddenPaths = ["/login", "/user/:validId"];
+const hiddenPaths = ["/login", "/user/:validId", "/id/edit"];
 
 const Nav = () => {
+  const location = useLocation();
   const pathNow = location.pathname;
 
-  const shouldHideNav = hiddenPaths.some((pathPattern) =>
-    matchPath(pathPattern, pathNow)
-  );
+  const shouldHideNav = hiddenPaths.some((pathPattern) => matchPath({ path: pathPattern, end: true }, pathNow));
 
   return (
-    <div
-      className={`h-20 bg-white shadow-lg ${
-        shouldHideNav ? "hidden" : "block"
-      } px-3`}
-    >
+    <div className={`h-20 bg-white shadow-lg ${shouldHideNav ? "hidden" : "block"} px-3`}>
       <nav className="flex mx-auto max-w-md p-4 justify-between">
         {navTabs.map(({ pathname, activeIcon, unActiveIcon, label }) => {
-          const isActive = pathNow === pathname;
+          const isActive = matchPath(pathname, pathNow);
           return (
             <a
               key={label}
               href={pathname}
-              className={`flex flex-col items-center text-xs ${
-                isActive ? "text-blue-700" : "text-slate-400"
-              }`}
+              className={`flex flex-col items-center text-xs ${isActive ? "text-blue-700" : "text-slate-400"}`}
             >
               {isActive ? activeIcon : unActiveIcon}
               <span className="my-1">{label}</span>
