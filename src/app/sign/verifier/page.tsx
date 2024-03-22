@@ -4,11 +4,21 @@ import { useState } from "react";
 import type { SignType } from "@/types";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
+import { useValid } from "@/hooks";
 
 export default function Verifier() {
   const [type, setType] = useState<SignType>("message");
-
+  const [signatureResult, setSignatureResult] = useState("");
   const [openResult, setOpenResult] = useState(false);
+  const { valid } = useValid();
+
+  const handleValid = () => {
+    if (signatureResult) {
+      const isValid = valid(signatureResult);
+      console.log(isValid);
+      setOpenResult(isValid);
+    }
+  };
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
@@ -42,15 +52,17 @@ export default function Verifier() {
               <span className="label-text">Signature</span>
             </div>
             <textarea
-              className="textarea textarea-bordered h-52 leading-normal"
+              className="textarea textarea-bordered h-60 leading-normal"
               placeholder={`Please paste the signature here
 e.g
-Valid Sign from id.valid.one
-===
 Message
 ===
-signer: signer address/valid id,
-signature:signature value`}
+Valid Sign from Valid One
+===
+signer:signer address,
+sig:signature value`}
+              value={signatureResult}
+              onChange={(e) => setSignatureResult(e.target.value)}
             ></textarea>
           </label>
         )}
@@ -81,7 +93,8 @@ signature:signature value`}
 
       <button
         className="btn btn-neutral btn-block"
-        onClick={() => setOpenResult(true)}
+        disabled={!signatureResult}
+        onClick={handleValid}
       >
         Verify
       </button>

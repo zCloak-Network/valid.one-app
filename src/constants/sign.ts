@@ -17,7 +17,7 @@ export const signatureResultTemplate = (
   hex: string
 ) => `${cont}
 ===
-Valid Sign from valid3.id
+Valid Sign from Valid One
 ===
-${public_key},
+signer:0x${public_key},
 sig:0x${hex}`;
