@@ -2,7 +2,10 @@ import { useCopyToClipboard } from "react-use";
 import { IoCopyOutline } from "react-icons/io5";
 import { useState } from "react";
 
-export const TextareaWithCopy = function (props: { value: string }) {
+export const TextareaWithCopy = function (props: {
+  value: string;
+  rows?: number;
+}) {
   const [state, copyToClipboard] = useCopyToClipboard();
   const [copyState, setCopyState] = useState(false);
 
@@ -26,7 +29,7 @@ export const TextareaWithCopy = function (props: { value: string }) {
       <div className="relative mt-4 overflow-hidden rounded-lg border ">
         <textarea
           className={"textarea textarea-bordered block w-full leading-normal"}
-          rows={8}
+          rows={props.rows || 8}
           value={props.value}
           disabled
         ></textarea>

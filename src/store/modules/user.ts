@@ -1,6 +1,6 @@
 import { USER_VALID_ID } from "@/constants";
-import { actor } from "@/utils/canister";
-import { UserProfile } from "@/utils/canister/idl/valid_one_backend.did";
+import { getProfileById } from "@/hooks";
+import { UserProfile } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
 
 export type UserData = Omit<UserProfile, "create_time" | "modify_time"> & {
@@ -35,21 +35,19 @@ export default class User {
       return;
     }
 
-    const result = await actor.user_profile_get(this.id);
-    runInAction(() => {
-      if (result[0]) {
+    const result = await getProfileById(this.id);
+    if (result) {
+      runInAction(() => {
         let data: UserData = {
-          ...result[0],
-          create_time: Number(result[0].create_time),
-          modify_time: Number(result[0].modify_time),
+          ...result,
+          create_time: Number(result.create_time),
+          modify_time: Number(result.modify_time),
         };
 
         this.profile = data;
-        console.log("update profile", this.id, data);
-      } else {
-        this.profile = null;
-      }
-    });
+        console.log("update profile", this.id, result);
+      });
+    }
   }
 
   private getUserId() {
