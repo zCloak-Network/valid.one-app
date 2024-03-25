@@ -3,31 +3,37 @@ import { ActionModal, TextareaWithCopy } from "@/components";
 import { useState, useEffect } from "react";
 import IconSign from "@/assets/svg/icon_sign.svg?react";
 import IconCloak from "@/assets/svg/clock.svg?react";
-
 export default function SignatureResultObject(props: {
   open: boolean;
   signatureResult?: string;
+  needShortlink?: boolean;
   onClose: () => void;
 }) {
-  const [openResult, setOpenResult] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
   const [signature, setSignature] = useState<string>("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     console.log("signatureResult", props.signatureResult);
     if (props.open && props.signatureResult) {
       setSignature(props.signatureResult);
     }
-    setOpenResult(props.open);
+    setOpenModal(props.open);
   }, [props]);
 
   return (
     <ActionModal
       title="Signature Result"
-      open={openResult}
+      open={openModal}
       closeByModal
       onClose={props.onClose}
     >
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 relative">
+        {loading && (
+          <div className="absolute left-0 top-0 w-full h-full flex items-center justify-center bg-[rgba(0,0,0,.3)] z-50">
+            <span className="loading loading-infinity loading-md"></span>
+          </div>
+        )}
         <div className="flex gap-3 items-center">
           <IconSign className="h-[55px] w-[55px] relative" />
 

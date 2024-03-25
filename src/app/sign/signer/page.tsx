@@ -16,6 +16,7 @@ export default observer(function Signer() {
   const [openStatus, setOpenStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ICPSignResult, setICPSignResult] = useState("");
+  const [needShortlink, setNeedShortlink] = useState(true);
 
   const signatureResult = useMemo(() => {
     if (messageCont && ICPSignResult) {
@@ -100,7 +101,8 @@ export default observer(function Signer() {
           <label className="label cursor-pointer gap-2">
             <input
               type="checkbox"
-              defaultChecked
+              checked={needShortlink}
+              onChange={() => setNeedShortlink(!needShortlink)}
               className="checkbox-primary checkbox"
             />
             <span className="label-text text-xs">
@@ -125,6 +127,7 @@ export default observer(function Signer() {
       {/* SignatureResult */}
       <SignatureResult
         open={openStatus}
+        needShortlink={needShortlink}
         signatureResult={signatureResult}
         onClose={() => {
           setOpenStatus(false);
