@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef } from "react";
 import { default as useStore, observer } from "@/store";
 import type { SignType } from "@/types";
 import { signTypes, signatureResultTemplate } from "@/constants";
@@ -8,6 +8,7 @@ import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
 import { sha256AsU8a } from "@zcloak/crypto";
 import { u8aToHex } from "@polkadot/util";
+import { IoIosCloseCircle } from "react-icons/io";
 
 export default observer(function Signer() {
   const navigate = useNavigate();
@@ -20,16 +21,21 @@ export default observer(function Signer() {
   const [ICPSignResult, setICPSignResult] = useState("");
   const [needShortlink, setNeedShortlink] = useState(true);
 
+  const signCont = useMemo(
+    () => (type === "message" ? messageCont : fileCont),
+    [type, messageCont, fileCont]
+  );
+
   const signatureResult = useMemo(() => {
-    if (messageCont && ICPSignResult) {
+    if (signCont && ICPSignResult) {
       return signatureResultTemplate(
         User.profile?.public_key || "test_key",
-        messageCont,
+        signCont,
         ICPSignResult
       );
     }
     return undefined;
-  }, [ICPSignResult, messageCont]);
+  }, [ICPSignResult, signCont]);
 
   const handleSign = async () => {
     if (!User.id) {
@@ -37,9 +43,8 @@ export default observer(function Signer() {
     }
     setLoading(true);
 
-    const signCont = type === "message" ? messageCont : fileCont;
     const res = await actor.sign(User.id, signCont);
-
+    console.log(type, signCont, "sign result", res);
     if ((res as any)["Ok"]?.signature_hex) {
       setICPSignResult((res as any)["Ok"].signature_hex);
       setOpenStatus(true);
@@ -50,16 +55,24 @@ export default observer(function Signer() {
     setLoading(false);
   };
 
-  const handleFileChange = (e: any) => {
-    const file = e.target.files[0];
-    let reader = new FileReader();
-    reader.readAsArrayBuffer(file);
-    reader.onload = function () {
-      var wordArray = new Uint8Array(reader.result as ArrayBuffer);
-      var hash = sha256AsU8a(wordArray);
-      console.log("get file sha256", u8aToHex(hash));
-      setFileCont(u8aToHex(hash));
-    };
+  const fileSelector = useRef<HTMLInputElement>(null);
+  const handleFileChange = () => {
+    if (fileSelector.current) {
+      const file = fileSelector.current.files?.[0];
+
+      if (file) {
+        let reader = new FileReader();
+        reader.readAsArrayBuffer(file);
+        reader.onload = function () {
+          var wordArray = new Uint8Array(reader.result as ArrayBuffer);
+          var hash = sha256AsU8a(wordArray);
+          console.log("get file sha256", u8aToHex(hash));
+          setFileCont(u8aToHex(hash));
+        };
+      } else {
+        setFileCont("");
+      }
+    }
   };
 
   const contIsReady = () => {
@@ -74,7 +87,10 @@ export default observer(function Signer() {
     <div className="rounded-xl bg-[#F9FAFB] p-4">
       <div className="mb-4 flex h-[52px] items-center gap-2 rounded-xl border border-zinc-200 p-4">
         <div className="relative h-6 w-6">
-          <div className="absolute left-[1px] top-[1px] h-[22px] w-[22px] rounded-full bg-zinc-300" />
+          <img
+            src={User.profile?.avatar}
+            className="absolute left-[1px] top-[1px] h-[22px] w-[22px] rounded-full bg-zinc-300"
+          />
         </div>
         <div className="text-sm font-medium text-gray-900">{User.id}</div>
       </div>
@@ -114,11 +130,23 @@ export default observer(function Signer() {
         {type === "file" && (
           <div className="form-control min-h-40">
             <label className="label cursor-pointer gap-2"></label>
-            <input
-              type="file"
-              className="file-input w-full max-w-xs"
-              onChange={handleFileChange}
-            />
+            <div className="flex items-center gap-2">
+              <input
+                ref={fileSelector}
+                type="file"
+                className="file-input flex-1"
+                onChange={handleFileChange}
+              />
+              {fileCont && (
+                <IoIosCloseCircle
+                  className="w-8 h-8 text-gray-400"
+                  onClick={() => {
+                    fileSelector.current && (fileSelector.current.value = "");
+                    handleFileChange();
+                  }}
+                />
+              )}
+            </div>
           </div>
         )}
       </div>
@@ -144,7 +172,7 @@ export default observer(function Signer() {
 
       <button
         className="btn btn-neutral btn-block"
-        disabled={loading || !contIsReady}
+        disabled={loading || !contIsReady()}
         onClick={() => handleSign()}
       >
         {loading && <span className="loading loading-spinner"></span>}
