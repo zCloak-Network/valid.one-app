@@ -47,6 +47,8 @@ export default class User {
         this.profile = data;
         console.log("update profile", this.id, result);
       });
+    } else {
+      console.warn("get user profile fail", result);
     }
   }
 

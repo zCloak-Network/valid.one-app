@@ -1,14 +1,25 @@
 "use client";
-import { useState } from "react";
-// import { default as useStore, observer } from "@/store";
+import { useState, useEffect } from "react";
+import { default as useStore, observer } from "@/store";
 import type { SignType } from "@/types";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
+import { ethereumEncode } from "@zcloak/crypto";
 
-export default function Verifier() {
+export default observer(function Verifier() {
   const [type, setType] = useState<SignType>("message");
   const [signatureResult, setSignatureResult] = useState("");
   const [openValid, setOpenValid] = useState(false);
+
+  // TODO
+  const { User } = useStore();
+  useEffect(() => {
+    console.log(User.profile);
+    if (User.profile?.public_key) {
+      console.log(`0x${User.profile?.public_key}`);
+      console.log(ethereumEncode(`0x${User.profile?.public_key}`));
+    }
+  }, [User]);
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
@@ -97,4 +108,4 @@ sig:signature value`}
       />
     </div>
   );
-}
+});

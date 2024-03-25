@@ -6,7 +6,6 @@ import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
-import { encodeBase64 } from "ethers";
 
 export default observer(function Signer() {
   const navigate = useNavigate();
@@ -47,14 +46,6 @@ export default observer(function Signer() {
 
     setLoading(false);
   };
-
-  // TODO
-  console.log(
-    123,
-    encodeBase64(
-      "0x025094e31311738df148199d738c99dd7c674b3d628a93090ee16193c2f9e98090"
-    )
-  );
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
