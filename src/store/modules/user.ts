@@ -3,9 +3,14 @@ import { getProfileById } from "@/hooks";
 import { UserProfile } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
 
+export type UserData = Omit<UserProfile, "create_time" | "modify_time"> & {
+  create_time: number;
+  modify_time: number;
+};
+
 export default class User {
   id: number | null;
-  profile: UserProfile | null;
+  profile: UserData | null;
 
   constructor() {
     this.id = null;
@@ -33,7 +38,13 @@ export default class User {
     const result = await getProfileById(this.id);
     if (result) {
       runInAction(() => {
-        this.profile = result;
+        let data: UserData = {
+          ...result,
+          create_time: Number(result.create_time),
+          modify_time: Number(result.modify_time),
+        };
+
+        this.profile = data;
         console.log("update profile", this.id, result);
       });
     }
