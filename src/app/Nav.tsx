@@ -7,7 +7,7 @@ import IDAcIcon from "@/assets/svg/icon/icon_id_s.svg?react";
 import ConnexAcIcon from "@/assets/svg/icon/icon_connex_s.svg?react";
 import SignAcIcon from "@/assets/svg/icon/icon_sign_s.svg?react";
 import ProfileAcIcon from "@/assets/svg/icon/icon_profile_s.svg?react";
-import { matchPath, useLocation } from "react-router-dom";
+import { matchPath, useLocation, useNavigate } from "react-router-dom";
 
 interface NavTab {
   label: string;
@@ -48,6 +48,7 @@ const hiddenPaths = ["/login", "/user/:validId", "/id/edit"];
 const Nav = () => {
   const location = useLocation();
   const pathNow = location.pathname;
+  const navigate = useNavigate();
 
   const shouldHideNav = hiddenPaths.some((pathPattern) =>
     matchPath({ path: pathPattern, end: true }, pathNow)
@@ -63,16 +64,16 @@ const Nav = () => {
         {navTabs.map(({ pathname, activeIcon, unActiveIcon, label }) => {
           const isActive = pathNow.indexOf(pathname) === 0;
           return (
-            <a
+            <span
               key={label}
-              href={pathname}
               className={`flex flex-col items-center text-xs ${
                 isActive ? "text-blue-700" : "text-slate-400"
               }`}
+              onClick={() => navigate(pathname)}
             >
               {isActive ? activeIcon : unActiveIcon}
               <span className="my-1">{label}</span>
-            </a>
+            </span>
           );
         })}
       </nav>

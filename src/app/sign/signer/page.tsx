@@ -6,13 +6,15 @@ import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
+import { sha256AsU8a } from "@zcloak/crypto";
+import { u8aToHex } from "@polkadot/util";
 
 export default observer(function Signer() {
   const navigate = useNavigate();
   const { User } = useStore();
   const [type, setType] = useState<SignType>("message");
   const [messageCont, setMessageCont] = useState("");
-  // const [fileCont, setFileCont] = useState("");
+  const [fileCont, setFileCont] = useState("");
   const [openStatus, setOpenStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ICPSignResult, setICPSignResult] = useState("");
@@ -35,7 +37,8 @@ export default observer(function Signer() {
     }
     setLoading(true);
 
-    const res = await actor.sign(User.id, messageCont);
+    const signCont = type === "message" ? messageCont : fileCont;
+    const res = await actor.sign(User.id, signCont);
 
     if ((res as any)["Ok"]?.signature_hex) {
       setICPSignResult((res as any)["Ok"].signature_hex);
@@ -45,6 +48,26 @@ export default observer(function Signer() {
     }
 
     setLoading(false);
+  };
+
+  const handleFileChange = (e: any) => {
+    const file = e.target.files[0];
+    let reader = new FileReader();
+    reader.readAsArrayBuffer(file);
+    reader.onload = function () {
+      var wordArray = new Uint8Array(reader.result as ArrayBuffer);
+      var hash = sha256AsU8a(wordArray);
+      console.log("get file sha256", u8aToHex(hash));
+      setFileCont(u8aToHex(hash));
+    };
+  };
+
+  const contIsReady = () => {
+    if (type === "message") {
+      return messageCont.length > 0;
+    } else {
+      return fileCont.length > 0;
+    }
   };
 
   return (
@@ -91,7 +114,11 @@ export default observer(function Signer() {
         {type === "file" && (
           <div className="form-control min-h-40">
             <label className="label cursor-pointer gap-2"></label>
-            <input type="file" className="file-input w-full max-w-xs" />
+            <input
+              type="file"
+              className="file-input w-full max-w-xs"
+              onChange={handleFileChange}
+            />
           </div>
         )}
       </div>
@@ -117,7 +144,7 @@ export default observer(function Signer() {
 
       <button
         className="btn btn-neutral btn-block"
-        disabled={loading || !messageCont}
+        disabled={loading || !contIsReady}
         onClick={() => handleSign()}
       >
         {loading && <span className="loading loading-spinner"></span>}
