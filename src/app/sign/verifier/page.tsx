@@ -4,21 +4,11 @@ import { useState } from "react";
 import type { SignType } from "@/types";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
-import { useValid } from "@/hooks";
 
 export default function Verifier() {
   const [type, setType] = useState<SignType>("message");
   const [signatureResult, setSignatureResult] = useState("");
-  const [openResult, setOpenResult] = useState(false);
-  const { valid } = useValid();
-
-  const handleValid = () => {
-    if (signatureResult) {
-      const isValid = valid(signatureResult);
-      console.log(isValid);
-      setOpenResult(isValid);
-    }
-  };
+  const [openValid, setOpenValid] = useState(false);
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
@@ -94,13 +84,17 @@ sig:signature value`}
       <button
         className="btn btn-neutral btn-block"
         disabled={!signatureResult}
-        onClick={handleValid}
+        onClick={() => setOpenValid(true)}
       >
         Verify
       </button>
 
       {/* VerifyMessage */}
-      <VerifyMessage open={openResult} onClose={() => setOpenResult(false)} />
+      <VerifyMessage
+        signatureResult={signatureResult}
+        open={openValid}
+        onClose={() => setOpenValid(false)}
+      />
     </div>
   );
 }

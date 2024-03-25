@@ -1,9 +1,6 @@
 import { verifyMessage, isHexString } from "ethers";
-import { SignatureResult } from "@/types";
-import useStore from "@/store";
+import { SignatureResultObject } from "@/types";
 export function useValid() {
-  const { User } = useStore();
-
   const checkSignatureResult = (signatureResult: string) => {
     const data = signatureResult.split("===");
 
@@ -14,34 +11,35 @@ export function useValid() {
 
       didSig = data[2].trim().split(",");
     } else {
-      throw new Error("Not a Valid Sign content.");
+      console.warn("Not a Valid Sign content.");
+      return null;
     }
 
     const signer = didSig[0].replace("signer:", "");
     const sig = didSig[1].replace("sig:", "").trim();
 
     if (!isHexString(signer) || !isHexString(sig)) {
-      throw new Error("Not a Valid Sign content.");
+      console.warn("Not a Valid Sign content.");
+      return null;
     }
 
     return {
       signature: sig,
       signer,
       message,
-    } as SignatureResult;
+    } as SignatureResultObject;
   };
 
   const valid = (signatureResult: string) => {
     const signatureObject = checkSignatureResult(signatureResult);
-    console.log(
-      verifyMessage(signatureObject?.message, signatureObject.signature)
-    );
-    console.log(signatureObject.signer);
-    console.log(User.profile);
-    return signatureObject
-      ? signatureObject.signer ===
+
+    return {
+      result: signatureObject
+        ? String(signatureObject.signer) ===
           verifyMessage(signatureObject?.message, signatureObject.signature)
-      : false;
+        : false,
+      signatureObject,
+    };
   };
 
   return { checkSignatureResult, valid };

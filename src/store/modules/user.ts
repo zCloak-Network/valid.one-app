@@ -1,6 +1,6 @@
 import { USER_VALID_ID } from "@/constants";
-import { actor } from "@/utils/canister";
-import { UserProfile } from "@/utils/canister/idl/valid_one_backend.did";
+import { getProfileById } from "@/hooks";
+import { UserProfile } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
 
 export default class User {
@@ -30,11 +30,13 @@ export default class User {
       return;
     }
 
-    const result = await actor.user_profile_get(this.id);
-    runInAction(() => {
-      this.profile = result[0] || null;
-      console.log("update profile", this.id, result);
-    });
+    const result = await getProfileById(this.id);
+    if (result) {
+      runInAction(() => {
+        this.profile = result;
+        console.log("update profile", this.id, result);
+      });
+    }
   }
 
   private getUserId() {

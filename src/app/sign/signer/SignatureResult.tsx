@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import IconSign from "@/assets/svg/icon_sign.svg?react";
 import IconCloak from "@/assets/svg/clock.svg?react";
 
-export default function SignatureResult(props: {
+export default function SignatureResultObject(props: {
   open: boolean;
   signatureResult?: string;
   onClose: () => void;
