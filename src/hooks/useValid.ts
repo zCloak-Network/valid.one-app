@@ -1,5 +1,7 @@
 import { verifyMessage, isHexString } from "ethers";
 import { SignatureResultObject } from "@/types";
+import { ethereumEncode } from "@zcloak/crypto";
+
 export function useValid() {
   const checkSignatureResult = (signatureResult: string) => {
     const data = signatureResult.split("===");
@@ -32,11 +34,17 @@ export function useValid() {
 
   const valid = (signatureResult: string) => {
     const signatureObject = checkSignatureResult(signatureResult);
+    signatureObject &&
+      console.log(
+        "valid address:",
+        verifyMessage(signatureObject.message, signatureObject.signature)
+      );
 
+    console.log("encode  address:", ethereumEncode(signatureObject?.signer));
     return {
       result: signatureObject
-        ? String(signatureObject.signer) ===
-          verifyMessage(signatureObject?.message, signatureObject.signature)
+        ? ethereumEncode(signatureObject.signer) ===
+          verifyMessage(signatureObject.message, signatureObject.signature)
         : false,
       signatureObject,
     };

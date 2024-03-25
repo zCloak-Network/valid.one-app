@@ -4,7 +4,7 @@ export async function getProfileById(id: number) {
 }
 
 export async function getProfileByPublicKey(publicKey: string) {
-  // return (await actor.user_profile_get_by_public_key(publicKey))[0] || null;
+  // return (await actor.user_profile_get_by_pub_key(publicKey))[0] || null;
   return new Promise((resolve) => {
     setTimeout(() => {
       resolve({
