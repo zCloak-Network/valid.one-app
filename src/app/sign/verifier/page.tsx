@@ -1,15 +1,44 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { default as useStore, observer } from "@/store";
 import type { SignType } from "@/types";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
 import { ethereumEncode } from "@zcloak/crypto";
+import { IoIosCloseCircle } from "react-icons/io";
+import { sha256OfFile } from "@/utils";
 
 export default observer(function Verifier() {
   const [type, setType] = useState<SignType>("message");
   const [signatureResult, setSignatureResult] = useState("");
-  const [openValid, setOpenValid] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [fileCont, setFileCont] = useState("");
+  const [selectFile, setSelectFile] = useState<File | undefined>();
+  const [ValidID, setValidID] = useState("");
+
+  const fileSelector = useRef<HTMLInputElement>(null);
+  const handleFileChange = () => {
+    if (fileSelector.current) {
+      const file = fileSelector.current.files?.[0];
+      setSelectFile(file);
+      if (file) {
+        sha256OfFile(file).then((res) => {
+          console.log("get file sha256", res);
+          setFileCont(res);
+        });
+      } else {
+        setFileCont("");
+      }
+    }
+  };
+
+  const validContIsReady = () => {
+    if (type === "message") {
+      return signatureResult.length > 0;
+    } else {
+      return fileCont.length > 0;
+    }
+  };
 
   // TODO
   const { User } = useStore();
@@ -74,17 +103,49 @@ sig:signature value`}
               <div className="label">
                 <span className="label-text">File</span>
               </div>
-              <input type="file" className="file-input w-full max-w-xs" />
+              <div className="flex items-center gap-2">
+                <input
+                  ref={fileSelector}
+                  type="file"
+                  className="file-input flex-1"
+                  onChange={handleFileChange}
+                />
+                {fileCont && (
+                  <IoIosCloseCircle
+                    className="w-8 h-8 text-gray-400"
+                    onClick={() => {
+                      fileSelector.current && (fileSelector.current.value = "");
+                      handleFileChange();
+                    }}
+                  />
+                )}
+              </div>
             </label>
             <label className="form-control">
               <div className="label">
                 <span className="label-text">Signer (Optional)</span>
               </div>
-              <input
-                type="text"
-                placeholder="Please enter the valid ID of the signer"
-                className="input input-bordered w-full max-w-xs"
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  placeholder="Please enter the valid ID of the signer"
+                  className="input input-bordered flex-1"
+                  value={ValidID}
+                  onChange={(e) =>
+                    setValidID(
+                      isNaN(Number(e.target.value)) ? "" : e.target.value
+                    )
+                  }
+                />
+                {ValidID && (
+                  <IoIosCloseCircle
+                    className="w-8 h-8 text-gray-400"
+                    onClick={() => {
+                      setValidID("");
+                    }}
+                  />
+                )}
+              </div>
             </label>
           </>
         )}
@@ -94,8 +155,8 @@ sig:signature value`}
 
       <button
         className="btn btn-neutral btn-block"
-        disabled={!signatureResult}
-        onClick={() => setOpenValid(true)}
+        disabled={!validContIsReady()}
+        onClick={() => setOpenModal(true)}
       >
         Verify
       </button>
@@ -103,8 +164,8 @@ sig:signature value`}
       {/* VerifyMessage */}
       <VerifyMessage
         signatureResult={signatureResult}
-        open={openValid}
-        onClose={() => setOpenValid(false)}
+        open={openModal}
+        onClose={() => setOpenModal(false)}
       />
     </div>
   );

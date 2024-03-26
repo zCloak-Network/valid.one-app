@@ -37,9 +37,13 @@ export interface _SERVICE {
     [number, string],
     { Ok: { signature_hex: string } } | { Err: string }
   >;
+  sign_bytes65: ActorMethod<
+    [number, string],
+    { Ok: { signature_hex: string } } | { Err: string }
+  >;
   sign_get_by_uuid: ActorMethod<[string], [] | [Sign]>;
   sign_insert: ActorMethod<
-    [string, number, string, string, string],
+    [string, number, string],
     { Ok: Sign } | { Err: string }
   >;
   sign_paginate: ActorMethod<[number, number], Array<Sign>>;

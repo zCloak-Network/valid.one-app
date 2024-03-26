@@ -41,8 +41,6 @@ export default function VerifyMessage(props: {
       setSignatureObject(null);
     }
   }, [props]);
-  // const { result, signatureObject } = valid(props.signatureResult);
-  const testResult = true;
 
   return (
     <>
@@ -53,7 +51,7 @@ export default function VerifyMessage(props: {
         onClose={props.onClose}
       >
         <div className="flex flex-col gap-4">
-          {testResult ? (
+          {isValid ? (
             <>
               <label className="form-control">
                 <div className="label">
@@ -64,13 +62,13 @@ export default function VerifyMessage(props: {
                   value={signatureObject?.message || ""}
                 />
               </label>
-              <div className="flex items-center gap-3">
-                <IconSign className="relative h-[55px] w-[55px]" />
+              <div className="flex gap-3 items-center">
+                <IconSign className="h-[55px] w-[55px] relative" />
 
-                <div className="flex flex-1 flex-col items-start gap-1">
+                <div className="flex flex-col flex-1 gap-1 items-start">
                   <div className="text-sm">
                     <Link
-                      className="link text-neutral-400"
+                      className="text-neutral-400 link"
                       to={signerProfile?.id ? `/user/${signerProfile?.id}` : ""}
                     >{`${signerProfile?.id}(${
                       signatureObject?.signer
@@ -79,7 +77,7 @@ export default function VerifyMessage(props: {
                     })`}</Link>
                     has signed this message at
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-neutral-400">
+                  <div className="flex text-xs text-neutral-400 gap-1 items-center">
                     <IconCloak className="h-4 w-4" />
                     2024-12-12: 00:12:12
                   </div>
@@ -91,16 +89,6 @@ export default function VerifyMessage(props: {
               {signatureObject?.signer && (
                 <UserCard signerProfile={signerProfile} />
               )}
-
-              <div className="h-[21.67px] w-[335px]">
-                <span className="text-xs font-semibold leading-tight text-slate-400">
-                  Check the on-chain record here:
-                </span>
-
-                <a className="text-xs font-semibold leading-tight text-blue-600 underline">
-                  {`https://explorer.valid-one.com/${signatureObject?.signature}`}
-                </a>
-              </div>
             </>
           ) : (
             "Valid Fail"

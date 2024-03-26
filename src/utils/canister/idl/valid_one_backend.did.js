@@ -54,9 +54,19 @@ export const idlFactory = ({ IDL }) => {
       ],
       []
     ),
+    sign_bytes65: IDL.Func(
+      [IDL.Nat32, IDL.Text],
+      [
+        IDL.Variant({
+          Ok: IDL.Record({ signature_hex: IDL.Text }),
+          Err: IDL.Text,
+        }),
+      ],
+      []
+    ),
     sign_get_by_uuid: IDL.Func([IDL.Text], [IDL.Opt(Sign)], ["query"]),
     sign_insert: IDL.Func(
-      [IDL.Text, IDL.Nat8, IDL.Text, IDL.Text, IDL.Text],
+      [IDL.Text, IDL.Nat8, IDL.Text],
       [IDL.Variant({ Ok: Sign, Err: IDL.Text })],
       []
     ),
