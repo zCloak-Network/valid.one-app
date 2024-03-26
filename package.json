@@ -13,6 +13,7 @@
     "@dfinity/agent": "^1.0.1",
     "@dfinity/candid": "^1.0.1",
     "@dfinity/principal": "^1.0.1",
+    "@ethersproject/transactions": "^5.7.0",
     "@simplewebauthn/browser": "^9.0.1",
     "@zcloak/crypto": "^2.0.0",
     "axios": "^1.6.7",

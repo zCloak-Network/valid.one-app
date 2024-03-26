@@ -1,4 +1,6 @@
-import { verifyMessage, isHexString } from "ethers";
+import { isHexString } from "ethers";
+import { recoverAddress } from "@ethersproject/transactions";
+import { sha256AsU8a } from "@zcloak/crypto";
 import { SignatureResultObject } from "@/types";
 import { ethereumEncode } from "@zcloak/crypto";
 
@@ -33,19 +35,19 @@ export function useValid() {
   };
 
   const valid = (signatureResult: string) => {
+    let result = false;
     const signatureObject = checkSignatureResult(signatureResult);
-    signatureObject &&
-      console.log(
-        "valid address:",
-        verifyMessage(signatureObject.message, signatureObject.signature)
+    if (signatureObject) {
+      const messageHash = sha256AsU8a(signatureObject.message);
+      const verifyResult = recoverAddress(
+        messageHash,
+        signatureObject.signature
       );
+      result = verifyResult === ethereumEncode(signatureObject.signer);
+    }
 
-    console.log("encode  address:", ethereumEncode(signatureObject?.signer));
     return {
-      result: signatureObject
-        ? ethereumEncode(signatureObject.signer) ===
-          verifyMessage(signatureObject.message, signatureObject.signature)
-        : false,
+      result,
       signatureObject,
     };
   };

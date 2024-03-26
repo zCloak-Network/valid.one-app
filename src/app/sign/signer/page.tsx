@@ -6,8 +6,7 @@ import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
-import { sha256AsU8a } from "@zcloak/crypto";
-import { u8aToHex } from "@polkadot/util";
+import { sha256OfFile } from "@/utils";
 import { IoIosCloseCircle } from "react-icons/io";
 
 export default observer(function Signer() {
@@ -16,6 +15,7 @@ export default observer(function Signer() {
   const [type, setType] = useState<SignType>("message");
   const [messageCont, setMessageCont] = useState("");
   const [fileCont, setFileCont] = useState("");
+  const [selectFile, setSelectFile] = useState<File | undefined>();
   const [openStatus, setOpenStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ICPSignResult, setICPSignResult] = useState("");
@@ -43,8 +43,8 @@ export default observer(function Signer() {
     }
     setLoading(true);
 
-    const res = await actor.sign(User.id, signCont);
-    console.log(type, signCont, "sign result", res);
+    const res = await actor.sign_bytes65(User.id, signCont);
+    console.log(User.id, signCont, type, signCont, "sign result", res);
     if ((res as any)["Ok"]?.signature_hex) {
       setICPSignResult((res as any)["Ok"].signature_hex);
       setOpenStatus(true);
@@ -59,16 +59,12 @@ export default observer(function Signer() {
   const handleFileChange = () => {
     if (fileSelector.current) {
       const file = fileSelector.current.files?.[0];
-
+      setSelectFile(file);
       if (file) {
-        let reader = new FileReader();
-        reader.readAsArrayBuffer(file);
-        reader.onload = function () {
-          var wordArray = new Uint8Array(reader.result as ArrayBuffer);
-          var hash = sha256AsU8a(wordArray);
-          console.log("get file sha256", u8aToHex(hash));
-          setFileCont(u8aToHex(hash));
-        };
+        sha256OfFile(file).then((res) => {
+          console.log("get file sha256", res);
+          setFileCont(res);
+        });
       } else {
         setFileCont("");
       }
@@ -85,24 +81,24 @@ export default observer(function Signer() {
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
-      <div className="mb-4 flex h-[52px] items-center gap-2 rounded-xl border border-zinc-200 p-4">
-        <div className="relative h-6 w-6">
+      <div className="border rounded-xl flex border-zinc-200 h-[52px] mb-4 p-4 gap-2 items-center">
+        <div className="h-6 w-6 relative">
           <img
             src={User.profile?.avatar}
-            className="absolute left-[1px] top-[1px] h-[22px] w-[22px] rounded-full bg-zinc-300"
+            className="rounded-full bg-zinc-300 h-[22px] top-[1px] left-[1px] w-[22px] absolute"
           />
         </div>
-        <div className="text-sm font-medium text-gray-900">{User.id}</div>
+        <div className="font-medium text-sm text-gray-900">{User.id}</div>
       </div>
 
-      <div className="mb-4 flex flex-col gap-4">
-        <div className=" self-stretch text-sm  text-zinc-500">
+      <div className="flex flex-col mb-4 gap-4">
+        <div className=" text-sm text-zinc-500  self-stretch">
           What do you want to sign?
         </div>
         <div className="flex w-full items-center">
           {signTypes.map((signType) => (
             <label
-              className="label flex-1 cursor-pointer justify-normal gap-2"
+              className="cursor-pointer flex-1 gap-2 label justify-normal"
               key={signType.type}
             >
               <input
@@ -121,25 +117,25 @@ export default observer(function Signer() {
       <div className="mb-4">
         {type === "message" && (
           <textarea
-            className="textarea-border textarea w-full"
+            className="w-full textarea-border textarea"
             placeholder="Please enter your message here"
             value={messageCont}
             onChange={(e) => setMessageCont(e.target.value)}
           ></textarea>
         )}
         {type === "file" && (
-          <div className="form-control min-h-40">
-            <label className="label cursor-pointer gap-2"></label>
-            <div className="flex items-center gap-2">
+          <div className="min-h-40 form-control">
+            <label className="cursor-pointer gap-2 label"></label>
+            <div className="flex gap-2 items-center">
               <input
                 ref={fileSelector}
                 type="file"
-                className="file-input flex-1"
+                className="flex-1 file-input"
                 onChange={handleFileChange}
               />
               {fileCont && (
                 <IoIosCloseCircle
-                  className="w-8 h-8 text-gray-400"
+                  className="h-8 text-gray-400 w-8"
                   onClick={() => {
                     fileSelector.current && (fileSelector.current.value = "");
                     handleFileChange();
@@ -153,14 +149,14 @@ export default observer(function Signer() {
 
       {type === "message" && (
         <div className="form-control">
-          <label className="label cursor-pointer gap-2">
+          <label className="cursor-pointer gap-2 label">
             <input
               type="checkbox"
               checked={needShortlink}
               onChange={() => setNeedShortlink(!needShortlink)}
               className="checkbox-primary checkbox"
             />
-            <span className="label-text text-xs">
+            <span className="text-xs label-text">
               Select this and we'll create a shareable link for your signed
               message. Note: we'll store your message.
             </span>
@@ -168,7 +164,7 @@ export default observer(function Signer() {
         </div>
       )}
 
-      <div className="my-4 border"></div>
+      <div className="border my-4"></div>
 
       <button
         className="btn btn-neutral btn-block"
@@ -184,6 +180,7 @@ export default observer(function Signer() {
         open={openStatus}
         needShortlink={needShortlink}
         signatureResult={signatureResult}
+        selectFile={selectFile}
         onClose={() => {
           setOpenStatus(false);
           setICPSignResult("");
