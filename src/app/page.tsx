@@ -1,76 +1,53 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-// import * as React from "react";
 
-// !STARTERCONF -> Select !STARTERCONF and CMD + SHIFT + F
-// Before you begin editing, follow all comments with `STARTERCONF`,
-// to customize the default configuration.
-import { default as useStore, observer } from "@/store";
+import Logo from "@/assets/landing-page/logo.png";
+import HeroBG from "@/assets/landing-page/home_bg_privacy.jpg";
+import HeroText from "@/assets/landing-page/hero-text.png";
+import { HiCheckBadge } from "react-icons/hi2";
+import { GoArrowRight } from "react-icons/go";
 
-/**
- * SVGR Support
- * Caveat: No React Props Type.
- *
- * You can override the next-env if the type is important to you
- * @see https://stackoverflow.com/questions/68103844/how-to-override-next-js-svg-module-declaration
- */
-import Logo from "@/assets/svg/Logo.svg?react";
-
-export default observer(function HomePage() {
+export default (function HomePage() {
   const navigate = useNavigate();
-  const { User } = useStore();
 
   return (
-    <main>
-      <section className="bg-white">
-        <div className="layout relative flex flex-col items-center justify-center py-12 text-center">
-          <Logo className="w-16" />
-          <h1>Hi, {User.id}</h1>
-          <h1 className="mt-4">
-            Next.js + Tailwind CSS + daisyUI + TypeScript Starter
-          </h1>
-          <p className="mt-2 text-sm text-gray-800">
-            A starter for Next.js, Tailwind CSS, daisyUI, and TypeScript with
-            Seo, xs pre-configured with Husky{" "}
-          </p>
-          <p className="mt-2 text-sm text-gray-700">
-            <a
-              className="btn btn-link"
-              target="_blank"
-              href="https://github.com/tower1229/nextjs-daisyui-starter"
+    <main className="h-full">
+      <header className="absolute left-0 w-full top-0 h-20 flex items-center px-4 bg-white z-10">
+        <img src={Logo} alt="logo" className="h-[28px] w-[28px]" />
+        <div className="flex-1"></div>
+        <button
+          className="btn btn-neutral bg-[#000000]"
+          onClick={() => navigate("/login")}
+        >
+          Launch App
+        </button>
+      </header>
+      <div className="h-full overflow-auto pt-20 px-4">
+        <div className="relative h-[calc(100%-20px)] rounded-3xl overflow-hidden mb-20">
+          <img src={HeroBG} className="block w-full h-full object-cover" />
+          <div className="absolute left-[50%] top-0 w-[278px] -ml-[139px] h-full flex flex-col py-10 gap-4">
+            <div className="flex-1 flex items-center justify-center">
+              <img src={HeroText} className="flex-1" />
+            </div>
+            <button
+              className="btn btn-block btn-primary bg-[#125BE4] text-white btn-lg rounded border-none"
+              onClick={() => navigate("/login")}
             >
-              See the repository
-            </a>
-          </p>
-
-          <button
-            className="btn mt-6 "
-            onClick={() => navigate(`/user/${User.id}`)}
-          >
-            Test Page
-          </button>
-          <button
-            className="btn mt-6 "
-            onClick={() =>
-              User.setUser(String(Math.floor(Math.random() * 1e5)))
-            }
-          >
-            Change User
-          </button>
-
-          <footer className="absolute bottom-2 text-gray-700">
-            © {new Date().getFullYear()} By{" "}
-            <a
-              className="link"
-              target="_blank"
-              href="https://refined-x.com?ref=nextstarter"
-            >
-              Shixiong
-            </a>
-          </footer>
+              Register your Valid ID
+              <GoArrowRight />
+            </button>
+            <button className="btn btn-block btn-neutral bg-[#1B172B] text-white btn-lg rounded">
+              For business access
+              <GoArrowRight />
+            </button>
+          </div>
         </div>
-      </section>
+        <div className="h-40">test</div>
+        <div className="h-40">test</div>
+        <div className="h-40">test</div>
+        <div className="h-40">test</div>
+      </div>
     </main>
   );
 });
