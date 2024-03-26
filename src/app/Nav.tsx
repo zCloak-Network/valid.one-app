@@ -23,12 +23,12 @@ const navTabs: NavTab[] = [
     activeIcon: <IDAcIcon />,
     unActiveIcon: <IDIcon />,
   },
-  {
-    label: "ConneX",
-    pathname: "/connex/",
-    activeIcon: <ConnexAcIcon />,
-    unActiveIcon: <ConnexIcon />,
-  },
+  // {
+  //   label: "ConneX",
+  //   pathname: "/connex/",
+  //   activeIcon: <ConnexAcIcon />,
+  //   unActiveIcon: <ConnexIcon />,
+  // },
   {
     label: "Sign",
     pathname: "/sign/",
