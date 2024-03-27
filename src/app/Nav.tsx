@@ -19,25 +19,25 @@ interface NavTab {
 const navTabs: NavTab[] = [
   {
     label: "ID",
-    pathname: "/id/",
+    pathname: "/id",
     activeIcon: <IDAcIcon />,
     unActiveIcon: <IDIcon />,
   },
   // {
   //   label: "ConneX",
-  //   pathname: "/connex/",
+  //   pathname: "/connex",
   //   activeIcon: <ConnexAcIcon />,
   //   unActiveIcon: <ConnexIcon />,
   // },
   {
     label: "Sign",
-    pathname: "/sign/",
+    pathname: "/sign",
     activeIcon: <SignAcIcon />,
     unActiveIcon: <SignIcon />,
   },
   {
     label: "Account",
-    pathname: "/account/",
+    pathname: "/account",
     activeIcon: <ProfileAcIcon />,
     unActiveIcon: <ProfileIcon />,
   },
