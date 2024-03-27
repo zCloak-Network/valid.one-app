@@ -8,6 +8,7 @@ import useStore from "@/store";
 import dayjs from "dayjs";
 import { useCopy } from "@/hooks";
 import { siteConfig } from "@/constants";
+import { QRCodeGenerator } from "@/components";
 
 export default function SignatureResultObject(props: {
   open: boolean;
@@ -19,6 +20,7 @@ export default function SignatureResultObject(props: {
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [signature, setSignature] = useState<string>("");
+  const [showQRCode, setShowQRCode] = useState(false);
   const { User } = useStore();
   const { copy, copyState } = useCopy();
 
@@ -76,40 +78,54 @@ export default function SignatureResultObject(props: {
             <div className="border-t"></div>
 
             {validLinkUrl && (
-              <div className="flex px-20 gap-5 justify-between">
+              <>
+                <div className="flex px-20 gap-5 justify-between">
+                  <div
+                    className={
+                      "flex flex-col flex-1" + (copyState ? " tooltip" : "")
+                    }
+                    data-tip={copyState ? "Copied" : ""}
+                    onClick={() => {
+                      copy(validLinkUrl);
+                    }}
+                  >
+                    <div className="flex m-auto bg-gray-800 rounded-[1000px] h-[57px] px-4 w-[57px] items-center justify-center">
+                      <img
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/c830d601174db9e130799b095f4f0d7d4f0cae14e7dcb9b377e925a4735e9f94?apiKey=bdc70480199b4c7f9edcac5b83339cc0&"
+                        className="w-6 aspect-square"
+                      />
+                    </div>
+                    <div className="font-semibold mt-3 text-center text-xs text-slate-900 leading-4 whitespace-nowrap">
+                      Share link
+                    </div>
+                  </div>
+                  <div
+                    className="flex flex-col flex-1"
+                    onClick={() => setShowQRCode(true)}
+                  >
+                    <div className="flex m-auto bg-blue-700 rounded-[1000px] h-14 px-4 w-14 items-center justify-center">
+                      <img
+                        loading="lazy"
+                        src="https://cdn.builder.io/api/v1/image/assets/TEMP/e88297bcb3b2a363e6583446b75f604789f5d3602708c34b14f96931c78caf48?apiKey=bdc70480199b4c7f9edcac5b83339cc0&"
+                        className="w-6 aspect-square"
+                      />
+                    </div>
+                    <div className="font-semibold mt-3 text-center text-xs text-slate-900 leading-4 whitespace-nowrap">
+                      QR Code
+                    </div>
+                  </div>
+                </div>
                 <div
                   className={
-                    "flex flex-col flex-1" + (copyState ? " tooltip" : "")
+                    "absolute left-0 w-full top-0 h-full z-20 bg-white flex flex-col items-center justify-center" +
+                    (showQRCode ? " block" : " hidden")
                   }
-                  data-tip={copyState ? "Copied" : ""}
-                  onClick={() => {
-                    copy(validLinkUrl);
-                  }}
+                  onClick={() => setShowQRCode(false)}
                 >
-                  <div className="flex m-auto bg-gray-800 rounded-[1000px] h-[57px] px-4 w-[57px] items-center justify-center">
-                    <img
-                      loading="lazy"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/c830d601174db9e130799b095f4f0d7d4f0cae14e7dcb9b377e925a4735e9f94?apiKey=bdc70480199b4c7f9edcac5b83339cc0&"
-                      className="w-6 aspect-square"
-                    />
-                  </div>
-                  <div className="font-semibold mt-3 text-center text-xs text-slate-900 leading-4 whitespace-nowrap">
-                    Share link
-                  </div>
+                  <QRCodeGenerator cellSize={320} url={validLinkUrl} />
                 </div>
-                <div className="flex flex-col flex-1">
-                  <div className="flex m-auto bg-blue-700 rounded-[1000px] h-14 px-4 w-14 items-center justify-center">
-                    <img
-                      loading="lazy"
-                      src="https://cdn.builder.io/api/v1/image/assets/TEMP/e88297bcb3b2a363e6583446b75f604789f5d3602708c34b14f96931c78caf48?apiKey=bdc70480199b4c7f9edcac5b83339cc0&"
-                      className="w-6 aspect-square"
-                    />
-                  </div>
-                  <div className="font-semibold mt-3 text-center text-xs text-slate-900 leading-4 whitespace-nowrap">
-                    QR Code
-                  </div>
-                </div>
-              </div>
+              </>
             )}
           </>
         )}
