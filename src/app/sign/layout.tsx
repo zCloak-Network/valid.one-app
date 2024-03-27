@@ -17,12 +17,7 @@ function HeadTab(
   const navigate = useNavigate();
   const pathname = location.pathname;
 
-  const [activeTab, setActiveTab] = useState(
-    {
-      "/sign/signer": 0,
-      "/sign/verifier": 1,
-    }[pathname] || 0
-  );
+  const [activeTab, setActiveTab] = useState(0);
 
   const tabs = [
     {
@@ -36,28 +31,28 @@ function HeadTab(
   ];
 
   useEffect(() => {
-    if (pathname === "/sign" || pathname === "/sign/") {
+    if ("/sign/".indexOf(pathname) === 0) {
+      // default router
       navigate(tabs[0].route);
     } else {
-      setActiveTab(
-        {
-          "/sign/signer": 0,
-          "/sign/verifier": 1,
-        }[pathname] || 0
-      );
+      if (pathname.indexOf("/sign/signer") === 0) {
+        setActiveTab(0);
+      } else if (pathname.indexOf("/sign/verifier") === 0) {
+        setActiveTab(1);
+      }
     }
   }, [pathname]);
 
   return (
     <div {...props}>
-      <div role="tablist" className="rounded-xl tabs-boxed tabs">
+      <div role="tablist" className="rounded-xl tabs-boxed tabs tabs-lg">
         {tabs.map((tab, index) => (
           <a
             key={"sign_tabs_" + index}
             role="tab"
-            className={`tab ${
+            className={`tab font-semibold ${
               activeTab === tabs.indexOf(tab)
-                ? "tab-active  !bg-white !text-black"
+                ? "tab-active shadow  !bg-white !text-black"
                 : ""
             }`}
             onClick={() => navigate(tab.route)}

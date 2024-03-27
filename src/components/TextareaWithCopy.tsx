@@ -1,27 +1,17 @@
-import { useCopyToClipboard } from "react-use";
 import { IoCopyOutline } from "react-icons/io5";
-import { useState } from "react";
+import { useCopy } from "@/hooks";
 
 export const TextareaWithCopy = function (props: {
   value: string;
   rows?: number;
 }) {
-  const [state, copyToClipboard] = useCopyToClipboard();
-  const [copyState, setCopyState] = useState(false);
+  const { copy, copyState } = useCopy();
 
   const handleCopy = () => {
     if (!props.value) {
       return console.warn("no text to copy", props.value);
     }
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(props.value);
-      setCopyState(true);
-      console.log("clipboard writeText ", props.value);
-    } else {
-      copyToClipboard(props.value);
-      console.log("copyToClipboard ", props.value);
-      setCopyState(!!state.value);
-    }
+    copy(props.value);
   };
 
   return (

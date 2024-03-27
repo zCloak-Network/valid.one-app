@@ -1,13 +1,21 @@
-import type { SignType } from "@/types";
+type SignType = "message" | "file";
 
-export const signTypes: Array<{ label: string; type: SignType }> = [
+export const signTypes: Array<{
+  label: string;
+  type: SignType;
+  value: number;
+  disabled?: boolean;
+}> = [
   {
     label: "Message",
     type: "message",
+    value: 1,
   },
   {
     label: "File",
     type: "file",
+    value: 2,
+    disabled: true,
   },
 ];
 

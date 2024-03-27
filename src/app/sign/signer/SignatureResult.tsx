@@ -1,14 +1,18 @@
 "use client";
 import { ActionModal, TextareaWithCopy, InputWithCopy } from "@/components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import IconSign from "@/assets/svg/icon_sign.svg?react";
 import IconCloak from "@/assets/svg/clock.svg?react";
-import { MdOutlineCopyAll } from "react-icons/md";
+import { SignatureResponse } from "@/types";
 import useStore from "@/store";
+import dayjs from "dayjs";
+import { useCopy } from "@/hooks";
+import { siteConfig } from "@/constants";
 
 export default function SignatureResultObject(props: {
   open: boolean;
   signatureResult?: string;
+  ICPSignResponse: SignatureResponse | null;
   needShortlink?: boolean;
   selectFile?: File;
   onClose: () => void;
@@ -16,6 +20,7 @@ export default function SignatureResultObject(props: {
   const [openModal, setOpenModal] = useState(false);
   const [signature, setSignature] = useState<string>("");
   const { User } = useStore();
+  const { copy, copyState } = useCopy();
 
   useEffect(() => {
     console.log("signatureResult", props.signatureResult);
@@ -24,6 +29,13 @@ export default function SignatureResultObject(props: {
     }
     setOpenModal(props.open);
   }, [props]);
+
+  const validLinkUrl = useMemo(() => {
+    if (props.ICPSignResponse) {
+      return `${siteConfig.url}/sign/verifier/${props.ICPSignResponse.uuid}`;
+    }
+    return "";
+  }, [props.ICPSignResponse]);
 
   return (
     <ActionModal
@@ -48,7 +60,9 @@ export default function SignatureResultObject(props: {
             )}
             <div className="flex font-semibold text-xs leading-none text-neutral-400 gap-1 items-center">
               <IconCloak className="h-4 w-4" />
-              2024-12-12: 00:12:12
+              {dayjs(props.ICPSignResponse?.create_time).format(
+                "DD-MM-YYYY HH:mm:ss"
+              )}
             </div>
           </div>
         </div>
@@ -61,9 +75,17 @@ export default function SignatureResultObject(props: {
             </label>
             <div className="border-t"></div>
 
-            {props.needShortlink && (
+            {validLinkUrl && (
               <div className="flex px-20 gap-5 justify-between">
-                <div className="flex flex-col flex-1">
+                <div
+                  className={
+                    "flex flex-col flex-1" + (copyState ? " tooltip" : "")
+                  }
+                  data-tip={copyState ? "Copied" : ""}
+                  onClick={() => {
+                    copy(validLinkUrl);
+                  }}
+                >
                   <div className="flex m-auto bg-gray-800 rounded-[1000px] h-[57px] px-4 w-[57px] items-center justify-center">
                     <img
                       loading="lazy"

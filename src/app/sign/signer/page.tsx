@@ -1,35 +1,47 @@
 "use client";
 import { useState, useMemo, useRef } from "react";
 import { default as useStore, observer } from "@/store";
-import type { SignType } from "@/types";
 import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
 import { sha256OfFile } from "@/utils";
 import { IoIosCloseCircle } from "react-icons/io";
+import { usePasskeyAuth } from "@/hooks";
+import type { SignatureResponse } from "@/types";
 
 export default observer(function Signer() {
+  const { auth } = usePasskeyAuth();
   const navigate = useNavigate();
   const { User } = useStore();
-  const [type, setType] = useState<SignType>("message");
+  const [type, setType] = useState<number>(1);
   const [messageCont, setMessageCont] = useState("");
   const [fileCont, setFileCont] = useState("");
   const [selectFile, setSelectFile] = useState<File | undefined>();
   const [openStatus, setOpenStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ICPSignResult, setICPSignResult] = useState("");
+  const [ICPSignResponse, setICPSignResponse] =
+    useState<SignatureResponse | null>(null);
   const [needShortlink, setNeedShortlink] = useState(true);
 
   const signCont = useMemo(
-    () => (type === "message" ? messageCont : fileCont),
+    () => (type === 1 ? messageCont : fileCont),
     [type, messageCont, fileCont]
   );
 
   const signatureResult = useMemo(() => {
+    if (!User.profile) {
+      navigate("/login");
+      return undefined;
+    }
+    if (!User.profile?.public_key) {
+      navigate("/id/edit");
+      return undefined;
+    }
     if (signCont && ICPSignResult) {
       return signatureResultTemplate(
-        User.profile?.public_key || "test_key",
+        User.profile.public_key,
         signCont,
         ICPSignResult
       );
@@ -42,11 +54,16 @@ export default observer(function Signer() {
       return navigate("/login");
     }
     setLoading(true);
-
-    const res = await actor.sign_bytes65(User.id, signCont);
-    console.log(User.id, signCont, type, signCont, "sign result", res);
-    if ((res as any)["Ok"]?.signature_hex) {
-      setICPSignResult((res as any)["Ok"].signature_hex);
+    const authRequest = await auth();
+    const res = await actor.sign_insert(authRequest, type, signCont);
+    console.log(User.id, type, signCont, "sign result", res);
+    if ((res as any)["Ok"]?.signature) {
+      setICPSignResult((res as any)["Ok"].signature);
+      setICPSignResponse({
+        ...(res as any)["Ok"],
+        create_time: Number((res as any)["Ok"].create_time),
+        modify_time: Number((res as any)["Ok"].create_time),
+      });
       setOpenStatus(true);
     } else {
       console.warn("sign fail", res);
@@ -72,7 +89,7 @@ export default observer(function Signer() {
   };
 
   const contIsReady = () => {
-    if (type === "message") {
+    if (type === 1) {
       return messageCont.length > 0;
     } else {
       return fileCont.length > 0;
@@ -105,8 +122,9 @@ export default observer(function Signer() {
                 type="radio"
                 name="radio-10"
                 className="radio-primary radio"
-                checked={type === signType.type}
-                onChange={() => setType(signType.type)}
+                checked={type === signType.value}
+                onChange={() => setType(signType.value)}
+                disabled={signType.disabled}
               />
               <span className="label-text">{signType.label}</span>
             </label>
@@ -115,7 +133,7 @@ export default observer(function Signer() {
       </div>
 
       <div className="mb-4">
-        {type === "message" && (
+        {type === 1 && (
           <textarea
             className="w-full textarea-border textarea"
             placeholder="Please enter your message here"
@@ -123,7 +141,7 @@ export default observer(function Signer() {
             onChange={(e) => setMessageCont(e.target.value)}
           ></textarea>
         )}
-        {type === "file" && (
+        {type === 2 && (
           <div className="min-h-40 form-control">
             <label className="cursor-pointer gap-2 label"></label>
             <div className="flex gap-2 items-center">
@@ -147,7 +165,7 @@ export default observer(function Signer() {
         )}
       </div>
 
-      {type === "message" && (
+      {type === 1 && (
         <div className="form-control">
           <label className="cursor-pointer gap-2 label">
             <input
@@ -180,6 +198,7 @@ export default observer(function Signer() {
         open={openStatus}
         needShortlink={needShortlink}
         signatureResult={signatureResult}
+        ICPSignResponse={ICPSignResponse}
         selectFile={selectFile}
         onClose={() => {
           setOpenStatus(false);

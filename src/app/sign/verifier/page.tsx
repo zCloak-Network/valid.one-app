@@ -1,20 +1,25 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { default as useStore, observer } from "@/store";
-import type { SignType } from "@/types";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
-import { ethereumEncode } from "@zcloak/crypto";
+import { getRecordByUUID, getProfileById } from "@/hooks";
 import { IoIosCloseCircle } from "react-icons/io";
 import { sha256OfFile } from "@/utils";
+import { useParams } from "react-router-dom";
+import { SignatureResponse } from "@/types";
+import { signatureResultTemplate } from "@/constants";
 
-export default observer(function Verifier() {
-  const [type, setType] = useState<SignType>("message");
+export default (function Verifier() {
+  const [type, setType] = useState<number>(1);
   const [signatureResult, setSignatureResult] = useState("");
   const [openModal, setOpenModal] = useState(false);
-  const [fileCont, setFileCont] = useState("");
+  const [fileSHA256, setFileSHA256] = useState("");
   const [selectFile, setSelectFile] = useState<File | undefined>();
   const [ValidID, setValidID] = useState("");
+  const [ICPSignResponse, setICPSignResponse] =
+    useState<SignatureResponse | null>(null);
+  const [loading, setLoading] = useState(false);
+  const params = useParams();
 
   const fileSelector = useRef<HTMLInputElement>(null);
   const handleFileChange = () => {
@@ -24,31 +29,65 @@ export default observer(function Verifier() {
       if (file) {
         sha256OfFile(file).then((res) => {
           console.log("get file sha256", res);
-          setFileCont(res);
+          setFileSHA256(res);
         });
       } else {
-        setFileCont("");
+        setFileSHA256("");
       }
     }
   };
 
   const validContIsReady = () => {
-    if (type === "message") {
+    if (type === 1) {
       return signatureResult.length > 0;
     } else {
-      return fileCont.length > 0;
+      return fileSHA256.length > 0;
     }
   };
 
-  // TODO
-  const { User } = useStore();
+  // get record by uuid
   useEffect(() => {
-    console.log(User.profile);
-    if (User.profile?.public_key) {
-      console.log(`0x${User.profile?.public_key}`);
-      console.log(ethereumEncode(`0x${User.profile?.public_key}`));
+    if (params.uuid && params.uuid !== ICPSignResponse?.uuid) {
+      setLoading(true);
+      getRecordByUUID(params.uuid)
+        .then(async (res) => {
+          console.log("get record by", params.uuid, res);
+          const response = res as unknown as SignatureResponse;
+
+          if (response) {
+            setICPSignResponse({
+              ...response,
+              create_time: Number(response.create_time),
+              modify_time: Number(response.create_time),
+            } as SignatureResponse);
+
+            setType(response.sign_type);
+
+            const profile = await getProfileById(response.created_by);
+            console;
+            if (profile) {
+              if (response.sign_type === 1) {
+                // message valid link
+                setSignatureResult(
+                  signatureResultTemplate(
+                    profile?.public_key,
+                    response.content,
+                    response.signature
+                  )
+                );
+              } else if (response.sign_type === 2) {
+                // TODO file valid link
+              }
+
+              setOpenModal(true);
+            }
+          }
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
-  }, [User]);
+  }, [params.uuid]);
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
@@ -66,8 +105,9 @@ export default observer(function Verifier() {
                 type="radio"
                 name="radio-10"
                 className="radio-primary radio"
-                checked={type === signType.type}
-                onChange={() => setType(signType.type)}
+                checked={type === signType.value}
+                onChange={() => setType(signType.value)}
+                disabled={signType.disabled}
               />
               <span className="label-text">{signType.label}</span>
             </label>
@@ -76,7 +116,7 @@ export default observer(function Verifier() {
       </div>
 
       <div className="mb-4 flex flex-col gap-4">
-        {type === "message" && (
+        {type === 1 && (
           <label className="form-control">
             <div className="label">
               <span className="label-text">Signature</span>
@@ -97,7 +137,7 @@ sig:signature value`}
           </label>
         )}
 
-        {type === "file" && (
+        {type === 2 && (
           <>
             <label className="form-control">
               <div className="label">
@@ -110,7 +150,7 @@ sig:signature value`}
                   className="file-input flex-1"
                   onChange={handleFileChange}
                 />
-                {fileCont && (
+                {fileSHA256 && (
                   <IoIosCloseCircle
                     className="w-8 h-8 text-gray-400"
                     onClick={() => {
@@ -155,7 +195,7 @@ sig:signature value`}
 
       <button
         className="btn btn-neutral btn-block"
-        disabled={!validContIsReady()}
+        disabled={loading || !validContIsReady()}
         onClick={() => setOpenModal(true)}
       >
         Verify
@@ -164,6 +204,7 @@ sig:signature value`}
       {/* VerifyMessage */}
       <VerifyMessage
         signatureResult={signatureResult}
+        ICPSignResponse={ICPSignResponse}
         open={openModal}
         onClose={() => setOpenModal(false)}
       />

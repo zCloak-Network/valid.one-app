@@ -13,7 +13,6 @@ type Sign = record {
     sign_type: nat8;
     uuid: text;
     signature: text;
-    hash: text;
     content: text;
     create_time: nat64;
     modify_time: nat64;
@@ -35,6 +34,7 @@ service : {
     "get_allow_credentials": (nat32) -> (text) query;
     "get_valid_id_by_credential": (text) -> (opt nat32) query;
     "sign_get_by_uuid": (text) -> (opt Sign) query;
+    sign_get_by_signature: (text) -> (opt Sign) query;
 
     // auth_request, sign_type, hash, signature
     "sign_insert": (text, nat8, text) -> (variant { Ok: Sign; Err: text });
