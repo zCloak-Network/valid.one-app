@@ -38,7 +38,7 @@ export default (function HomePage() {
       <div className="h-full overflow-auto pt-20">
         <div className="px-6">
           {/* hero */}
-          <div className="relative h-[calc(100%-20px)] rounded-3xl overflow-hidden my-16">
+          <div className="relative h-[calc(100%-20px)] rounded-3xl overflow-hidden mt-10 mb-16">
             <img src={HeroBG} className="block w-full h-full object-cover" />
             <div className="absolute left-[50%] top-0 w-[278px] -ml-[139px] h-full flex flex-col py-10 gap-6">
               <div className="flex-1 flex items-center justify-center">
@@ -106,11 +106,11 @@ export default (function HomePage() {
         {/* footer */}
         <footer className="bg-[#f6f8ff] border-t-[1px] border-[#e4e5e8] px-6 py-10">
           <img src={TextLogo} className="h-[30px]" />
-          <div className="opacity-80 text-blue-700 text-lg my-6">
+          <div className="opacity-80 text-blue-700 text-lg my-4">
             Register here
           </div>
-          <img src={FooterQR} className="mb-12" />
-          <div className=" opacity-80 text-blue-700 text-lg my-6">
+          <img src={FooterQR} className="mb-8" />
+          <div className=" opacity-80 text-blue-700 text-lg my-4">
             Contact us
           </div>
           <div className="flex items-center gap-4">
