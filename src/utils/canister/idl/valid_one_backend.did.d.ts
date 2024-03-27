@@ -11,6 +11,7 @@ export interface Sign {
   'create_time' : bigint,
   'sign_type' : number,
 }
+export interface SignResult { 'result' : Array<Sign>, 'size' : number }
 export interface UserProfile {
   'id' : number,
   'bio' : string,
@@ -23,7 +24,7 @@ export interface UserProfile {
 export interface _SERVICE {
   'finish_authentication_new' : ActorMethod<[string], number>,
   'finish_register_new' : ActorMethod<[string], number>,
-  'get_allow_credentials' : ActorMethod<[number], string>,
+  'get_allow_credentials' : ActorMethod<[number], [] | [string]>,
   'get_valid_id_by_credential' : ActorMethod<[string], [] | [number]>,
   'greet' : ActorMethod<[string], { 'Ok' : string } | { 'Err' : string }>,
   'map_get' : ActorMethod<[bigint], [] | [bigint]>,
@@ -50,7 +51,7 @@ export interface _SERVICE {
     { 'Ok' : Sign } |
       { 'Err' : string }
   >,
-  'sign_paginate' : ActorMethod<[number, number], Array<Sign>>,
+  'sign_paginate' : ActorMethod<[number, number], SignResult>,
   'start_authentication_new' : ActorMethod<[number], string>,
   'start_register_new' : ActorMethod<[], string>,
   'user_current_id' : ActorMethod<[], number>,
@@ -69,4 +70,4 @@ export interface _SERVICE {
   >,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
+export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];

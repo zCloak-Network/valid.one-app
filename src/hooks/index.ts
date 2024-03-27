@@ -3,3 +3,4 @@ export * from "./usePasskeyAuth";
 export * from "./useValid";
 export * from "./useAPI";
 export * from "./useCopy";
+export * from "./useGetSigs";

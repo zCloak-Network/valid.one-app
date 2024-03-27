@@ -1,12 +1,12 @@
 import QrIcon from "@/assets/svg/icon/icon_qr.svg?react";
 import { QRCodeGenerator } from "@/components";
 import { useStore } from "@/hooks";
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
 import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
 import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
-import { siteConfig } from "@/constants";
+// import { siteConfig } from "@/constants";
 
 export default function () {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -16,6 +16,8 @@ export default function () {
       modalRef.current.showModal();
     }
   };
+
+  const qrLink = useMemo(() => `${import.meta.env.VITE_APP_VALID_ID_URL}/user/${User.id}`, [User.id]);
 
   return (
     <div className="w-full">
@@ -65,7 +67,7 @@ export default function () {
             </div>
             <hr className="w-72 border-t-2 border-gray-200 border-dashed" />
 
-            <QRCodeGenerator cellSize={180} url={siteConfig.url} />
+            <QRCodeGenerator cellSize={180} url={qrLink} />
           </div>
         </div>
       </dialog>

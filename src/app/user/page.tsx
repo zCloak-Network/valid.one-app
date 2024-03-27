@@ -45,7 +45,7 @@ export default observer(function User() {
   return (
     <div className="p-6 w-full h-full bg-gray-50">
       <div>
-        <Link className="absolute rounded-lg border border-zinc-300 p-2" to={"/"} replace>
+        <Link className="absolute rounded-lg border border-zinc-300 p-2" to={"/id"} replace>
           <IconBack />
         </Link>
       </div>

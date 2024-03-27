@@ -67,4 +67,10 @@ export default class User {
     this.getProfile();
     this.saveUser(id);
   }
+
+  clearUser() {
+    this.id = null;
+    this.profile = null;
+    localStorage.removeItem(USER_VALID_ID);
+  }
 }

@@ -8,6 +8,10 @@ export const idlFactory = ({ IDL }) => {
     'create_time' : IDL.Nat64,
     'sign_type' : IDL.Nat8,
   });
+  const SignResult = IDL.Record({
+    'result' : IDL.Vec(Sign),
+    'size' : IDL.Nat32,
+  });
   const UserProfile = IDL.Record({
     'id' : IDL.Nat32,
     'bio' : IDL.Text,
@@ -20,7 +24,11 @@ export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'finish_authentication_new' : IDL.Func([IDL.Text], [IDL.Nat32], []),
     'finish_register_new' : IDL.Func([IDL.Text], [IDL.Nat32], []),
-    'get_allow_credentials' : IDL.Func([IDL.Nat32], [IDL.Text], ['query']),
+    'get_allow_credentials' : IDL.Func(
+        [IDL.Nat32],
+        [IDL.Opt(IDL.Text)],
+        ['query'],
+      ),
     'get_valid_id_by_credential' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(IDL.Nat32)],
@@ -70,11 +78,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Variant({ 'Ok' : Sign, 'Err' : IDL.Text })],
         [],
       ),
-    'sign_paginate' : IDL.Func(
-        [IDL.Nat32, IDL.Nat32],
-        [IDL.Vec(Sign)],
-        ['query'],
-      ),
+    'sign_paginate' : IDL.Func([IDL.Nat32, IDL.Nat32], [SignResult], ['query']),
     'start_authentication_new' : IDL.Func([IDL.Nat32], [IDL.Text], []),
     'start_register_new' : IDL.Func([], [IDL.Text], []),
     'user_current_id' : IDL.Func([], [IDL.Nat32], ['query']),

@@ -14,3 +14,6 @@ export async function getRecordByUUID(uuid: string) {
 export async function getRecordBySignature(signature: string) {
   return (await actor.sign_get_by_signature(signature))[0] || null;
 }
+export function getAllSigs(page: number, size: number) {
+  return actor.sign_paginate(page, size);
+}
