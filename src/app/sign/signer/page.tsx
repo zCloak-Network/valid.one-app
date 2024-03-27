@@ -32,10 +32,12 @@ export default observer(function Signer() {
 
   const signatureResult = useMemo(() => {
     if (!User.profile) {
-      return navigate("/login");
+      navigate("/login");
+      return undefined;
     }
     if (!User.profile?.public_key) {
-      return navigate("/id/edit");
+      navigate("/id/edit");
+      return undefined;
     }
     if (signCont && ICPSignResult) {
       return signatureResultTemplate(
