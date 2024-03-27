@@ -44,7 +44,7 @@ export default function UserCard(props: {
         <div className="h-[60px] w-[60px] rounded-full border border-neutral-400 p-[2px]">
           <img
             className="h-full w-full rounded-full object-cover"
-            src="https://via.placeholder.com/130x146"
+            src={profile?.avatar}
           />
         </div>
         <div className="flex flex-1 flex-col gap-2">

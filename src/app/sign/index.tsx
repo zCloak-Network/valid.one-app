@@ -13,7 +13,16 @@ const routers = [
       },
       {
         path: "verifier",
-        element: <Verifier />,
+        children: [
+          {
+            path: ":uuid",
+            element: <Verifier />,
+          },
+          {
+            path: "",
+            element: <Verifier />,
+          },
+        ],
       },
     ],
   },

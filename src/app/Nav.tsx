@@ -43,7 +43,7 @@ const navTabs: NavTab[] = [
   },
 ];
 
-const hiddenPaths = ["/login", "/user/:validId", "/id/edit"];
+const hiddenPaths = ["/user/:validId", "/id/edit"];
 
 const Nav = () => {
   const location = useLocation();
@@ -56,9 +56,12 @@ const Nav = () => {
 
   return (
     <div
-      className={`h-20 bg-white shadow-lg ${
+      className={`relative z-10 h-20 bg-[#fcfdfd] ${
         shouldHideNav ? "hidden" : "block"
       } px-3`}
+      style={{
+        boxShadow: "0 4px 10px 4px #e5e7eb ",
+      }}
     >
       <nav className="flex mx-auto max-w-md p-4 justify-between">
         {navTabs.map(({ pathname, activeIcon, unActiveIcon, label }) => {

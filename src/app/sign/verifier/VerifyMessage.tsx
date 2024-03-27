@@ -4,38 +4,61 @@ import { useState, useEffect } from "react";
 import IconSign from "@/assets/svg/icon_sign.svg?react";
 import IconCloak from "@/assets/svg/clock.svg?react";
 import UserCard from "./UserCard";
-import { useValid, getProfileByPublicKey } from "@/hooks";
-import { SignatureResultObject, UserProfile } from "@/types";
+import { useValid, getRecordBySignature } from "@/hooks";
+import { SignatureResultObject } from "@/types";
 import { shortString } from "@/utils";
 import { Link } from "react-router-dom";
+import type { SignatureResponse } from "@/types";
+import dayjs from "dayjs";
 
 export default function VerifyMessage(props: {
   open: boolean;
   signatureResult: string;
+  ICPSignResponse: SignatureResponse | null;
   onClose: () => void;
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [isValid, setIsValid] = useState(false);
   const [signatureObject, setSignatureObject] =
     useState<SignatureResultObject | null>(null);
-  const [signerProfile, setSignerProfile] = useState<UserProfile | undefined>();
   const { valid } = useValid();
-
-  useEffect(() => {
-    if (signatureObject?.signer) {
-      getProfileByPublicKey(signatureObject.signer).then((profile) => {
-        profile && setSignerProfile(profile as UserProfile);
-      });
-    }
-  }, [signatureObject]);
+  const [ICPSignResponse, setICPSignResponse] =
+    useState<SignatureResponse | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setOpenModal(props.open);
-    if (props.open && props.signatureResult) {
-      const { result, signatureObject } = valid(props.signatureResult);
-      setIsValid(result);
-      setSignatureObject(signatureObject);
-      console.log(result);
+    if (props.open) {
+      if (props.signatureResult) {
+        const { result, signatureObject } = valid(props.signatureResult);
+        setIsValid(result);
+        setSignatureObject(signatureObject);
+        console.log(result);
+
+        if (props.ICPSignResponse) {
+          setICPSignResponse(props.ICPSignResponse);
+        } else if (signatureObject?.signature) {
+          setLoading(true);
+          getRecordBySignature(signatureObject.signature.replace(/^0x/, ""))
+            .then((response) => {
+              console.log(
+                signatureObject.signature.replace(/^0x/, ""),
+                "===>",
+                response
+              );
+              if (response) {
+                setICPSignResponse({
+                  ...response,
+                  create_time: Number(response.create_time),
+                  modify_time: Number(response.create_time),
+                } as SignatureResponse);
+              }
+            })
+            .finally(() => {
+              setLoading(false);
+            });
+        }
+      }
     } else {
       setIsValid(false);
       setSignatureObject(null);
@@ -69,8 +92,12 @@ export default function VerifyMessage(props: {
                   <div className="text-sm">
                     <Link
                       className="text-neutral-400 link"
-                      to={signerProfile?.id ? `/user/${signerProfile?.id}` : ""}
-                    >{`${signerProfile?.id}(${
+                      to={
+                        ICPSignResponse?.created_by
+                          ? `/user/${ICPSignResponse.created_by}`
+                          : ""
+                      }
+                    >{`${ICPSignResponse?.created_by || ""}(${
                       signatureObject?.signer
                         ? shortString(signatureObject.signer)
                         : "Valid User"
@@ -79,15 +106,17 @@ export default function VerifyMessage(props: {
                   </div>
                   <div className="flex text-xs text-neutral-400 gap-1 items-center">
                     <IconCloak className="h-4 w-4" />
-                    2024-12-12: 00:12:12
+                    {dayjs(ICPSignResponse?.create_time).format(
+                      "DD-MM-YYYY HH:mm:ss"
+                    )}
                   </div>
                 </div>
               </div>
 
               <div className="border-t"></div>
 
-              {signatureObject?.signer && (
-                <UserCard signerProfile={signerProfile} />
+              {ICPSignResponse?.created_by && (
+                <UserCard validId={ICPSignResponse.created_by} />
               )}
             </>
           ) : (

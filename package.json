@@ -17,6 +17,7 @@
     "@simplewebauthn/browser": "^9.0.1",
     "@zcloak/crypto": "^2.0.0",
     "axios": "^1.6.7",
+    "dayjs": "^1.11.10",
     "ethers": "^6.11.1",
     "isomorphic-fetch": "^3.0.0",
     "mobx": "^6.12.0",

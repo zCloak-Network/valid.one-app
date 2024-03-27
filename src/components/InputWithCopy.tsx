@@ -1,11 +1,11 @@
-import { useCopyToClipboard } from "react-use";
+import { useCopy } from "@/hooks";
 import { MdOutlineCopyAll } from "react-icons/md";
 
 export const InputWithCopy = function (props: {
   value?: string | number | null;
   label?: string;
 }) {
-  const [_state, copyToClipboard] = useCopyToClipboard();
+  const { copy } = useCopy();
   const valueString =
     props.value === null || props.value === undefined
       ? ""
@@ -15,13 +15,7 @@ export const InputWithCopy = function (props: {
     if (!valueString) {
       return console.warn("no text to copy", valueString);
     }
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(valueString);
-      console.log("clipboard writeText ", valueString);
-    } else {
-      copyToClipboard(valueString);
-      console.log("copyToClipboard ", valueString);
-    }
+    copy(valueString);
   };
 
   return (
