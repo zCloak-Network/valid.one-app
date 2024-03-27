@@ -4,7 +4,6 @@ export const signTypes: Array<{
   label: string;
   type: SignType;
   value: number;
-  disabled?: boolean;
 }> = [
   {
     label: "Message",
@@ -15,7 +14,6 @@ export const signTypes: Array<{
     label: "File",
     type: "file",
     value: 2,
-    disabled: true,
   },
 ];
 

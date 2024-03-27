@@ -10,6 +10,7 @@ import { shortString } from "@/utils";
 import { Link } from "react-router-dom";
 import type { SignatureResponse } from "@/types";
 import dayjs from "dayjs";
+import { siteConfig } from "@/constants";
 
 export default function VerifyMessage(props: {
   open: boolean;
@@ -117,6 +118,22 @@ export default function VerifyMessage(props: {
 
               {ICPSignResponse?.created_by && (
                 <UserCard validId={ICPSignResponse.created_by} />
+              )}
+
+              {ICPSignResponse?.uuid && (
+                <div className="text-xs font-semibold leading-tight ">
+                  <span className="text-slate-400 ">
+                    Check the on-chain record here
+                  </span>
+                  <span className="text-blue-600 ">: </span>
+                  <a
+                    href={`${siteConfig.url}/explorer/${ICPSignResponse.uuid}`}
+                    target="_blank"
+                    className="text-blue-600 underline"
+                  >
+                    {`${siteConfig.url}/explorer/${ICPSignResponse.uuid}`}
+                  </a>
+                </div>
               )}
             </>
           ) : (

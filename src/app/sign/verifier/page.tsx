@@ -107,7 +107,6 @@ export default (function Verifier() {
                 className="radio-primary radio"
                 checked={type === signType.value}
                 onChange={() => setType(signType.value)}
-                disabled={signType.disabled}
               />
               <span className="label-text">{signType.label}</span>
             </label>
