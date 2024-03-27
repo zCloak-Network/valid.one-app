@@ -6,9 +6,16 @@ interface Props {
   cellSize?: number | undefined;
 }
 
-const QRCodeGenerator: React.FC<Props> = ({ url, cellSize }) => {
+export const QRCodeGenerator: React.FC<Props> = ({ url, cellSize }) => {
   return (
-    <div style={{ height: "auto", margin: "0 auto", maxWidth: cellSize, width: "100%" }}>
+    <div
+      style={{
+        height: "auto",
+        margin: "0 auto",
+        maxWidth: cellSize,
+        width: "100%",
+      }}
+    >
       <QRCode
         size={256}
         style={{ height: "auto", maxWidth: "100%", width: "100%" }}
@@ -18,5 +25,3 @@ const QRCodeGenerator: React.FC<Props> = ({ url, cellSize }) => {
     </div>
   );
 };
-
-export default QRCodeGenerator;
