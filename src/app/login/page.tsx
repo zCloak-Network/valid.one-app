@@ -1,8 +1,11 @@
 import { default as useStore, observer } from "@/store";
 import { useCallback } from "react";
-import { startAuthentication, startRegistration } from "@simplewebauthn/browser";
+import {
+  startAuthentication,
+  startRegistration,
+} from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
-import LoginBg from "@/assets/svg/LoginBg.svg";
+import LoginBg from "@/assets/images/loginBg.png";
 import OnBoarding from "@/assets/svg/onboarding.svg";
 import { actor } from "@/utils/canister";
 import { useSearchParam, useToggle } from "react-use";
@@ -24,9 +27,16 @@ export default observer(function HomePage() {
 
       let registrationResult;
       registrationResult = await startRegistration(options);
-      console.log(`navigator.credentials.create(): ${JSON.stringify(registrationResult)}`);
-      const finish_register_result = await actor.finish_register_new(JSON.stringify(registrationResult));
-      console.log(`finish_register_result: `, JSON.stringify(finish_register_result));
+      console.log(
+        `navigator.credentials.create(): ${JSON.stringify(registrationResult)}`
+      );
+      const finish_register_result = await actor.finish_register_new(
+        JSON.stringify(registrationResult)
+      );
+      console.log(
+        `finish_register_result: `,
+        JSON.stringify(finish_register_result)
+      );
 
       store.User.setUser(finish_register_result);
       toggle();
@@ -54,14 +64,20 @@ export default observer(function HomePage() {
       asseResp = await startAuthentication({
         ...authOptions,
       });
-      console.log(`【startAuthentication】navigator.credentials.get(): ${JSON.stringify(asseResp)}`);
+      console.log(
+        `【startAuthentication】navigator.credentials.get(): ${JSON.stringify(
+          asseResp
+        )}`
+      );
     } catch (error) {
       console.log(`start authencation error: `, error);
       return;
     }
 
     // step 3
-    let auth_result = await actor.finish_authentication_new(JSON.stringify(asseResp));
+    let auth_result = await actor.finish_authentication_new(
+      JSON.stringify(asseResp)
+    );
     console.log(`auth_result ${auth_result}`);
   }, []);
 
@@ -89,8 +105,9 @@ export default observer(function HomePage() {
             </div>
           </div>
           <div className="h-24 w-72 text-center font-['Poppins'] text-sm font-medium text-neutral-400">
-            Valid ID weaves together your online identity, serving as your passport to the digital universe. Share who
-            you are with others, and connect with trusted friends to create a network of trust.
+            Valid ID weaves together your online identity, serving as your
+            passport to the digital universe. Share who you are with others, and
+            connect with trusted friends to create a network of trust.
           </div>
 
           <LoadingButton
@@ -100,7 +117,10 @@ export default observer(function HomePage() {
           >
             Create an account
           </LoadingButton>
-          <button className="btn btn-primary w-full" onClick={handlePasskeyLogin}>
+          <button
+            className="btn btn-primary w-full"
+            onClick={handlePasskeyLogin}
+          >
             Sign up or Log in using Passkey
           </button>
 
