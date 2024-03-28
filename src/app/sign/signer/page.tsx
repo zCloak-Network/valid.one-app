@@ -5,7 +5,7 @@ import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
 import { useNavigate } from "react-router-dom";
-import { sha256OfFile } from "@/utils";
+import { sha256OfFile, sha256OfString } from "@/utils";
 import { IoIosCloseCircle } from "react-icons/io";
 import { usePasskeyAuth } from "@/hooks";
 import type { SignatureResponse } from "@/types";
@@ -16,7 +16,7 @@ export default observer(function Signer() {
   const { User } = useStore();
   const [type, setType] = useState<number>(1);
   const [messageCont, setMessageCont] = useState("");
-  const [fileCont, setFileCont] = useState("");
+  const [fileSHA256, setFileSHA256] = useState("");
   const [selectFile, setSelectFile] = useState<File | undefined>();
   const [openStatus, setOpenStatus] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -25,9 +25,13 @@ export default observer(function Signer() {
     useState<SignatureResponse | null>(null);
   const [needShortlink, setNeedShortlink] = useState(true);
 
+  const messageSHA256 = useMemo(() => {
+    return sha256OfString(messageCont)?.replace(/^0x/, "") || "";
+  }, [messageCont]);
+
   const signCont = useMemo(
-    () => (type === 1 ? messageCont : fileCont),
-    [type, messageCont, fileCont]
+    () => (type === 1 ? messageSHA256 : fileSHA256),
+    [type, messageSHA256, fileSHA256]
   );
 
   const signatureResult = useMemo(() => {
@@ -80,19 +84,19 @@ export default observer(function Signer() {
       if (file) {
         sha256OfFile(file).then((res) => {
           console.log("get file sha256", res);
-          setFileCont(res);
+          setFileSHA256(res.replace(/^0x/, ""));
         });
       } else {
-        setFileCont("");
+        setFileSHA256("");
       }
     }
   };
 
   const contIsReady = () => {
     if (type === 1) {
-      return messageCont.length > 0;
+      return messageSHA256.length > 0;
     } else {
-      return fileCont.length > 0;
+      return fileSHA256.length > 0;
     }
   };
 
@@ -150,7 +154,7 @@ export default observer(function Signer() {
                 className="flex-1 file-input"
                 onChange={handleFileChange}
               />
-              {fileCont && (
+              {fileSHA256 && (
                 <IoIosCloseCircle
                   className="h-8 text-gray-400 w-8"
                   onClick={() => {

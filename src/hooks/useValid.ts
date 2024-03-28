@@ -43,6 +43,11 @@ export function useValid() {
         messageHash,
         signatureObject.signature
       );
+      console.log(
+        "verifyResult=",
+        verifyResult,
+        ethereumEncode(signatureObject.signer)
+      );
       result = verifyResult === ethereumEncode(signatureObject.signer);
     }
 
