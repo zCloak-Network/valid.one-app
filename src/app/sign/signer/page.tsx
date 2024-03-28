@@ -14,7 +14,7 @@ export default observer(function Signer() {
   const { auth } = usePasskeyAuth();
   const navigate = useNavigate();
   const { User } = useStore();
-  const [type, setType] = useState<number>(1);
+  const [signType, setType] = useState<number>(1);
   const [messageCont, setMessageCont] = useState("");
   const [fileSHA256, setFileSHA256] = useState("");
   const [selectFile, setSelectFile] = useState<File | undefined>();
@@ -23,15 +23,15 @@ export default observer(function Signer() {
   const [ICPSignResult, setICPSignResult] = useState("");
   const [ICPSignResponse, setICPSignResponse] =
     useState<SignatureResponse | null>(null);
-  const [needShortlink, setNeedShortlink] = useState(true);
+  const [publicMode, setPublicMode] = useState(false);
 
   const messageSHA256 = useMemo(() => {
     return sha256OfString(messageCont)?.replace(/^0x/, "") || "";
   }, [messageCont]);
 
   const signCont = useMemo(
-    () => (type === 1 ? messageSHA256 : fileSHA256),
-    [type, messageSHA256, fileSHA256]
+    () => (signType === 1 ? messageSHA256 : fileSHA256),
+    [signType, messageSHA256, fileSHA256]
   );
 
   const signatureResult = useMemo(() => {
@@ -47,7 +47,8 @@ export default observer(function Signer() {
       return signatureResultTemplate(
         User.profile.public_key,
         signCont,
-        ICPSignResult
+        ICPSignResult,
+        publicMode
       );
     }
     return undefined;
@@ -58,9 +59,18 @@ export default observer(function Signer() {
       return navigate("/login");
     }
     setLoading(true);
+
+    let publicContentKey = "";
+    if (signType === 1) {
+      if (publicMode) {
+        // TODO send cont to api
+        publicContentKey = "cont-key";
+      }
+    }
     const authRequest = await auth();
-    const res = await actor.sign_insert(authRequest, type, signCont);
-    console.log(User.id, type, signCont, "sign result", res);
+    const res = await actor.sign_insert(authRequest, signType, signCont);
+    console.log(User.id, signType, signCont, "sign result", res);
+
     if ((res as any)["Ok"]?.signature) {
       setICPSignResult((res as any)["Ok"].signature);
       setICPSignResponse({
@@ -93,7 +103,7 @@ export default observer(function Signer() {
   };
 
   const contIsReady = () => {
-    if (type === 1) {
+    if (signType === 1) {
       return messageSHA256.length > 0;
     } else {
       return fileSHA256.length > 0;
@@ -117,26 +127,26 @@ export default observer(function Signer() {
           What do you want to sign?
         </div>
         <div className="flex w-full items-center">
-          {signTypes.map((signType) => (
+          {signTypes.map((currentType) => (
             <label
               className="cursor-pointer flex-1 gap-2 label justify-normal"
-              key={signType.type}
+              key={currentType.type}
             >
               <input
                 type="radio"
                 name="radio-10"
                 className="radio-primary radio"
-                checked={type === signType.value}
-                onChange={() => setType(signType.value)}
+                checked={signType === currentType.value}
+                onChange={() => setType(currentType.value)}
               />
-              <span className="label-text">{signType.label}</span>
+              <span className="label-text">{currentType.label}</span>
             </label>
           ))}
         </div>
       </div>
 
       <div className="mb-4">
-        {type === 1 && (
+        {signType === 1 && (
           <textarea
             className="w-full textarea-border textarea"
             placeholder="Please enter your message here"
@@ -144,7 +154,7 @@ export default observer(function Signer() {
             onChange={(e) => setMessageCont(e.target.value)}
           ></textarea>
         )}
-        {type === 2 && (
+        {signType === 2 && (
           <div className="min-h-40 form-control">
             <label className="cursor-pointer gap-2 label"></label>
             <div className="flex gap-2 items-center">
@@ -168,13 +178,13 @@ export default observer(function Signer() {
         )}
       </div>
 
-      {type === 1 && (
+      {signType === 1 && (
         <div className="form-control">
-          <label className="cursor-pointer gap-2 label">
+          <label className="cursor-pointer label justify-start gap-2">
             <input
               type="checkbox"
-              checked={needShortlink}
-              onChange={() => setNeedShortlink(!needShortlink)}
+              checked={publicMode}
+              onChange={() => setPublicMode(!publicMode)}
               className="checkbox-primary checkbox"
             />
             <span className="text-xs label-text">
@@ -198,7 +208,6 @@ export default observer(function Signer() {
       {/* SignatureResult */}
       <SignatureResult
         open={openStatus}
-        needShortlink={needShortlink}
         signatureResult={signatureResult}
         ICPSignResponse={ICPSignResponse}
         selectFile={selectFile}

@@ -20,9 +20,14 @@ export const signTypes: Array<{
 export const signatureResultTemplate = (
   public_key: string,
   cont: string,
-  hex: string
-) => `${cont}
-===
+  hex: string,
+  publicMode?: boolean
+) =>
+  publicMode
+    ? `${cont}
+`
+    : "" +
+      `===
 Valid Sign from Valid One
 ===
 signer:0x${public_key},

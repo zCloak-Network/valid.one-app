@@ -1,6 +1,6 @@
 "use client";
 import { ActionModal, TextareaWithCopy } from "@/components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import IconSign from "@/assets/svg/icon_sign.svg?react";
 import IconCloak from "@/assets/svg/clock.svg?react";
 import UserCard from "./UserCard";
@@ -20,6 +20,7 @@ export default function VerifyMessage(props: {
   open: boolean;
   signatureResult: string;
   ICPSignResponse: SignatureResponse | null;
+  userInputMessage?: string;
   onClose: () => void;
 }) {
   const [openModal, setOpenModal] = useState(false);
@@ -30,6 +31,7 @@ export default function VerifyMessage(props: {
   const [ICPSignResponse, setICPSignResponse] =
     useState<SignatureResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [orignalMessage, setOrignalMessage] = useState("");
 
   useEffect(() => {
     setOpenModal(props.open);
@@ -39,6 +41,10 @@ export default function VerifyMessage(props: {
         setIsValid(result);
         setSignatureObject(signatureObject);
         console.log(result);
+
+        if (props.userInputMessage) {
+          setOrignalMessage(props.userInputMessage);
+        }
 
         if (props.ICPSignResponse) {
           setICPSignResponse(props.ICPSignResponse);
@@ -85,10 +91,7 @@ export default function VerifyMessage(props: {
                 <div className="label">
                   <span className="label-text">Message</span>
                 </div>
-                <TextareaWithCopy
-                  rows={4}
-                  value={signatureObject?.message || ""}
-                />
+                <TextareaWithCopy rows={4} value={orignalMessage || ""} />
               </label>
               <div className="flex gap-3 items-center">
                 <IconSign className="h-[55px] w-[55px] relative" />

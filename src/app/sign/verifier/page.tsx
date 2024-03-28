@@ -1,10 +1,10 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
-import { getRecordByUUID, getProfileById } from "@/hooks";
+import { getRecordByUUID, getProfileById, useValid } from "@/hooks";
 import { IoIosCloseCircle } from "react-icons/io";
-import { sha256OfFile } from "@/utils";
+import { sha256OfFile, sha256OfString } from "@/utils";
 import { useParams } from "react-router-dom";
 import { SignatureResponse } from "@/types";
 import { signatureResultTemplate } from "@/constants";
@@ -12,6 +12,8 @@ import { signatureResultTemplate } from "@/constants";
 export default (function Verifier() {
   const [type, setType] = useState<number>(1);
   const [signatureResult, setSignatureResult] = useState("");
+  const [userInputMessage, setUserInputMessage] = useState("");
+  const [showUserInputMessage, setShowUserInputMessage] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [fileSHA256, setFileSHA256] = useState("");
   const [selectFile, setSelectFile] = useState<File | undefined>();
@@ -34,14 +36,6 @@ export default (function Verifier() {
       } else {
         setFileSHA256("");
       }
-    }
-  };
-
-  const validContIsReady = () => {
-    if (type === 1) {
-      return signatureResult.length > 0;
-    } else {
-      return fileSHA256.length > 0;
     }
   };
 
@@ -89,6 +83,50 @@ export default (function Verifier() {
     }
   }, [params.uuid]);
 
+  const { valid } = useValid();
+
+  useEffect(() => {
+    if (signatureResult) {
+      const { signatureObject } = valid(signatureResult);
+      console.log("signatureObject", signatureObject);
+      console.log("userInputMessage", userInputMessage);
+      if (signatureObject) {
+        if (!signatureObject.message) {
+          setShowUserInputMessage(true);
+        }
+        if (showUserInputMessage && !userInputMessage) {
+          setShowUserInputMessage(false);
+          setSignatureResult("");
+        }
+      }
+    }
+  }, [signatureResult, userInputMessage]);
+
+  const validContIsReady = () => {
+    if (type === 1) {
+      return showUserInputMessage
+        ? userInputMessage.length > 0
+        : signatureResult.length > 0;
+    } else {
+      return fileSHA256.length > 0;
+    }
+  };
+
+  const handleVerify = () => {
+    console.log(finnalMessageSignatureResult);
+    setOpenModal(true);
+  };
+
+  const finnalMessageSignatureResult = useMemo(() => {
+    // TODO
+    if (showUserInputMessage && userInputMessage.trim()) {
+      return `${sha256OfString(userInputMessage.trim())?.replace(/^0x/, "")}
+${signatureResult.trim()}`;
+    } else {
+      return signatureResult.trim();
+    }
+  }, [signatureResult, userInputMessage, showUserInputMessage]);
+
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4">
       <div className="mb-4 flex flex-col gap-4">
@@ -116,13 +154,15 @@ export default (function Verifier() {
 
       <div className="mb-4 flex flex-col gap-4">
         {type === 1 && (
-          <label className="form-control">
-            <div className="label">
-              <span className="label-text">Signature</span>
-            </div>
-            <textarea
-              className="textarea textarea-bordered h-60 leading-normal"
-              placeholder={`Please paste the signature here
+          <>
+            {!showUserInputMessage ? (
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">Signature</span>
+                </div>
+                <textarea
+                  className="textarea textarea-bordered h-60 leading-normal"
+                  placeholder={`Please paste the signature here
 e.g
 Message
 ===
@@ -130,10 +170,24 @@ Valid Sign from Valid One
 ===
 signer:signer address,
 sig:signature value`}
-              value={signatureResult}
-              onChange={(e) => setSignatureResult(e.target.value)}
-            ></textarea>
-          </label>
+                  value={signatureResult}
+                  onChange={(e) => setSignatureResult(e.target.value)}
+                ></textarea>
+              </label>
+            ) : (
+              <label className="form-control w-full">
+                <div className="label">
+                  <span className="label-text">Message</span>
+                </div>
+                <textarea
+                  className="textarea textarea-bordered h-60 leading-normal"
+                  placeholder={`Please paste the message here`}
+                  value={userInputMessage}
+                  onChange={(e) => setUserInputMessage(e.target.value)}
+                ></textarea>
+              </label>
+            )}
+          </>
         )}
 
         {type === 2 && (
@@ -195,14 +249,15 @@ sig:signature value`}
       <button
         className="btn btn-neutral btn-block"
         disabled={loading || !validContIsReady()}
-        onClick={() => setOpenModal(true)}
+        onClick={handleVerify}
       >
         Verify
       </button>
 
       {/* VerifyMessage */}
       <VerifyMessage
-        signatureResult={signatureResult}
+        userInputMessage={userInputMessage}
+        signatureResult={finnalMessageSignatureResult}
         ICPSignResponse={ICPSignResponse}
         open={openModal}
         onClose={() => setOpenModal(false)}

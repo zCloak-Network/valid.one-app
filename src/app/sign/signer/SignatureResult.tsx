@@ -14,7 +14,6 @@ export default function SignatureResultObject(props: {
   open: boolean;
   signatureResult?: string;
   ICPSignResponse: SignatureResponse | null;
-  needShortlink?: boolean;
   selectFile?: File;
   onClose: () => void;
 }) {
