@@ -1,5 +1,5 @@
 import "./globals.css";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Nav from "./Nav";
 
 export function ResponseLayout({
@@ -24,7 +24,8 @@ export function ResponseLayout({
 }
 
 export default function RootLayout() {
-  const pathname = window.location.pathname;
+  const location = useLocation();
+  const pathname = location.pathname;
   return (
     <ResponseLayout className="flex flex-col relative">
       <Outlet />
