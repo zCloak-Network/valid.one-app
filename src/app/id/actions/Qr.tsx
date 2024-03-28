@@ -6,6 +6,7 @@ import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
 import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
 import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
+import { siteConfig } from "@/constants";
 // import { siteConfig } from "@/constants";
 
 export default function () {
@@ -17,12 +18,12 @@ export default function () {
     }
   };
 
-  const qrLink = useMemo(() => `${import.meta.env.VITE_APP_VALID_ID_URL}/user/${User.id}`, [User.id]);
+  const qrLink = useMemo(() => `${siteConfig.url}/user/${User.id}`, [User.id]);
 
   return (
     <div className="w-full">
       <button
-        className="btn w-full bg-white bg-opacity-20 rounded-lg text-white border-none"
+        className="btn w-full bg-white bg-opacity-20 rounded-lg text-white border-none text-xs"
         onClick={openModal}
       >
         <QrIcon />

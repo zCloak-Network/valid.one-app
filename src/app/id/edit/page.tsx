@@ -27,14 +27,19 @@ const EditProfile = () => {
     setAvatarUrl(User.profile?.avatar === "" ? undefined : User.profile?.avatar);
   }, [User.profile]);
   const handelSave = useCallback(async () => {
-    if (!avatarFile) return console.warn("avatar is required");
     try {
       toggle();
       const authRequest = await auth();
-      const formData = new FormData();
-      formData.append("file", avatarFile, avatarFile.name);
-      const avatarResult = await axiosCardService.post("/api/s3/upload", formData);
-      const data = await actor.user_profile_edit(authRequest, avatarResult.data, name, bio);
+      let avatarResult = User.profile?.avatar;
+      if (avatarFile) {
+        const formData = new FormData();
+        formData.append("file", avatarFile, avatarFile.name);
+        avatarResult = (await axiosCardService.post("/api/s3/upload", formData)).data;
+      }
+
+      if (!avatarResult) return console.warn("no avatar.");
+
+      const data = await actor.user_profile_edit(authRequest, avatarResult, name, bio);
       await User.getProfile();
       navigate("/id");
       console.log("[ data ] >", data);

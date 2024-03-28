@@ -1,4 +1,4 @@
-import { USER_VALID_ID } from "@/constants";
+import { USERS_LIST, USER_VALID_ID } from "@/constants";
 import { getProfileById } from "@/hooks";
 import { UserProfile } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -11,10 +11,12 @@ export type UserData = Omit<UserProfile, "create_time" | "modify_time"> & {
 export default class User {
   id: number | null;
   profile: UserData | null;
+  users: number[];
 
   constructor() {
     this.id = null;
     this.profile = null;
+    this.users = [];
 
     makeAutoObservable(this);
 
@@ -22,8 +24,9 @@ export default class User {
   }
 
   async initUser() {
+    this.loadUsers();
     this.getUserId();
-
+    
     if (this.id) {
       await this.getProfile();
     }
@@ -58,19 +61,39 @@ export default class User {
     this.id = result ? (JSON.parse(result) as number) : null;
   }
 
-  private saveUser(userId: number) {
+  private loadUsers() {
+    const users = localStorage.getItem(USERS_LIST);
+    this.users = users ? JSON.parse(users) : [];
+  }
+
+  private saveUserList() {
+    localStorage.setItem(USERS_LIST, JSON.stringify(this.users));
+  }
+
+  async switchUser(id: number) {
+    if (this.users.includes(id)) {
+      this.id = id;
+      await this.getProfile();
+    }
+  }
+
+  private saveCurrentUser(userId: number) {
     localStorage.setItem(USER_VALID_ID, JSON.stringify(userId));
   }
 
-  setUser(id: number) {
-    this.id = id;
-    this.getProfile();
-    this.saveUser(id);
-  }
-
-  clearUser() {
+  logout() {
     this.id = null;
     this.profile = null;
     localStorage.removeItem(USER_VALID_ID);
+  }
+
+  async login(id: number) {
+    if (!this.users.includes(id)) {
+      this.users.push(id);
+      this.saveUserList();
+    }
+    this.id = id;
+    this.saveCurrentUser(id);
+    await this.getProfile();
   }
 }

@@ -10,7 +10,7 @@ export default observer(function AccountPage() {
   const navigate = useNavigate();
 
   const signOut = useCallback(() => {
-    User.clearUser();
+    User.logout();
     navigate("/login");
   }, [User]);
   return (

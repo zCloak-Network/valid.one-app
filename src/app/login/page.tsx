@@ -1,9 +1,6 @@
 import { default as useStore, observer } from "@/store";
 import { useCallback } from "react";
-import {
-  startAuthentication,
-  startRegistration,
-} from "@simplewebauthn/browser";
+import { startRegistration } from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
 import LoginBg from "@/assets/images/loginBg.png";
 import OnBoarding from "@/assets/svg/onboarding.svg";
@@ -11,6 +8,7 @@ import { actor } from "@/utils/canister";
 import { useSearchParam, useToggle } from "react-use";
 import { ResponseLayout } from "../layout";
 import LoadingButton from "@/components/LoadingButton";
+import LoginWithPasskey from "./LoginWithPasskey";
 
 export default observer(function HomePage() {
   const store = useStore();
@@ -21,24 +19,12 @@ export default observer(function HomePage() {
   const handleRegister = useCallback(async () => {
     toggle();
     try {
-      let response = await actor.start_register_new();
+      const response = await actor.start_register_new();
       const options = JSON.parse(response).publicKey;
-      console.log(`【generate register options】: ${JSON.stringify(options)}`);
+      const registrationResult = await startRegistration(options);
+      const finish_register_result = await actor.finish_register_new(JSON.stringify(registrationResult));
 
-      let registrationResult;
-      registrationResult = await startRegistration(options);
-      console.log(
-        `navigator.credentials.create(): ${JSON.stringify(registrationResult)}`
-      );
-      const finish_register_result = await actor.finish_register_new(
-        JSON.stringify(registrationResult)
-      );
-      console.log(
-        `finish_register_result: `,
-        JSON.stringify(finish_register_result)
-      );
-
-      store.User.setUser(finish_register_result);
+      store.User.login(finish_register_result);
       toggle();
       navigate(searchParams);
     } catch (error) {
@@ -47,39 +33,6 @@ export default observer(function HomePage() {
       return;
     }
   }, [store, navigate, toggle]);
-
-  const handlePasskeyLogin = useCallback(async () => {
-    if (!store.User.id) {
-      console.log(`User not logged in`);
-      return;
-    }
-    let response = await actor.start_authentication_new(store.User.id);
-    // const authOptions = { "challenge": "anI1j2hCiQtDjaek_MagaVxoDlzc2XOz83bV2Dv0vpY", "timeout": 60000, "rpId": "localhost", "allowCredentials": [{ "type": "public-key", "id": "xd8a9XI21xwQFTmDGqtpN510rZpN2-in5mwGE4AxBdQ" }], "userVerification": "preferred" };
-    const authOptions = JSON.parse(response).publicKey;
-    console.log(`【generate auth options】: ${JSON.stringify(authOptions)}`);
-
-    // step 2
-    let asseResp;
-    try {
-      asseResp = await startAuthentication({
-        ...authOptions,
-      });
-      console.log(
-        `【startAuthentication】navigator.credentials.get(): ${JSON.stringify(
-          asseResp
-        )}`
-      );
-    } catch (error) {
-      console.log(`start authencation error: `, error);
-      return;
-    }
-
-    // step 3
-    let auth_result = await actor.finish_authentication_new(
-      JSON.stringify(asseResp)
-    );
-    console.log(`auth_result ${auth_result}`);
-  }, []);
 
   return (
     <ResponseLayout>
@@ -117,12 +70,7 @@ export default observer(function HomePage() {
           >
             Create an account
           </LoadingButton>
-          <button
-            className="btn btn-primary w-full"
-            onClick={handlePasskeyLogin}
-          >
-            Sign up or Log in using Passkey
-          </button>
+          <LoginWithPasskey />
 
           <div className="text-center font-['Poppins'] text-sm font-normal text-zinc-500">
             it takes as little as 10s
