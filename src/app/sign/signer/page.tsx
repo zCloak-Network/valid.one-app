@@ -178,8 +178,7 @@ export default observer(function Signer() {
               className="checkbox-primary checkbox"
             />
             <span className="text-xs label-text">
-              Select this and we'll create a shareable link for your signed
-              message. Note: we'll store your message.
+              Check this to show your signature text publicly in our Explorer.
             </span>
           </label>
         </div>
