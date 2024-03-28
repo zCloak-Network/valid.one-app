@@ -10,8 +10,11 @@ import { shortString } from "@/utils";
 import { Link } from "react-router-dom";
 import type { SignatureResponse } from "@/types";
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { siteConfig } from "@/constants";
 import { ethereumEncode } from "@zcloak/crypto";
+
+dayjs.extend(relativeTime);
 
 export default function VerifyMessage(props: {
   open: boolean;
@@ -103,14 +106,14 @@ export default function VerifyMessage(props: {
                       signatureObject?.signer
                         ? shortString(ethereumEncode(signatureObject.signer))
                         : "Valid User"
-                    })`}</Link>
+                    }) `}</Link>
                     has signed this message at
                   </div>
                   <div className="flex text-xs text-neutral-400 gap-1 items-center">
                     <IconCloak className="h-4 w-4" />
-                    {dayjs(ICPSignResponse?.create_time).format(
+                    {`${dayjs(ICPSignResponse?.create_time).format(
                       "DD-MM-YYYY HH:mm:ss"
-                    )}
+                    )} (${dayjs().from(dayjs(ICPSignResponse?.create_time))})`}
                   </div>
                 </div>
               </div>

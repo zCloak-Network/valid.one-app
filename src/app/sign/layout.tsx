@@ -7,7 +7,7 @@ import {
   useState,
   useEffect,
 } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function HeadTab(
   props: JSX.IntrinsicAttributes &
@@ -15,6 +15,7 @@ function HeadTab(
     HTMLAttributes<HTMLDivElement>
 ) {
   const navigate = useNavigate();
+  const location = useLocation();
   const pathname = location.pathname;
 
   const [activeTab, setActiveTab] = useState(0);
