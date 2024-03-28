@@ -13,8 +13,7 @@ const SetProfile: React.FC<Props> = ({}) => {
     <>
       <div className="bg-white border flex flex-col border-blue-950 rounded-2xl h-56 pb-4 overflow-hidden">
         <div className="flex bg-gray-800 h-11 px-4 items-center justify-between">
-          <span className="text-sm text-white">Valid ID</span>
-          <span className="text-xs text-white text-opacity-80">{User.id}</span>
+          <span className="text-sm text-white">Valid ID: {User.id}</span>
         </div>
         <div className="flex flex-col h-full text-sm px-4 pt-4 text-gray-900 justify-between">
           <p>
@@ -42,7 +41,7 @@ const SetProfile: React.FC<Props> = ({}) => {
             your profile, so no need to memorize it
           </p>
           <div className="border rounded-xl flex mx-auto bg-neutral-100 border-zinc-200 h-12 my-3  w-48 items-center justify-center">
-            {User.id}
+            Valid ID: {User.id}
           </div>
           <button
             className="rounded-xl bg-gray-800 text-white w-full p-2"

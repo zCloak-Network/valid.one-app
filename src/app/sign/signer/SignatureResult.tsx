@@ -41,7 +41,7 @@ export default function SignatureResultObject(props: {
 
   return (
     <ActionModal
-      title="Signature Result"
+      title="Sign Result"
       open={openModal}
       closeByModal
       onClose={props.onClose}

@@ -12,8 +12,9 @@ export default function () {
   return (
     <div className="w-full p-4 bg-gray-800 rounded-3xl shadow">
       <div className="flex items-center justify-between">
-        <span className="text-white text-sm font-medium">Valid ID</span>
-        <span className="text-zinc-300 text-sm font-medium">{User.id}</span>
+        <span className="text-white text-sm font-medium">
+          Valid ID: {User.id}
+        </span>
       </div>
       <div className="flex items-center justify-between  mt-4">
         <div className="flex items-center gap-3">
@@ -23,7 +24,9 @@ export default function () {
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <span className="text-white text-base font-bold">{User.profile?.name}</span>
+            <span className="text-white text-base font-bold">
+              {User.profile?.name}
+            </span>
             <div className="flex gap-2">
               <a className="btn btn-circle btn-xs bg-gray-600 border-none">
                 <MediumIcon />

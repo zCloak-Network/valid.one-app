@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import type { SignatureResponse } from "@/types";
 import dayjs from "dayjs";
 import { siteConfig } from "@/constants";
+import { ethereumEncode } from "@zcloak/crypto";
 
 export default function VerifyMessage(props: {
   open: boolean;
@@ -69,7 +70,7 @@ export default function VerifyMessage(props: {
   return (
     <>
       <ActionModal
-        title="Result"
+        title="Verify Result"
         open={openModal}
         closeByModal
         onClose={props.onClose}
@@ -100,7 +101,7 @@ export default function VerifyMessage(props: {
                       }
                     >{`${ICPSignResponse?.created_by || ""}(${
                       signatureObject?.signer
-                        ? shortString(signatureObject.signer)
+                        ? shortString(ethereumEncode(signatureObject.signer))
                         : "Valid User"
                     })`}</Link>
                     has signed this message at

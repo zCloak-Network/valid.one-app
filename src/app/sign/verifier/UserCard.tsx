@@ -34,10 +34,7 @@ export default function UserCard(props: {
     <div className="flex flex-col gap-4 rounded-xl bg-gray-800 p-4">
       <div className="flex w-full items-center">
         <div className="flex-1 text-sm font-medium leading-tight tracking-tight text-white">
-          Valid ID
-        </div>
-        <div className=" text-sm font-medium text-zinc-300">
-          {props.validId}
+          Valid ID: {props.validId}
         </div>
       </div>
       <div className="flex items-center gap-2">
