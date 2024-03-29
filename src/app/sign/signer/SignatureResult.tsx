@@ -67,6 +67,7 @@ export default function SignatureResultObject(props: {
             </div>
           </div>
         </div>
+
         {props.selectFile ? (
           <InputWithCopy value={User.id} label="Valid ID:" />
         ) : (

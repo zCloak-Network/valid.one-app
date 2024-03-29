@@ -3,6 +3,7 @@ import { recoverAddress } from "@ethersproject/transactions";
 import { sha256AsU8a } from "@zcloak/crypto";
 import { SignatureResultObject } from "@/types";
 import { ethereumEncode } from "@zcloak/crypto";
+import { sha256OfString } from "@/utils";
 
 export function useValid() {
   const checkSignatureResult = (signatureResult: string) => {
@@ -37,8 +38,12 @@ export function useValid() {
   const valid = (signatureResult: string) => {
     let result = false;
     const signatureObject = checkSignatureResult(signatureResult);
-    if (signatureObject) {
-      const messageHash = sha256AsU8a(signatureObject.message);
+    if (signatureObject && signatureObject.message) {
+      const messageSHA256 = sha256OfString(signatureObject.message)?.replace(
+        /^0x/,
+        ""
+      );
+      const messageHash = sha256AsU8a(messageSHA256);
       const verifyResult = recoverAddress(
         messageHash,
         signatureObject.signature

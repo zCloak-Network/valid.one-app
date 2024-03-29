@@ -65,7 +65,7 @@ export default (function Verifier() {
                 setSignatureResult(
                   signatureResultTemplate(
                     profile?.public_key,
-                    response.content,
+                    response.hash,
                     response.signature
                   )
                 );
@@ -120,7 +120,7 @@ export default (function Verifier() {
   const finnalMessageSignatureResult = useMemo(() => {
     // TODO
     if (showUserInputMessage && userInputMessage.trim()) {
-      return `${sha256OfString(userInputMessage.trim())?.replace(/^0x/, "")}
+      return `${userInputMessage.trim()}
 ${signatureResult.trim()}`;
     } else {
       return signatureResult.trim();
@@ -155,13 +155,22 @@ ${signatureResult.trim()}`;
       <div className="mb-4 flex flex-col gap-4">
         {type === 1 && (
           <>
-            {!showUserInputMessage ? (
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text">Signature</span>
-                </div>
+            <div role="tablist" className="tabs tabs-lifted">
+              <input
+                type="radio"
+                name="my_tabs_1"
+                role="tab"
+                className="tab"
+                checked={!showUserInputMessage}
+                onChange={() => setShowUserInputMessage(!showUserInputMessage)}
+                aria-label="Signature"
+              />
+              <div
+                role="tabpanel"
+                className="tab-content bg-base-100 border-base-300 rounded-box p-2"
+              >
                 <textarea
-                  className="textarea textarea-bordered h-60 leading-normal"
+                  className="textarea h-60 leading-normal w-full"
                   placeholder={`Please paste the signature here
 e.g
 Message
@@ -173,20 +182,36 @@ sig:signature value`}
                   value={signatureResult}
                   onChange={(e) => setSignatureResult(e.target.value)}
                 ></textarea>
-              </label>
-            ) : (
-              <label className="form-control w-full">
-                <div className="label">
-                  <span className="label-text">Message</span>
-                </div>
-                <textarea
-                  className="textarea textarea-bordered h-60 leading-normal"
-                  placeholder={`Please paste the message here`}
-                  value={userInputMessage}
-                  onChange={(e) => setUserInputMessage(e.target.value)}
-                ></textarea>
-              </label>
-            )}
+              </div>
+
+              {showUserInputMessage && (
+                <>
+                  <input
+                    type="radio"
+                    name="my_tabs_1"
+                    role="tab"
+                    className="tab"
+                    checked={showUserInputMessage}
+                    onChange={() =>
+                      setShowUserInputMessage(!showUserInputMessage)
+                    }
+                    aria-label="Message"
+                  />
+
+                  <div
+                    role="tabpanel"
+                    className="tab-content bg-base-100 border-base-300 rounded-box p-2"
+                  >
+                    <textarea
+                      className="textarea h-60 leading-normal w-full"
+                      placeholder={`Please paste the message here`}
+                      value={userInputMessage}
+                      onChange={(e) => setUserInputMessage(e.target.value)}
+                    ></textarea>
+                  </div>
+                </>
+              )}
+            </div>
           </>
         )}
 
@@ -260,7 +285,14 @@ sig:signature value`}
         signatureResult={finnalMessageSignatureResult}
         ICPSignResponse={ICPSignResponse}
         open={openModal}
-        onClose={() => setOpenModal(false)}
+        onClose={() => {
+          setOpenModal(false);
+          setUserInputMessage("");
+          if (showUserInputMessage) {
+            setShowUserInputMessage(false);
+            setSignatureResult("");
+          }
+        }}
       />
     </div>
   );

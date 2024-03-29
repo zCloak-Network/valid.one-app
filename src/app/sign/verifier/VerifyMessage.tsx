@@ -91,7 +91,10 @@ export default function VerifyMessage(props: {
                 <div className="label">
                   <span className="label-text">Message</span>
                 </div>
-                <TextareaWithCopy rows={4} value={orignalMessage || ""} />
+                <TextareaWithCopy
+                  rows={4}
+                  value={signatureObject?.message || ""}
+                />
               </label>
               <div className="flex gap-3 items-center">
                 <IconSign className="h-[55px] w-[55px] relative" />

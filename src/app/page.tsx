@@ -3,6 +3,7 @@
 import { useNavigate } from "react-router-dom";
 
 import Logo from "@/assets/landing-page/logo.png";
+import Alpha from "@/assets/landing-page/alpha.png";
 import HeroBG from "@/assets/landing-page/home_bg_privacy.jpg";
 import HeroText from "@/assets/landing-page/hero-text.png";
 import solutionPic from "@/assets/landing-page/solution.jpg";
@@ -27,6 +28,7 @@ export default (function HomePage() {
     <main className="h-full bg-[#fafbff]">
       <header className="absolute left-0 w-full top-0 h-20 flex items-center px-4 bg-[#fafbff] z-10 shadow-lg">
         <img src={Logo} alt="logo" className="h-[28px] w-[28px]" />
+        <img src={Alpha} alt="alpha" className="h-[24px] ml-2" />
         <div className="flex-1"></div>
         <button
           className="btn btn-neutral bg-[#000000]"

@@ -48,7 +48,7 @@ export default observer(function Signer() {
         User.profile.public_key,
         signCont,
         ICPSignResult,
-        publicMode
+        publicMode ? messageCont : undefined
       );
     }
     return undefined;

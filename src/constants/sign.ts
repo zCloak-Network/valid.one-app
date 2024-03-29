@@ -21,13 +21,13 @@ export const signatureResultTemplate = (
   public_key: string,
   cont: string,
   hex: string,
-  publicMode?: boolean
+  publicCont?: string
 ) =>
-  publicMode
-    ? `${cont}
+  (publicCont
+    ? `${publicCont}
 `
-    : "" +
-      `===
+    : "") +
+  `===
 Valid Sign from Valid One
 ===
 signer:0x${public_key},
