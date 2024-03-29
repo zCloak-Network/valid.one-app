@@ -9,6 +9,7 @@ import { sha256OfFile, sha256OfString } from "@/utils";
 import { IoIosCloseCircle } from "react-icons/io";
 import { usePasskeyAuth } from "@/hooks";
 import type { SignatureResponse } from "@/types";
+import { saveString } from "@/api";
 
 export default observer(function Signer() {
   const { auth } = usePasskeyAuth();
@@ -62,9 +63,17 @@ export default observer(function Signer() {
 
     let publicContentKey = "";
     if (signType === 1) {
-      if (publicMode) {
+      if (publicMode && messageCont) {
         // TODO send cont to api
-        publicContentKey = "cont-key";
+        const saveStringRes = await saveString({ content: messageCont });
+        if (saveStringRes.data) {
+          publicContentKey = saveStringRes.data;
+          console.log("save string get key:", publicContentKey);
+        } else {
+          setLoading(false);
+          console.warn("save string fail, get:", saveStringRes);
+          return null;
+        }
       }
     }
     const authRequest = await auth();

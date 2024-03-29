@@ -5,7 +5,7 @@ export const saveString = ({
   createdBy = "ValidOne-ICP",
 }: {
   content: string;
-  createdBy: string;
+  createdBy?: string;
 }) => {
   return axiosInstance.post(
     "/api/sign",

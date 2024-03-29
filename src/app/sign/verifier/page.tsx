@@ -8,6 +8,7 @@ import { sha256OfFile, sha256OfString } from "@/utils";
 import { useParams } from "react-router-dom";
 import { SignatureResponse } from "@/types";
 import { signatureResultTemplate } from "@/constants";
+import { getString } from "@/api";
 
 export default (function Verifier() {
   const [type, setType] = useState<number>(1);
@@ -20,6 +21,8 @@ export default (function Verifier() {
   const [ValidID, setValidID] = useState("");
   const [ICPSignResponse, setICPSignResponse] =
     useState<SignatureResponse | null>(null);
+  const [switchUserInput, setSwitchUserInput] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const params = useParams();
 
@@ -62,22 +65,53 @@ export default (function Verifier() {
             if (profile) {
               if (response.sign_type === 1) {
                 // message valid link
-                setSignatureResult(
-                  signatureResultTemplate(
-                    profile?.public_key,
-                    response.hash,
-                    response.signature
-                  )
-                );
+                if (response.content_key) {
+                  // TODO load content
+                  getString(response.content_key).then((res) => {
+                    console.log("get string", res);
+                    if (res.data?.content) {
+                      setSignatureResult(
+                        signatureResultTemplate(
+                          profile?.public_key,
+                          response.hash,
+                          response.signature,
+                          res.data.content
+                        )
+                      );
+                      setLoading(false);
+                      setOpenModal(true);
+                    } else {
+                      console.warn("get string fail, get:", res);
+                      setLoading(false);
+                    }
+                  });
+                } else {
+                  setSignatureResult(
+                    signatureResultTemplate(
+                      profile?.public_key,
+                      response.hash,
+                      response.signature
+                    )
+                  );
+                  setLoading(false);
+                  setShowUserInputMessage(true);
+                  setSwitchUserInput(true);
+                }
               } else if (response.sign_type === 2) {
                 // TODO file valid link
+                setLoading(false);
+                setOpenModal(true);
               }
-
-              setOpenModal(true);
+            } else {
+              console.warn(
+                "get profile error by valid id:",
+                response.created_by
+              );
+              setLoading(false);
             }
           }
         })
-        .finally(() => {
+        .catch(() => {
           setLoading(false);
         });
     }
@@ -92,11 +126,8 @@ export default (function Verifier() {
       console.log("userInputMessage", userInputMessage);
       if (signatureObject) {
         if (!signatureObject.message) {
-          setShowUserInputMessage(true);
-        }
-        if (showUserInputMessage && !userInputMessage) {
-          setShowUserInputMessage(false);
-          setSignatureResult("");
+          setShowUserInputMessage(!signatureObject.message);
+          setSwitchUserInput(!signatureObject.message);
         }
       }
     }
@@ -161,8 +192,8 @@ ${signatureResult.trim()}`;
                 name="my_tabs_1"
                 role="tab"
                 className="tab"
-                checked={!showUserInputMessage}
-                onChange={() => setShowUserInputMessage(!showUserInputMessage)}
+                checked={!switchUserInput}
+                onChange={() => setSwitchUserInput(!switchUserInput)}
                 aria-label="Signature"
               />
               <div
@@ -191,10 +222,8 @@ sig:signature value`}
                     name="my_tabs_1"
                     role="tab"
                     className="tab"
-                    checked={showUserInputMessage}
-                    onChange={() =>
-                      setShowUserInputMessage(!showUserInputMessage)
-                    }
+                    checked={switchUserInput}
+                    onChange={() => setSwitchUserInput(!switchUserInput)}
                     aria-label="Message"
                   />
 
@@ -204,7 +233,7 @@ sig:signature value`}
                   >
                     <textarea
                       className="textarea h-60 leading-normal w-full"
-                      placeholder={`Please paste the message here`}
+                      placeholder={`Please input the message here`}
                       value={userInputMessage}
                       onChange={(e) => setUserInputMessage(e.target.value)}
                     ></textarea>
@@ -290,6 +319,7 @@ sig:signature value`}
           setUserInputMessage("");
           if (showUserInputMessage) {
             setShowUserInputMessage(false);
+            setSwitchUserInput(false);
             setSignatureResult("");
           }
         }}
