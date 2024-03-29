@@ -50,16 +50,16 @@ export default function () {
               </span>
               <div className="flex gap-2">
                 <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-                  <MediumIcon />
+                  {/* <MediumIcon /> */}
                 </a>
                 <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-                  <XIcon />
+                  {/* <XIcon /> */}
                 </a>
                 <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-                  <InsIcon />
+                  {/* <InsIcon /> */}
                 </a>
                 <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-                  <DyIcon />
+                  {/* <DyIcon /> */}
                 </a>
               </div>
               <span className="text-white text-base font-bold">

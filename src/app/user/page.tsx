@@ -16,7 +16,9 @@ interface ItemProps {
 function Item({ label, value }: ItemProps) {
   return (
     <div className="flex flex-col">
-      <span className="text-center text-slate-900 text-lg font-bold">{value}</span>
+      <span className="text-center text-slate-900 text-lg font-bold">
+        {value}
+      </span>
       <span className="text-center text-slate-500 text-sm">{label}</span>
     </div>
   );
@@ -26,7 +28,9 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const { validId } = params;
 
   await initActor();
-  const result = validId ? await actor.user_profile_get(parseInt(validId)) : null;
+  const result = validId
+    ? await actor.user_profile_get(parseInt(validId))
+    : null;
 
   const profile: UserData | undefined = result?.[0]
     ? {
@@ -40,12 +44,19 @@ export async function loader({ params }: LoaderFunctionArgs) {
 }
 
 export default observer(function User() {
-  const { profile } = useLoaderData() as { validId: string; profile: UserData | undefined };
+  const { profile } = useLoaderData() as {
+    validId: string;
+    profile: UserData | undefined;
+  };
 
   return (
     <div className="p-6 w-full h-full bg-gray-50">
       <div>
-        <Link className="absolute rounded-lg border border-zinc-300 p-2" to={"/id"} replace>
+        <Link
+          className="absolute rounded-lg border border-zinc-300 p-2"
+          to={"/id"}
+          replace
+        >
           <IconBack />
         </Link>
       </div>
@@ -56,41 +67,47 @@ export default observer(function User() {
               <img src={profile?.avatar} />
             </div>
           </div>
-          <button className="btn rounded-xl bg-gray-800 text-white">+Follow</button>
+          {/* <button className="btn rounded-xl bg-gray-800 text-white">+Follow</button> */}
         </div>
 
-        <div className=" text-slate-900 text-lg font-extrabold leading-relaxed tracking-tight">{profile?.name}</div>
-        <div className=" text-slate-900 text-xs font-normal leading-none tracking-tight">{profile?.bio}</div>
+        <div className=" text-slate-900 text-lg font-extrabold leading-relaxed tracking-tight">
+          {profile?.name}
+        </div>
+        <div className=" text-slate-900 text-xs font-normal leading-none tracking-tight">
+          {profile?.bio}
+        </div>
         <div className="flex gap-2">
           <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-            <MediumIcon />
+            {/* <MediumIcon /> */}
           </a>
           <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-            <XIcon />
+            {/* <XIcon /> */}
           </a>
           <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-            <InsIcon />
+            {/* <InsIcon /> */}
           </a>
           <a className="btn btn-circle btn-xs bg-gray-600 border-none">
-            <DyIcon />
+            {/* <DyIcon /> */}
           </a>
         </div>
         <div className="h-px border border-gray-100"></div>
         <div className="flex gap-4 items-center justify-between">
-          <Item value="2.1M" label="Followers" />
+          <Item value="0" label="Followers" />
           <div className="w-7 h-px origin-center rotate-90 border border-slate-200"></div>
-          <Item value="2459" label="Following" />
+          <Item value="0" label="Following" />
           <div className="w-7 h-px origin-center rotate-90 border border-slate-200"></div>
-          <Item value="290" label="Connected" />
+          <Item value="0" label="Connected" />
         </div>
-        <div className="w-full h-16 bg-white rounded-xl shadow mt-5 flex items-center px-3">
+        {/* <div className="w-full h-16 bg-white rounded-xl shadow mt-5 flex items-center px-3">
           <div className="w-8 h-7 bg-blue-700 bg-opacity-20 rounded-full" />
           <div className="w-11 h-7 relative -left-4">
             <div className="w-8 h-7 left-0 top-0 absolute bg-blue-700 rounded-full" />
             <div className="w-8 h-7 left-[15.28px] top-0 absolute bg-gray-700 rounded-full" />
           </div>
-          <div className="text-gray-800 text-xs font-medium">14 of your followings also follow this user</div>
-        </div>
+          <div className="text-gray-800 text-xs font-medium">
+            14 of your followings also follow this user
+          </div>
+        </div> */}
       </div>
     </div>
   );

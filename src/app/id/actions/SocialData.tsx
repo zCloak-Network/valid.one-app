@@ -20,9 +20,9 @@ export default function SocialData() {
 
   return (
     <div className="flex gap-4">
-      <Item value="2.1M" label="Followers" />
-      <Item value="2459" label="Following" />
-      <Item value="290" label="Connected" />
+      <Item value="0" label="Followers" />
+      <Item value="0" label="Following" />
+      <Item value="0" label="Connected" />
     </div>
   );
 }

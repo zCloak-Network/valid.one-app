@@ -5,7 +5,7 @@ export default function () {
         <span className="text-white text-sm font-semibold">Quick Actions</span>
       </div>
       <div className="p-4 flex flex-col item-center gap-4">
-        <button className="btn w-full">View Connections</button>
+        {/* <button className="btn w-full">View Connections</button> */}
         <button className="btn w-full">Submit Feedback</button>
       </div>
     </div>
