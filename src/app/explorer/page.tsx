@@ -9,9 +9,13 @@ export const PageSize = 10;
 export const DefaultPage = 1;
 
 export default function Explorer() {
-  const { data, loading } = useGetSigs(DefaultPage, PageSize);
-  const pagesize = useMemo(() => (data?.size ? Math.ceil(data.size / PageSize) : DefaultPage), [data]);
   const [page, setPage] = useState<number>(DefaultPage);
+  const { data, loading } = useGetSigs(page, PageSize);
+  const pagesize = useMemo(
+    () => (data?.size ? Math.ceil(data.size / PageSize) : DefaultPage),
+    [data]
+  );
+
   const { uuid } = useParams<{ uuid: string }>();
   const [sigOrUUID, setSigOrUUID] = useState<string>(uuid ?? "");
 
@@ -25,7 +29,8 @@ export default function Explorer() {
     [sigOrUUID]
   );
 
-  const { loading: queryLoading, data: queryData } = useQuerySigs(debouncedValue);
+  const { loading: queryLoading, data: queryData } =
+    useQuerySigs(debouncedValue);
 
   return (
     <div>
@@ -35,7 +40,9 @@ export default function Explorer() {
       <div className="w-full px-20 pt-8">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-neutral-900 text-3xl font-extrabold leading-10">Valid Explorer</div>
+            <div className="text-neutral-900 text-3xl font-extrabold leading-10">
+              Valid Explorer
+            </div>
             <div className="text-gray-500 text-sm font-normal mt-3 leading-tight py-8">
               Explore recent signatures posted from Valid Sign
             </div>
@@ -61,7 +68,9 @@ export default function Explorer() {
                 className="grow focus:outline-none"
                 placeholder="Search by signature, or hash value of the signed object"
               />
-              {queryLoading && <span className="loading loading-spinner loading-sm"></span>}
+              {queryLoading && (
+                <span className="loading loading-spinner loading-sm"></span>
+              )}
             </label>
           </div>
         </div>
@@ -82,7 +91,13 @@ export default function Explorer() {
               ) : (
                 <>
                   {uuid || debouncedValue ? (
-                    <>{queryData ? <Row data={queryData} /> : <div className="py-6 text-gray-400">No Data.</div>}</>
+                    <>
+                      {queryData ? (
+                        <Row data={queryData} />
+                      ) : (
+                        <div className="py-6 text-gray-400">No Data.</div>
+                      )}
+                    </>
                   ) : (
                     <>
                       {data?.result.map((item) => (

@@ -2,9 +2,10 @@
 import { useState, useEffect, useRef, useMemo } from "react";
 import { signTypes } from "@/constants";
 import VerifyMessage from "./VerifyMessage";
+import VerifyFile from "./VerifyFile";
 import { getRecordByUUID, getProfileById, useValid } from "@/hooks";
 import { IoIosCloseCircle } from "react-icons/io";
-import { sha256OfFile, sha256OfString } from "@/utils";
+import { sha256OfFile } from "@/utils";
 import { useParams } from "react-router-dom";
 import { SignatureResponse } from "@/types";
 import { signatureResultTemplate } from "@/constants";
@@ -15,7 +16,8 @@ export default (function Verifier() {
   const [signatureResult, setSignatureResult] = useState("");
   const [userInputMessage, setUserInputMessage] = useState("");
   const [showUserInputMessage, setShowUserInputMessage] = useState(false);
-  const [openModal, setOpenModal] = useState(false);
+  const [openMessageModal, setOpenMessageModal] = useState(false);
+  const [openFileModal, setOpenFileModal] = useState(false);
   const [fileSHA256, setFileSHA256] = useState("");
   const [selectFile, setSelectFile] = useState<File | undefined>();
   const [ValidID, setValidID] = useState("");
@@ -79,7 +81,7 @@ export default (function Verifier() {
                         )
                       );
                       setLoading(false);
-                      setOpenModal(true);
+                      setOpenMessageModal(true);
                     } else {
                       console.warn("get string fail, get:", res);
                       setLoading(false);
@@ -100,7 +102,7 @@ export default (function Verifier() {
               } else if (response.sign_type === 2) {
                 // TODO file valid link
                 setLoading(false);
-                setOpenModal(true);
+                setOpenMessageModal(true);
               }
             } else {
               console.warn(
@@ -122,8 +124,7 @@ export default (function Verifier() {
   useEffect(() => {
     if (signatureResult) {
       const { signatureObject } = valid(signatureResult);
-      console.log("signatureObject", signatureObject);
-      console.log("userInputMessage", userInputMessage);
+
       if (signatureObject) {
         if (!signatureObject.message) {
           setShowUserInputMessage(!signatureObject.message);
@@ -144,8 +145,11 @@ export default (function Verifier() {
   };
 
   const handleVerify = () => {
-    console.log(finnalMessageSignatureResult);
-    setOpenModal(true);
+    if (type === 1) {
+      setOpenMessageModal(true);
+    } else {
+      setOpenFileModal(true);
+    }
   };
 
   const finnalMessageSignatureResult = useMemo(() => {
@@ -313,15 +317,25 @@ sig:signature value`}
         userInputMessage={userInputMessage}
         signatureResult={finnalMessageSignatureResult}
         ICPSignResponse={ICPSignResponse}
-        open={openModal}
+        open={openMessageModal}
         onClose={() => {
-          setOpenModal(false);
+          setOpenMessageModal(false);
           setUserInputMessage("");
           if (showUserInputMessage) {
             setShowUserInputMessage(false);
             setSwitchUserInput(false);
             setSignatureResult("");
           }
+        }}
+      />
+
+      {/* VerifyFile */}
+      <VerifyFile
+        fileHash={fileSHA256}
+        validId={ValidID ? Number(ValidID) : undefined}
+        open={openFileModal}
+        onClose={() => {
+          setOpenFileModal(false);
         }}
       />
     </div>
