@@ -1,4 +1,4 @@
-import { axiosInstance } from "@/utils/axiosInstance";
+import { axiosInstance } from "@/utils";
 
 export const getGenerateOptions = (params: {
   address: string;

@@ -6,7 +6,7 @@ import { usePasskeyAuth, useStore } from "@/hooks";
 import { actor } from "@/utils/canister";
 import { observer } from "@/store";
 import { useToggle } from "react-use";
-import { axiosCardService } from "@/utils/axiosCardService";
+import { upload } from "@/api";
 import { Link, useNavigate } from "react-router-dom";
 const maxLength = 200;
 
@@ -24,7 +24,9 @@ const EditProfile = () => {
   useEffect(() => {
     setName(User.profile?.name || "");
     setBio(User.profile?.bio || "");
-    setAvatarUrl(User.profile?.avatar === "" ? undefined : User.profile?.avatar);
+    setAvatarUrl(
+      User.profile?.avatar === "" ? undefined : User.profile?.avatar
+    );
   }, [User.profile]);
   const handelSave = useCallback(async () => {
     try {
@@ -34,12 +36,17 @@ const EditProfile = () => {
       if (avatarFile) {
         const formData = new FormData();
         formData.append("file", avatarFile, avatarFile.name);
-        avatarResult = (await axiosCardService.post("/api/s3/upload", formData)).data;
+        avatarResult = (await upload(formData)).data;
       }
 
       if (!avatarResult) return console.warn("no avatar.");
 
-      const data = await actor.user_profile_edit(authRequest, avatarResult, name, bio);
+      const data = await actor.user_profile_edit(
+        authRequest,
+        avatarResult,
+        name,
+        bio
+      );
       await User.getProfile();
       navigate("/id");
       console.log("[ data ] >", data);
@@ -59,15 +66,20 @@ const EditProfile = () => {
   return (
     <div className="px-5 flex-1 flex flex-col overflow-hidden">
       <div className="flex items-center py-4 relative">
-        <Link className="absolute rounded-lg border border-zinc-300 p-2" to={"/id"} replace>
+        <Link
+          className="absolute rounded-lg border border-zinc-300 p-2"
+          to={"/id"}
+          replace
+        >
           <IconBack />
         </Link>
         <p className="text-gray-800 text-lg font-bold mx-auto">Edit Profile</p>
       </div>
       <div className="flex-1 overflow-auto">
         <p className="w-full text-neutral-400 text-sm font-medium mt-5">
-          Here, you'll merge different elements of your digital identity to create a complete online profile. Note that
-          we'll verify the details you provide
+          Here, you'll merge different elements of your digital identity to
+          create a complete online profile. Note that we'll verify the details
+          you provide
         </p>
 
         <div className="flex w-full justify-center mt-8">
