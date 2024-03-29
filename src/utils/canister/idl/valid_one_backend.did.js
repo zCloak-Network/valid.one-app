@@ -2,7 +2,8 @@ export const idlFactory = ({ IDL }) => {
   const Sign = IDL.Record({
     'modify_time' : IDL.Nat64,
     'signature' : IDL.Text,
-    'content' : IDL.Text,
+    'content_key' : IDL.Text,
+    'hash' : IDL.Text,
     'uuid' : IDL.Text,
     'created_by' : IDL.Nat32,
     'create_time' : IDL.Nat64,
@@ -71,10 +72,15 @@ export const idlFactory = ({ IDL }) => {
         ],
         [],
       ),
+    'sign_get_by_hash' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Nat32)],
+        [IDL.Opt(IDL.Vec(Sign))],
+        ['query'],
+      ),
     'sign_get_by_signature' : IDL.Func([IDL.Text], [IDL.Opt(Sign)], ['query']),
     'sign_get_by_uuid' : IDL.Func([IDL.Text], [IDL.Opt(Sign)], ['query']),
     'sign_insert' : IDL.Func(
-        [IDL.Text, IDL.Nat8, IDL.Text],
+        [IDL.Text, IDL.Nat8, IDL.Text, IDL.Text],
         [IDL.Variant({ 'Ok' : Sign, 'Err' : IDL.Text })],
         [],
       ),

@@ -68,7 +68,13 @@ export default observer(function Signer() {
       }
     }
     const authRequest = await auth();
-    const res = await actor.sign_insert(authRequest, signType, signCont);
+
+    const res = await actor.sign_insert(
+      authRequest,
+      signType,
+      signCont,
+      publicContentKey
+    );
     console.log(User.id, signType, signCont, "sign result", res);
 
     if ((res as any)["Ok"]?.signature) {

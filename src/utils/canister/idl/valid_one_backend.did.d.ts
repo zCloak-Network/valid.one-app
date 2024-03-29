@@ -5,7 +5,8 @@ import type { IDL } from '@dfinity/candid';
 export interface Sign {
   'modify_time' : bigint,
   'signature' : string,
-  'content' : string,
+  'content_key' : string,
+  'hash' : string,
   'uuid' : string,
   'created_by' : number,
   'create_time' : bigint,
@@ -44,10 +45,11 @@ export interface _SERVICE {
     { 'Ok' : { 'signature_hex' : string } } |
       { 'Err' : string }
   >,
+  'sign_get_by_hash' : ActorMethod<[string, [] | [number]], [] | [Array<Sign>]>,
   'sign_get_by_signature' : ActorMethod<[string], [] | [Sign]>,
   'sign_get_by_uuid' : ActorMethod<[string], [] | [Sign]>,
   'sign_insert' : ActorMethod<
-    [string, number, string],
+    [string, number, string, string],
     { 'Ok' : Sign } |
       { 'Err' : string }
   >,
@@ -70,4 +72,4 @@ export interface _SERVICE {
   >,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
