@@ -203,7 +203,7 @@ export default observer(function Signer() {
               className="checkbox-primary checkbox"
             />
             <span className="text-xs label-text">
-              Check this to show your signature text publicly in our Explorer.
+              Make your message public.
             </span>
           </label>
         </div>
