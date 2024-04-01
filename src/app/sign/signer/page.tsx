@@ -41,7 +41,7 @@ export default observer(function Signer() {
       return undefined;
     }
     if (!User.profile?.public_key) {
-      navigate("/id/edit");
+      navigate("/id/profile/edit");
       return undefined;
     }
     if (signCont && ICPSignResult) {

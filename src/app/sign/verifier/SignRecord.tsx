@@ -25,7 +25,7 @@ export default function SignRecord(props: {
             className="text-neutral-400 link"
             to={
               props.ICPSignResponse?.created_by
-                ? `/user/${props.ICPSignResponse.created_by}`
+                ? `/id/${props.ICPSignResponse.created_by}`
                 : ""
             }
           >{`${props.ICPSignResponse?.created_by || ""}(${

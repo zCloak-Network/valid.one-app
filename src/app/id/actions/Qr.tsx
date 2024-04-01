@@ -2,10 +2,10 @@ import QrIcon from "@/assets/svg/icon/icon_qr.svg?react";
 import { QRCodeGenerator } from "@/components";
 import { useStore } from "@/hooks";
 import { useMemo, useRef } from "react";
-import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
-import XIcon from "@/assets/svg/icon/icon_x.svg?react";
-import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
-import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
+// import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
+// import XIcon from "@/assets/svg/icon/icon_x.svg?react";
+// import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
+// import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
 import { siteConfig } from "@/constants";
 // import { siteConfig } from "@/constants";
 
@@ -18,7 +18,7 @@ export default function () {
     }
   };
 
-  const qrLink = useMemo(() => `${siteConfig.url}/user/${User.id}`, [User.id]);
+  const qrLink = useMemo(() => `${siteConfig.url}/id/${User.id}`, [User.id]);
 
   return (
     <div className="w-full">
