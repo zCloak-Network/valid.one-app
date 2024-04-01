@@ -15,15 +15,7 @@ export default observer(function AccountPage() {
   }, [User]);
   return (
     <div className="h-[100vh] pb-20">
-      <div
-        className="h-[350px] w-full p-5 flex flex-col items-center gap-8"
-        style={{
-          backgroundImage: `url(${AccountBg})`,
-          backgroundSize: "cover",
-          backgroundRepeat: "no-repeat",
-          backgroundPosition: "center",
-        }}
-      >
+      <div className="h-[350px] w-full p-5 flex flex-col items-center gap-8 bg-[#273238]">
         <div className="text-center text-white text-lg font-extrabold">
           Account
         </div>
