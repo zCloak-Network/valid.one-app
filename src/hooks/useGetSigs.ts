@@ -16,7 +16,7 @@ export function useGetSigs(page: number, size: number) {
 }
 
 function isUUID(uuid: string) {
-  return uuid.length === 20;
+  return uuid.length === 28;
 }
 
 export function useQuerySigs(sigOrUUID: string) {
