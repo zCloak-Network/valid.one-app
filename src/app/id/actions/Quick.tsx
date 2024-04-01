@@ -1,12 +1,16 @@
+import { FEEDBACK_FORM_URL } from "@/constants";
+
 export default function () {
   return (
-    <div className="w-full h-48 bg-white rounded-2xl border border-blue-950 overflow-hidden mt-6">
-      <div className="w-full h-11 bg-gray-800 flex items-center px-4">
-        <span className="text-white text-sm font-semibold">Quick Actions</span>
+    <div className="bg-white border border-blue-950 rounded-2xl h-48 mt-6 w-full overflow-hidden">
+      <div className="flex bg-gray-800 h-11 w-full px-4 items-center">
+        <span className="font-semibold text-white text-sm">Quick Actions</span>
       </div>
-      <div className="p-4 flex flex-col item-center gap-4">
-        {/* <button className="btn w-full">View Connections</button> */}
-        <button className="btn w-full">Submit Feedback</button>
+      <div className="flex flex-col p-4 gap-4 item-center">
+        {/* <button className="w-full btn">View Connections</button> */}
+        <a href={FEEDBACK_FORM_URL} target="_blank" className="w-full btn">
+          Submit Feedback
+        </a>
       </div>
     </div>
   );

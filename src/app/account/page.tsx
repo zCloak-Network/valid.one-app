@@ -1,9 +1,9 @@
 import { observer } from "@/store";
-import AccountBg from "@/assets/svg/account_bg.svg";
 import { useStore } from "@/hooks";
 import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ethereumEncode } from "@zcloak/crypto";
+import { FEEDBACK_FORM_URL } from "@/constants";
 
 export default observer(function AccountPage() {
   const { User } = useStore();
@@ -33,7 +33,9 @@ export default observer(function AccountPage() {
         </div>
       </div>
       <div className="flex flex-col p-5 gap-5 items-center">
-        <button className="w-full btn">Submit Feedback</button>
+        <a href={FEEDBACK_FORM_URL} target="_blank" className="w-full btn">
+          Submit Feedback
+        </a>
         <button
           className="bg-gray-800 text-white text-base w-full btn"
           onClick={signOut}

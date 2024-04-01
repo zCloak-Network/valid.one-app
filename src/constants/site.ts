@@ -5,3 +5,6 @@ export const siteConfig = {
   /** Without additional '/' on the end, e.g. https://theodorusclarence.com */
   url: "https://zkid.io",
 };
+
+export const FEEDBACK_FORM_URL =
+  "https://docs.google.com/forms/d/e/1FAIpQLSfSeKY4E40LMJ0K9bx4K0XzQ1MA4U6CoD1cRWTRHL0L_aDwWQ/viewform?usp=pp_url";
