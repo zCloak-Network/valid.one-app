@@ -1,4 +1,4 @@
-import { USERS_LIST, USER_VALID_ID } from "@/constants";
+import { USER_VALID_ID } from "@/constants";
 import { getProfileById } from "@/hooks";
 import { UserProfile } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -24,9 +24,8 @@ export default class User {
   }
 
   async initUser() {
-    this.loadUsers();
     this.getUserId();
-    
+
     if (this.id) {
       await this.getProfile();
     }
@@ -61,15 +60,6 @@ export default class User {
     this.id = result ? (JSON.parse(result) as number) : null;
   }
 
-  private loadUsers() {
-    const users = localStorage.getItem(USERS_LIST);
-    this.users = users ? JSON.parse(users) : [];
-  }
-
-  private saveUserList() {
-    localStorage.setItem(USERS_LIST, JSON.stringify(this.users));
-  }
-
   async switchUser(id: number) {
     if (this.users.includes(id)) {
       this.id = id;
@@ -90,7 +80,6 @@ export default class User {
   async login(id: number) {
     if (!this.users.includes(id)) {
       this.users.push(id);
-      this.saveUserList();
     }
     this.id = id;
     this.saveCurrentUser(id);

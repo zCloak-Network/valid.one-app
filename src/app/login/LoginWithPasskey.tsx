@@ -31,6 +31,7 @@ export default observer(function HomePage() {
     let auth_result = await actor.finish_authentication_new(
       JSON.stringify(asseResp)
     );
+
     toggle();
     auth_result === store.User.id && navigate("/id");
   }, [store]);
@@ -38,7 +39,7 @@ export default observer(function HomePage() {
   return (
     <>
       <LoadingButton
-        className="btn btn-primary w-full"
+        className="w-full btn btn-primary"
         onClick={handlePasskeyLogin}
         loading={loading}
       >
