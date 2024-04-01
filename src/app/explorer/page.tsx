@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useGetSigs, useQuerySigs } from "@/hooks";
 import { useMemo, useState } from "react";
 import { useDebounce } from "react-use";
+
 export const PageSize = 10;
 export const DefaultPage = 1;
 
@@ -81,8 +82,9 @@ export default function Explorer() {
                 <td>Time</td>
                 <td>Signer</td>
                 <td>Signature</td>
-                <td>Signed Object</td>
                 <td>Object Type</td>
+                <td>Object Hash</td>
+                <td>Sign Mode</td>
               </tr>
             </thead>
             <tbody>
