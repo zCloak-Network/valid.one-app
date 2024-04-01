@@ -39,11 +39,11 @@ const EditProfile = () => {
         avatarResult = (await upload(formData)).data;
       }
 
-      if (!avatarResult) return console.warn("no avatar.");
+      // if (!avatarResult) return alert("Avatar is required.");
 
       const data = await actor.user_profile_edit(
         authRequest,
-        avatarResult,
+        avatarResult || "",
         name,
         bio
       );
