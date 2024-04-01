@@ -33,7 +33,7 @@ export default function SignatureResultObject(props: {
 
   const validLinkUrl = useMemo(() => {
     if (props.ICPSignResponse) {
-      return `${siteConfig.url}/sign/verifier/${props.ICPSignResponse.uuid}`;
+      return `${siteConfig.url}/#/sign/verifier/${props.ICPSignResponse.uuid}`;
     }
     return "";
   }, [props.ICPSignResponse]);

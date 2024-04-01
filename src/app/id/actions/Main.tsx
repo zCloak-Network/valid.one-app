@@ -44,7 +44,7 @@ export default function () {
           </div>
         </div>
         <Link
-          to={{ pathname: "edit" }}
+          to={{ pathname: "profile/edit" }}
           className="btn btn-sm text-neutral-400 text-xs font-bold rounded-lg border border-neutral-400 bg-transparent"
         >
           Edit

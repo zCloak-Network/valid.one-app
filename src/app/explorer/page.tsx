@@ -1,10 +1,11 @@
 import Logo from "@/assets/svg/logo_explorer.svg?react";
 import Row, { SkeletonRows } from "./Row";
 import Pagination from "@mui/material/Pagination";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetSigs, useQuerySigs } from "@/hooks";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
+
 export const PageSize = 10;
 export const DefaultPage = 1;
 
@@ -17,13 +18,17 @@ export default function Explorer() {
   );
 
   const { uuid } = useParams<{ uuid: string }>();
-  const [sigOrUUID, setSigOrUUID] = useState<string>(uuid ?? "");
+  const [sigOrUUID, setSigOrUUID] = useState<string | undefined>(uuid);
 
-  const [debouncedValue, setDebouncedValue] = useState("");
+  useEffect(() => {
+    setSigOrUUID(uuid);
+  }, [uuid]);
+
+  const [debouncedValue, setDebouncedValue] = useState<string>("");
 
   const [, cancel] = useDebounce(
     () => {
-      setDebouncedValue(sigOrUUID);
+      setDebouncedValue(sigOrUUID || "");
     },
     500,
     [sigOrUUID]
@@ -33,16 +38,21 @@ export default function Explorer() {
     useQuerySigs(debouncedValue);
 
   return (
-    <div>
+    <div className="flex flex-col h-[100vh]">
       <div className="w-full h-20 bg-white border-b border-zinc-100 flex items-center px-10">
-        <Logo />
+        <Link to={"/"}>
+          <Logo />
+        </Link>
       </div>
-      <div className="w-full px-20 pt-8">
+      <div className="w-full px-20 pt-8 flex-1 overflow-hidden flex flex-col">
         <div className="flex items-center justify-between">
           <div>
-            <div className="text-neutral-900 text-3xl font-extrabold leading-10">
+            <Link
+              to="/explorer"
+              className="text-neutral-900 text-3xl font-extrabold leading-10"
+            >
               Valid Explorer
-            </div>
+            </Link>
             <div className="text-gray-500 text-sm font-normal mt-3 leading-tight py-8">
               Explore recent signatures posted from Valid Sign
             </div>
@@ -74,15 +84,16 @@ export default function Explorer() {
             </label>
           </div>
         </div>
-        <div className="overflow-x-auto">
+        <div className="flex-1 overflow-auto">
           <table className="table table-pin-rows table-pin-cols">
             <thead>
               <tr className="bg-neutral-50">
                 <td>Time</td>
                 <td>Signer</td>
                 <td>Signature</td>
-                <td>Signed Object</td>
                 <td>Object Type</td>
+                <td>Object Hash</td>
+                <td>Sign Mode</td>
               </tr>
             </thead>
             <tbody>

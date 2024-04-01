@@ -4,6 +4,8 @@ import { useState, useEffect } from "react";
 import { getSigsByHash } from "@/hooks";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import SignRecord from "./SignRecord";
+import type { SignatureResponse } from "@/types";
 
 dayjs.extend(relativeTime);
 
@@ -15,6 +17,7 @@ export default function VerifyFile(props: {
 }) {
   const [openModal, setOpenModal] = useState(false);
   const [fileSHA256, setFileSHA256] = useState<string | null>(null);
+  const [list, setList] = useState<SignatureResponse[]>([]);
 
   useEffect(() => {
     setOpenModal(props.open);
@@ -24,6 +27,16 @@ export default function VerifyFile(props: {
         const paramsHash = props.fileHash.replace(/^0x/, "");
         getSigsByHash(paramsHash, props.validId).then((res) => {
           console.log("get file sign list,", paramsHash, res);
+          res?.[0] &&
+            setList(
+              res[0].map((e) => {
+                return {
+                  ...e,
+                  create_time: Number(e.create_time),
+                  modify_time: Number(e.modify_time),
+                };
+              })
+            );
         });
       }
     } else {
@@ -47,7 +60,13 @@ export default function VerifyFile(props: {
               </div>
               <TextareaWithCopy rows={4} value={fileSHA256 || ""} />
             </label>
-            <div className="flex gap-3 items-center">list todo</div>
+            <div className="flex flex-col gap-4">
+              {list.map((record) => {
+                return (
+                  <SignRecord key={record.uuid} ICPSignResponse={record} />
+                );
+              })}
+            </div>
 
             <div className="border-t"></div>
 

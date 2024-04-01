@@ -6,7 +6,6 @@ import NoFound from "./not-found";
 import Id from "./id";
 import Sign from "./sign";
 import Account from "./account";
-import User from "./user";
 import Explorer from "./explorer";
 
 const rootRouter = [
@@ -21,7 +20,6 @@ const rootRouter = [
       },
       ...Id,
       ...Sign,
-      ...User,
       ...Account,
     ],
   },

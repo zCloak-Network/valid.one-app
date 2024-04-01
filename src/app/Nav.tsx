@@ -43,7 +43,7 @@ const navTabs: NavTab[] = [
   },
 ];
 
-const hiddenPaths = ["/user/:validId", "/id/edit"];
+const hiddenPaths = ["/id/:validId", "/id/profile/edit"];
 
 const Nav = () => {
   const location = useLocation();

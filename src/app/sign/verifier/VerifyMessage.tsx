@@ -1,20 +1,12 @@
 "use client";
 import { ActionModal, TextareaWithCopy } from "@/components";
-import { useState, useEffect, useMemo } from "react";
-import IconSign from "@/assets/svg/icon_sign.svg?react";
-import IconCloak from "@/assets/svg/clock.svg?react";
+import { useState, useEffect } from "react";
 import UserCard from "./UserCard";
 import { useValid, getRecordBySignature } from "@/hooks";
 import { SignatureResultObject } from "@/types";
-import { shortString } from "@/utils";
-import { Link } from "react-router-dom";
 import type { SignatureResponse } from "@/types";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
 import { siteConfig } from "@/constants";
-import { ethereumEncode } from "@zcloak/crypto";
-
-dayjs.extend(relativeTime);
+import SignRecord from "./SignRecord";
 
 export default function VerifyMessage(props: {
   open: boolean;
@@ -84,7 +76,12 @@ export default function VerifyMessage(props: {
         closeByModal
         onClose={props.onClose}
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 relative">
+          {loading && (
+            <div className="absolute left-0 w-full top-0 h-full flex items-center justify-center">
+              <span className="loading loading-ring loading-md"></span>
+            </div>
+          )}
           {isValid ? (
             <>
               <label className="form-control">
@@ -96,33 +93,10 @@ export default function VerifyMessage(props: {
                   value={signatureObject?.message || ""}
                 />
               </label>
-              <div className="flex gap-3 items-center">
-                <IconSign className="h-[55px] w-[55px] relative" />
-
-                <div className="flex flex-col flex-1 gap-1 items-start">
-                  <div className="text-sm">
-                    <Link
-                      className="text-neutral-400 link"
-                      to={
-                        ICPSignResponse?.created_by
-                          ? `/user/${ICPSignResponse.created_by}`
-                          : ""
-                      }
-                    >{`${ICPSignResponse?.created_by || ""}(${
-                      signatureObject?.signer
-                        ? shortString(ethereumEncode(signatureObject.signer))
-                        : "Valid User"
-                    }) `}</Link>
-                    has signed this message at
-                  </div>
-                  <div className="flex text-xs text-neutral-400 gap-1 items-center">
-                    <IconCloak className="h-4 w-4" />
-                    {`${dayjs(ICPSignResponse?.create_time).format(
-                      "DD-MM-YYYY HH:mm:ss"
-                    )} (${dayjs().from(dayjs(ICPSignResponse?.create_time))})`}
-                  </div>
-                </div>
-              </div>
+              <SignRecord
+                signatureObject={signatureObject}
+                ICPSignResponse={ICPSignResponse}
+              />
 
               <div className="border-t"></div>
 
@@ -137,11 +111,11 @@ export default function VerifyMessage(props: {
                   </span>
                   <span className="text-blue-600 ">: </span>
                   <a
-                    href={`${siteConfig.url}/explorer/${ICPSignResponse.uuid}`}
+                    href={`${siteConfig.url}/#/explorer/${ICPSignResponse.uuid}`}
                     target="_blank"
                     className="text-blue-600 underline"
                   >
-                    {`${siteConfig.url}/explorer/${ICPSignResponse.uuid}`}
+                    {`${siteConfig.url}/#/explorer/${ICPSignResponse.uuid}`}
                   </a>
                 </div>
               )}

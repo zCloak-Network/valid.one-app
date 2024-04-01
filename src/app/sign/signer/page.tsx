@@ -41,7 +41,7 @@ export default observer(function Signer() {
       return undefined;
     }
     if (!User.profile?.public_key) {
-      navigate("/id/edit");
+      navigate("/id/profile/edit");
       return undefined;
     }
     if (signCont && ICPSignResult) {
@@ -203,7 +203,7 @@ export default observer(function Signer() {
               className="checkbox-primary checkbox"
             />
             <span className="text-xs label-text">
-              Check this to show your signature text publicly in our Explorer.
+              Make your message public.
             </span>
           </label>
         </div>
