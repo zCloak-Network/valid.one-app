@@ -43,7 +43,7 @@ export default observer(function HomePage() {
         onClick={handlePasskeyLogin}
         loading={loading}
       >
-        Sign up or Log in using Passkey
+        Log in using passkey
       </LoadingButton>
     </>
   );

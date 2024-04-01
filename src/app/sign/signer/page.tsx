@@ -129,10 +129,12 @@ export default observer(function Signer() {
     <div className="rounded-xl bg-[#F9FAFB] p-4">
       <div className="border rounded-xl flex border-zinc-200 h-[52px] mb-4 p-4 gap-2 items-center">
         <div className="h-6 w-6 relative">
-          <img
-            src={User.profile?.avatar}
-            className="rounded-full bg-zinc-300 h-[22px] top-[1px] left-[1px] w-[22px] absolute"
-          />
+          {User.profile?.avatar && (
+            <img
+              src={User.profile?.avatar}
+              className="rounded-full bg-zinc-300 h-[22px] top-[1px] left-[1px] w-[22px] absolute"
+            />
+          )}
         </div>
         <div className="font-medium text-sm text-gray-900">{User.id}</div>
       </div>
@@ -195,7 +197,7 @@ export default observer(function Signer() {
 
       {signType === 1 && (
         <div className="form-control">
-          <label className="cursor-pointer label justify-start gap-2">
+          <label className="cursor-pointer gap-2 label justify-start">
             <input
               type="checkbox"
               checked={publicMode}

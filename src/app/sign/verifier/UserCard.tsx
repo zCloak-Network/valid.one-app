@@ -31,29 +31,31 @@ export default function UserCard(props: {
   }, [props]);
 
   return (
-    <div className="flex flex-col gap-4 rounded-xl bg-gray-800 p-4">
+    <div className="rounded-xl flex flex-col bg-gray-800 p-4 gap-4">
       <div className="flex w-full items-center">
-        <div className="flex-1 text-sm font-medium leading-tight tracking-tight text-white">
+        <div className="font-medium flex-1 text-sm text-white leading-tight tracking-tight">
           Valid ID: {props.validId}
         </div>
       </div>
-      <div className="flex items-center gap-2">
-        <div className="h-[60px] w-[60px] rounded-full border border-neutral-400 p-[2px]">
-          <img
-            className="h-full w-full rounded-full object-cover"
-            src={profile?.avatar}
-          />
+      <div className="flex gap-2 items-center">
+        <div className="border rounded-full border-neutral-400 h-[60px] p-[2px] w-[60px]">
+          {profile?.avatar && (
+            <img
+              className="rounded-full h-full object-cover w-full"
+              src={profile?.avatar}
+            />
+          )}
         </div>
-        <div className="flex flex-1 flex-col gap-2">
-          <div className="w-full text-[15px] font-bold text-white">
+        <div className="flex flex-col flex-1 gap-2">
+          <div className="font-bold text-white w-full text-[15px]">
             {loading ? "loading" : profile?.name || "Unkonwn"}
           </div>
 
           <div className="flex w-full gap-2">
-            <div className="relative h-5 w-5 rounded-[15px] bg-gray-600"></div>
-            <div className="relative h-5 w-5 rounded-[15px] bg-gray-600"></div>
-            <div className="relative h-5 w-5 rounded-[15px] bg-gray-600"></div>
-            <div className="relative h-5 w-5 rounded-[15px] bg-gray-600"></div>
+            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
+            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
+            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
+            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
           </div>
         </div>
       </div>

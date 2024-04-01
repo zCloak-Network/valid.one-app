@@ -18,6 +18,7 @@ export default function VerifyFile(props: {
   const [openModal, setOpenModal] = useState(false);
   const [fileSHA256, setFileSHA256] = useState<string | null>(null);
   const [list, setList] = useState<SignatureResponse[]>([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setOpenModal(props.open);
@@ -25,19 +26,26 @@ export default function VerifyFile(props: {
       if (props.fileHash) {
         setFileSHA256(props.fileHash);
         const paramsHash = props.fileHash.replace(/^0x/, "");
-        getSigsByHash(paramsHash, props.validId).then((res) => {
-          console.log("get file sign list,", paramsHash, res);
-          res?.[0] &&
-            setList(
-              res[0].map((e) => {
-                return {
-                  ...e,
-                  create_time: Number(e.create_time),
-                  modify_time: Number(e.modify_time),
-                };
-              })
-            );
-        });
+
+        setLoading(true);
+        getSigsByHash(paramsHash, props.validId)
+          .then((res) => {
+            setLoading(false);
+            console.log("get file sign list,", paramsHash, res);
+            res?.[0] &&
+              setList(
+                res[0].map((e) => {
+                  return {
+                    ...e,
+                    create_time: Number(e.create_time),
+                    modify_time: Number(e.modify_time),
+                  };
+                })
+              );
+          })
+          .catch(() => {
+            setLoading(false);
+          });
       }
     } else {
       setFileSHA256(null);
@@ -52,7 +60,12 @@ export default function VerifyFile(props: {
         closeByModal
         onClose={props.onClose}
       >
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 relative">
+          {loading && (
+            <div className="flex h-full w-full top-0 left-0 absolute items-center justify-center">
+              <span className="loading loading-ring loading-md"></span>
+            </div>
+          )}
           <>
             <label className="form-control">
               <div className="label">
@@ -70,7 +83,7 @@ export default function VerifyFile(props: {
 
             <div className="border-t"></div>
 
-            {/* <div className="text-xs font-semibold leading-tight ">
+            {/* <div className="font-semibold text-xs leading-tight ">
                 <span className="text-slate-400 ">
                   Check the on-chain record here
                 </span>

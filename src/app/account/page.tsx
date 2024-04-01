@@ -15,27 +15,27 @@ export default observer(function AccountPage() {
   }, [User]);
   return (
     <div className="h-[100vh] pb-20">
-      <div className="h-[350px] w-full p-5 flex flex-col items-center gap-8 bg-[#273238]">
-        <div className="text-center text-white text-lg font-extrabold">
+      <div className="flex flex-col bg-[#273238] h-[350px] w-full p-5 gap-8 items-center">
+        <div className="font-extrabold text-center text-white text-lg">
           Account
         </div>
         <div className="avatar">
-          <div className="w-20 rounded-full border-4 border-neutral-400">
-            <img src={User.profile?.avatar} />
+          <div className="rounded-full border-4 border-neutral-400 w-20">
+            {User.profile?.avatar && <img src={User.profile?.avatar} />}
           </div>
         </div>
-        <div className="w-64 h-4 text-center text-white text-base font-bold leading-relaxed">
+        <div className="font-bold h-4 text-center text-white text-base leading-relaxed w-64">
           My Key
         </div>
-        <div className="w-full opacity-80 text-center text-white text-sm font-normal leading-snug break-words">
+        <div className="font-normal text-center text-white text-sm leading-snug w-full opacity-80 break-words">
           {User.profile?.public_key &&
             ethereumEncode(`0x${User.profile.public_key}`)}
         </div>
       </div>
-      <div className="p-5 flex items-center flex-col gap-5">
-        <button className="btn w-full">Submit Feedback</button>
+      <div className="flex flex-col p-5 gap-5 items-center">
+        <button className="w-full btn">Submit Feedback</button>
         <button
-          className="btn bg-gray-800 w-full text-white text-base"
+          className="bg-gray-800 text-white text-base w-full btn"
           onClick={signOut}
         >
           Sign out
