@@ -111,11 +111,11 @@ export default function VerifyMessage(props: {
                   </span>
                   <span className="text-blue-600 ">: </span>
                   <a
-                    href={`${siteConfig.url}/explorer/${ICPSignResponse.uuid}`}
+                    href={`${siteConfig.url}/#/explorer/${ICPSignResponse.uuid}`}
                     target="_blank"
                     className="text-blue-600 underline"
                   >
-                    {`${siteConfig.url}/explorer/${ICPSignResponse.uuid}`}
+                    {`${siteConfig.url}/#/explorer/${ICPSignResponse.uuid}`}
                   </a>
                 </div>
               )}

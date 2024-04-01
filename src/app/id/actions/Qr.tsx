@@ -18,7 +18,7 @@ export default function () {
     }
   };
 
-  const qrLink = useMemo(() => `${siteConfig.url}/id/${User.id}`, [User.id]);
+  const qrLink = useMemo(() => `${siteConfig.url}/#/id/${User.id}`, [User.id]);
 
   return (
     <div className="w-full">
