@@ -126,10 +126,8 @@ export default (function Verifier() {
       const { signatureObject } = valid(signatureResult);
 
       if (signatureObject) {
-        if (!signatureObject.message) {
-          setShowUserInputMessage(!signatureObject.message);
-          setSwitchUserInput(!signatureObject.message);
-        }
+        setShowUserInputMessage(!signatureObject.message);
+        setSwitchUserInput(!signatureObject.message);
       }
     }
   }, [signatureResult, userInputMessage]);
