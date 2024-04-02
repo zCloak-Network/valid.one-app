@@ -8,7 +8,7 @@ import { actor } from "@/utils/canister";
 import { useSearchParam, useToggle } from "react-use";
 import { ResponseLayout } from "../layout";
 import LoadingButton from "@/components/LoadingButton";
-import LoginWithPasskey from "./LoginWithPasskey";
+import LoginWithValidID from "./LoginWithValidID";
 import { useToast } from "@/components";
 
 export default observer(function HomePage() {
@@ -46,7 +46,7 @@ export default observer(function HomePage() {
   return (
     <ResponseLayout>
       <div
-        className="relative mx-auto h-full w-full bg-white"
+        className="bg-white h-full mx-auto w-full relative"
         style={{
           backgroundImage: `url(${OnBoarding})`,
           backgroundPosition: "center top 10%",
@@ -55,33 +55,33 @@ export default observer(function HomePage() {
         }}
       >
         <div
-          className="absolute bottom-0 flex h-[440px] sm:h-[65%] w-full  flex-col items-center justify-between px-6 py-10 bg-contain sm:bg-cover"
+          className="bg-contain flex flex-col h-[440px] w-full py-10  px-6 bottom-0 absolute items-center justify-between sm:bg-cover sm:h-[65%]"
           style={{
             backgroundImage: `url(${LoginBg})`,
             backgroundRepeat: "no-repeat",
           }}
         >
           <div className="">
-            <div className="text-center font-['Poppins'] text-2xl font-semibold text-white">
+            <div className="text-center 'Poppins'] text-2xl font-semibold text-white">
               Defending trust and privacy in the age of AGI.
             </div>
           </div>
-          <div className="h-24 w-72 text-center font-['Poppins'] text-sm font-medium text-neutral-400">
+          <div className="h-24 text-center w-72 'Poppins'] text-sm font-medium text-neutral-400">
             Valid ID weaves together your online identity, serving as your
             passport to the digital universe. Share who you are with others, and
             connect with trusted friends to create a network of trust.
           </div>
 
           <LoadingButton
-            className={`btn w-full ${loading ? "bg-white" : ""}`}
+            className={`btn btn-primary w-full ${loading ? "bg-white" : ""}`}
             onClick={handleRegister}
             loading={loading}
           >
             Create an account
           </LoadingButton>
-          <LoginWithPasskey />
+          <LoginWithValidID />
 
-          <div className="text-center font-['Poppins'] text-sm font-normal text-zinc-500">
+          <div className="text-center 'Poppins'] text-sm font-normal text-zinc-500">
             it takes as little as 10s
           </div>
         </div>
