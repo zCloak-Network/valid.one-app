@@ -1,4 +1,4 @@
-import { Sign } from "@/utils/canister/idl/valid_one_backend.did";
+import { Sign } from "@/utils/canister/valid_one_backend/valid_one_backend.did";
 import moment from "moment";
 import { ShortAddress } from "@/components";
 import { getString } from "@/api";

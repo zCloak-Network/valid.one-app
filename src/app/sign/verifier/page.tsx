@@ -248,7 +248,7 @@ sig:signature value`}
 
         {type === 2 && (
           <>
-            <label className="form-control">
+            <div className="form-control">
               <div className="label">
                 <span className="label-text">File</span>
               </div>
@@ -269,7 +269,7 @@ sig:signature value`}
                   />
                 )}
               </div>
-            </label>
+            </div>
             <label className="form-control">
               <div className="label">
                 <span className="label-text">Signer (Optional)</span>

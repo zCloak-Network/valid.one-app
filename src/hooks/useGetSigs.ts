@@ -1,4 +1,7 @@
-import { Sign, SignResult } from "@/utils/canister/idl/valid_one_backend.did";
+import {
+  Sign,
+  SignResult,
+} from "@/utils/canister/valid_one_backend/valid_one_backend.did";
 import { useEffect, useState } from "react";
 import { useToggle } from "react-use";
 import { getAllSigs, getRecordBySignature, getRecordByUUID } from ".";

@@ -1,1 +1,1 @@
-export type { UserProfile } from "@/utils/canister/idl/valid_one_backend.did";
+export type { UserProfile } from "@/utils/canister/valid_one_backend/valid_one_backend.did";

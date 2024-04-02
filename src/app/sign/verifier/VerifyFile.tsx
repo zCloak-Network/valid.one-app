@@ -23,6 +23,7 @@ export default function VerifyFile(props: {
   useEffect(() => {
     setOpenModal(props.open);
     if (props.open) {
+      console.log("file props", props);
       if (props.fileHash) {
         setFileSHA256(props.fileHash);
         const paramsHash = props.fileHash.replace(/^0x/, "");
