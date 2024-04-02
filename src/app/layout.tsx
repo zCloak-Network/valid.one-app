@@ -1,6 +1,7 @@
 import "./globals.css";
 import { Outlet, useLocation } from "react-router-dom";
 import Nav from "./Nav";
+import { ToastProvider } from "@/components";
 
 export function ResponseLayout({
   children,
@@ -28,7 +29,9 @@ export default function RootLayout() {
   const pathname = location.pathname;
   return (
     <ResponseLayout className="flex flex-col relative">
-      <Outlet />
+      <ToastProvider>
+        <Outlet />
+      </ToastProvider>
       {pathname !== "/" && <Nav />}
     </ResponseLayout>
   );

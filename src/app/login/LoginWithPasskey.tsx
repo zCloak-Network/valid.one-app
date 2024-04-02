@@ -13,9 +13,17 @@ export default observer(function HomePage() {
 
   const handlePasskeyLogin = useCallback(async () => {
     toggle();
-    let response = await actor.start_authentication_new(store.User.id || 0);
+    let response,
+      challenge = "";
+    console.log(store.User.id);
+    if (store.User.id) {
+      response = await actor.start_authentication_new(store.User.id);
+    } else {
+      response = await actor.start_authentication_new_without_id();
+      challenge = JSON.parse(response).publicKey.challenge;
+    }
+
     const authOptions = JSON.parse(response).publicKey;
-    console.log(`authOptions: `, authOptions);
     // step 2
     let asseResp;
     try {
@@ -27,9 +35,10 @@ export default observer(function HomePage() {
       toggle();
       return;
     }
-    console.log(`asseResp: `, asseResp);
+    console.log(`finish_authentication_new params: `, asseResp, challenge);
     let auth_result = await actor.finish_authentication_new(
-      JSON.stringify(asseResp)
+      JSON.stringify(asseResp),
+      challenge ? [challenge] : []
     );
 
     toggle();

@@ -23,7 +23,7 @@ export interface UserProfile {
   'avatar' : string,
 }
 export interface _SERVICE {
-  'finish_authentication_new' : ActorMethod<[string], number>,
+  'finish_authentication_new' : ActorMethod<[string, [] | [string]], number>,
   'finish_register_new' : ActorMethod<[string], number>,
   'get_allow_credentials' : ActorMethod<[number], [] | [string]>,
   'get_valid_id_by_credential' : ActorMethod<[string], [] | [number]>,
@@ -49,16 +49,17 @@ export interface _SERVICE {
   'sign_get_by_signature' : ActorMethod<[string], [] | [Sign]>,
   'sign_get_by_uuid' : ActorMethod<[string], [] | [Sign]>,
   'sign_insert' : ActorMethod<
-    [string, number, string, string],
+    [string, string, number, string, string],
     { 'Ok' : Sign } |
       { 'Err' : string }
   >,
   'sign_paginate' : ActorMethod<[number, number], SignResult>,
   'start_authentication_new' : ActorMethod<[number], string>,
+  'start_authentication_new_without_id' : ActorMethod<[], string>,
   'start_register_new' : ActorMethod<[], string>,
   'user_current_id' : ActorMethod<[], number>,
   'user_profile_edit' : ActorMethod<
-    [string, string, string, string],
+    [string, string, string, string, string],
     { 'Ok' : string } |
       { 'Err' : string }
   >,

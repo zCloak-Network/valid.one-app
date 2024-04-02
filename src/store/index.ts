@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { autorun } from "mobx";
 
 import User from "./modules/user";
 
@@ -23,4 +24,4 @@ export default function initializeStore() {
   return store;
 }
 
-export { observer };
+export { observer, autorun };

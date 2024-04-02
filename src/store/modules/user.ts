@@ -24,7 +24,8 @@ export default class User {
   }
 
   async initUser() {
-    this.getUserId();
+    const localId = localStorage.getItem(USER_VALID_ID);
+    this.id = localId ? (JSON.parse(localId) as number) : null;
 
     if (this.id) {
       await this.getProfile();
@@ -52,12 +53,6 @@ export default class User {
     } else {
       console.warn("get user profile fail", result);
     }
-  }
-
-  private getUserId() {
-    const result = localStorage.getItem(USER_VALID_ID);
-
-    this.id = result ? (JSON.parse(result) as number) : null;
   }
 
   async switchUser(id: number) {

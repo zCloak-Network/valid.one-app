@@ -1,5 +1,4 @@
 import { default as useStore, observer } from "@/store";
-
 import SetProfile from "./SetProfile";
 import Main from "./actions/Main";
 import Quick from "./actions/Quick";

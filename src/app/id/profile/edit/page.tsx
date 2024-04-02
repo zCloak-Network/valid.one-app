@@ -31,7 +31,7 @@ const EditProfile = () => {
   const handelSave = useCallback(async () => {
     try {
       toggle();
-      const authRequest = await auth();
+      const [authRequest, challenge] = await auth();
       let avatarResult = User.profile?.avatar;
       if (avatarFile) {
         const formData = new FormData();
@@ -48,9 +48,10 @@ const EditProfile = () => {
       }
 
       // if (!avatarResult) return alert("Avatar is required.");
-
+      console.log(authRequest, challenge, avatarResult || "", name, bio);
       const data = await actor.user_profile_edit(
         authRequest,
+        challenge,
         avatarResult || "",
         name,
         bio
@@ -72,25 +73,25 @@ const EditProfile = () => {
   };
 
   return (
-    <div className="px-5 flex-1 flex flex-col overflow-hidden">
-      <div className="flex items-center py-4 relative">
+    <div className="flex flex-col flex-1 px-5 overflow-hidden">
+      <div className="flex py-4 items-center relative">
         <Link
-          className="absolute rounded-lg border border-zinc-300 p-2"
+          className="border rounded-lg border-zinc-300 p-2 absolute"
           to={"/id"}
           replace
         >
           <IconBack />
         </Link>
-        <p className="text-gray-800 text-lg font-bold mx-auto">Edit Profile</p>
+        <p className="font-bold mx-auto text-lg text-gray-800">Edit Profile</p>
       </div>
       <div className="flex-1 overflow-auto">
-        <p className="w-full text-neutral-400 text-sm font-medium mt-5">
+        <p className="font-medium mt-5 text-sm w-full text-neutral-400">
           Here, you'll merge different elements of your digital identity to
           create a complete online profile. Note that we'll verify the details
           you provide
         </p>
 
-        <div className="flex w-full justify-center mt-8">
+        <div className="flex mt-8 w-full justify-center">
           <UploadAvatar
             onChange={setAvatarFile}
             url={avatarUrl}
@@ -99,21 +100,21 @@ const EditProfile = () => {
             }}
           />
         </div>
-        <div className="flex flex-col gap-2 mt-8">
+        <div className="flex flex-col mt-8 gap-2">
           <label htmlFor="name">Name</label>
           <input
             id="name"
             value={name}
             type="text"
             placeholder="Type here"
-            className="input input-bordered w-full"
+            className="w-full input input-bordered"
             onChange={handleNameChange}
           />
-          <div className="relative mt-5">
+          <div className="mt-5 relative">
             <label htmlFor="bio">Bio</label>
             <textarea
               id="bio"
-              className="textarea textarea-bordered w-full h-24"
+              className="h-24 w-full textarea textarea-bordered"
               placeholder="Please enter a bio about yourself"
               value={bio}
               onChange={handleChange}
@@ -129,7 +130,7 @@ const EditProfile = () => {
           </div>
         </div>
         <LoadingButton
-          className="btn h-12 rounded-xl bg-gray-800 text-white w-full p-2 my-8"
+          className="rounded-xl bg-gray-800 h-12 my-8 text-white w-full p-2 btn"
           loading={loading}
           onClick={handelSave}
         >

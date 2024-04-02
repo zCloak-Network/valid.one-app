@@ -1,6 +1,6 @@
 "use client";
-import { useState, useMemo, useRef } from "react";
-import { default as useStore, observer } from "@/store";
+import { useState, useMemo, useRef, useEffect } from "react";
+import { default as useStore, observer, autorun } from "@/store";
 import { signTypes, signatureResultTemplate } from "@/constants";
 import SignatureResult from "./SignatureResult";
 import { actor } from "@/utils/canister";
@@ -35,7 +35,7 @@ export default observer(function Signer() {
     [signType, messageSHA256, fileSHA256]
   );
 
-  const signatureResult = useMemo(() => {
+  const clearAutorun = autorun(() => {
     if (!User.profile) {
       navigate("/login");
       return undefined;
@@ -44,7 +44,14 @@ export default observer(function Signer() {
       navigate("/id/profile/edit");
       return undefined;
     }
-    if (signCont && ICPSignResult) {
+  });
+
+  useEffect(() => {
+    return clearAutorun;
+  });
+
+  const signatureResult = useMemo(() => {
+    if (User.profile && signCont && ICPSignResult) {
       return signatureResultTemplate(
         User.profile.public_key,
         signCont,
@@ -76,10 +83,11 @@ export default observer(function Signer() {
         }
       }
     }
-    const authRequest = await auth();
+    const [authRequest, challenge] = await auth();
 
     const res = await actor.sign_insert(
       authRequest,
+      challenge,
       signType,
       signCont,
       publicContentKey

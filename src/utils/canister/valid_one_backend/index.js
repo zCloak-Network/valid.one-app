@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import { Actor, HttpAgent } from "@dfinity/agent";
 
 // Imports and re-exports candid interface
@@ -22,7 +21,7 @@ export const createActor = (canisterId, options = {}) => {
   }
 
   // Fetch root key for certificate validation during development
-  if (process.env.DFX_NETWORK !== "ic") {
+  if (!import.meta.env.PROD) {
     agent.fetchRootKey().catch((err) => {
       console.warn(
         "Unable to fetch root key. Check to ensure that your local replica is running"

@@ -9,12 +9,14 @@ import { useSearchParam, useToggle } from "react-use";
 import { ResponseLayout } from "../layout";
 import LoadingButton from "@/components/LoadingButton";
 import LoginWithPasskey from "./LoginWithPasskey";
+import { useToast } from "@/components";
 
 export default observer(function HomePage() {
   const store = useStore();
   const navigate = useNavigate();
   const [loading, toggle] = useToggle(false);
   const searchParams = useSearchParam("redirect") || "/id";
+  const toast = useToast();
 
   const handleRegister = useCallback(async () => {
     toggle();
@@ -22,14 +24,21 @@ export default observer(function HomePage() {
       const response = await actor.start_register_new();
       const options = JSON.parse(response).publicKey;
       const registrationResult = await startRegistration(options);
-      const finish_register_result = await actor.finish_register_new(JSON.stringify(registrationResult));
+      const finish_register_result = await actor.finish_register_new(
+        JSON.stringify(registrationResult)
+      );
 
       store.User.login(finish_register_result);
       toggle();
       navigate(searchParams);
     } catch (error) {
       toggle();
-      console.log(`startRegistration`, error);
+      console.warn(`startRegistration`, error);
+      toast &&
+        toast({
+          message: "Something went wrong, please try again later. code:0001",
+          type: "error",
+        });
       return;
     }
   }, [store, navigate, toggle]);

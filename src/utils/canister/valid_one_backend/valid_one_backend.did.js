@@ -23,7 +23,11 @@ export const idlFactory = ({ IDL }) => {
     'avatar' : IDL.Text,
   });
   return IDL.Service({
-    'finish_authentication_new' : IDL.Func([IDL.Text], [IDL.Nat32], []),
+    'finish_authentication_new' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Text)],
+        [IDL.Nat32],
+        [],
+      ),
     'finish_register_new' : IDL.Func([IDL.Text], [IDL.Nat32], []),
     'get_allow_credentials' : IDL.Func(
         [IDL.Nat32],
@@ -80,16 +84,17 @@ export const idlFactory = ({ IDL }) => {
     'sign_get_by_signature' : IDL.Func([IDL.Text], [IDL.Opt(Sign)], ['query']),
     'sign_get_by_uuid' : IDL.Func([IDL.Text], [IDL.Opt(Sign)], ['query']),
     'sign_insert' : IDL.Func(
-        [IDL.Text, IDL.Nat8, IDL.Text, IDL.Text],
+        [IDL.Text, IDL.Text, IDL.Nat8, IDL.Text, IDL.Text],
         [IDL.Variant({ 'Ok' : Sign, 'Err' : IDL.Text })],
         [],
       ),
     'sign_paginate' : IDL.Func([IDL.Nat32, IDL.Nat32], [SignResult], ['query']),
     'start_authentication_new' : IDL.Func([IDL.Nat32], [IDL.Text], []),
+    'start_authentication_new_without_id' : IDL.Func([], [IDL.Text], []),
     'start_register_new' : IDL.Func([], [IDL.Text], []),
     'user_current_id' : IDL.Func([], [IDL.Nat32], ['query']),
     'user_profile_edit' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
         [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
         [],
       ),
