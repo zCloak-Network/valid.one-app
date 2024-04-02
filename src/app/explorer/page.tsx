@@ -39,13 +39,13 @@ export default function Explorer() {
 
   return (
     <div className="flex flex-col h-[100vh]">
-      <div className="w-full h-20 bg-white border-b border-zinc-100 flex items-center px-10">
+      <div className="w-full h-20 bg-white border-b border-zinc-100 flex items-center px-4 sm:px-10">
         <Link to={"/"}>
           <Logo />
         </Link>
       </div>
-      <div className="w-full px-20 pt-8 flex-1 overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between">
+      <div className="w-full px-4 sm:px-20 pt-8 flex-1 overflow-hidden flex flex-col">
+        <div className="flex sm:items-center justify-between flex-col sm:flex-row mb-4 sm:mb-0">
           <div>
             <Link
               to="/explorer"
@@ -53,11 +53,11 @@ export default function Explorer() {
             >
               Valid Explorer
             </Link>
-            <div className="text-gray-500 text-sm font-normal mt-3 leading-tight py-8">
+            <div className="text-gray-500 text-sm font-normal mt-3 leading-tight py-4 sm:py-8">
               Explore recent signatures posted from Valid Sign
             </div>
           </div>
-          <div className="w-[40%]">
+          <div className="sm:w-[40%]">
             <label className="input input-bordered flex focus:outline-none items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -85,7 +85,7 @@ export default function Explorer() {
           </div>
         </div>
         <div className="flex-1 overflow-auto">
-          <table className="table table-pin-rows table-pin-cols">
+          <table className="table table-pin-rows table-pin-cols min-w-[700px]">
             <thead>
               <tr className="bg-neutral-50">
                 <td>Time</td>
