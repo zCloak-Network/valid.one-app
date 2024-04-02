@@ -37,6 +37,14 @@ const EditProfile = () => {
         const formData = new FormData();
         formData.append("file", avatarFile, avatarFile.name);
         avatarResult = (await upload(formData)).data;
+        upload(formData)
+          .then((res) => {
+            avatarResult = res.data;
+          })
+          .catch(() => {
+            toggle();
+            alert("Upload avatar error!");
+          });
       }
 
       // if (!avatarResult) return alert("Avatar is required.");
@@ -83,7 +91,13 @@ const EditProfile = () => {
         </p>
 
         <div className="flex w-full justify-center mt-8">
-          <UploadAvatar onChange={setAvatarFile} url={avatarUrl} />
+          <UploadAvatar
+            onChange={setAvatarFile}
+            url={avatarUrl}
+            onError={(err) => {
+              alert("select avatar error:" + err.message);
+            }}
+          />
         </div>
         <div className="flex flex-col gap-2 mt-8">
           <label htmlFor="name">Name</label>

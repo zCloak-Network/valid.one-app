@@ -15,7 +15,7 @@ export default observer(function HomePage() {
     toggle();
     let response = await actor.start_authentication_new(store.User.id || 0);
     const authOptions = JSON.parse(response).publicKey;
-
+    console.log(`authOptions: `, authOptions);
     // step 2
     let asseResp;
     try {
@@ -27,7 +27,7 @@ export default observer(function HomePage() {
       toggle();
       return;
     }
-
+    console.log(`asseResp: `, asseResp);
     let auth_result = await actor.finish_authentication_new(
       JSON.stringify(asseResp)
     );
