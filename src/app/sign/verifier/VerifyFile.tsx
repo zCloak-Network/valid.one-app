@@ -32,16 +32,17 @@ export default function VerifyFile(props: {
           .then((res) => {
             setLoading(false);
             console.log("get file sign list,", paramsHash, res);
-            res?.[0] &&
-              setList(
-                res[0].map((e) => {
-                  return {
-                    ...e,
-                    create_time: Number(e.create_time),
-                    modify_time: Number(e.modify_time),
-                  };
-                })
-              );
+            res?.[0]
+              ? setList(
+                  res[0].map((e) => {
+                    return {
+                      ...e,
+                      create_time: Number(e.create_time),
+                      modify_time: Number(e.modify_time),
+                    };
+                  })
+                )
+              : setList([]);
           })
           .catch(() => {
             setLoading(false);
@@ -74,11 +75,15 @@ export default function VerifyFile(props: {
               <TextareaWithCopy rows={4} value={fileSHA256 || ""} />
             </label>
             <div className="flex flex-col gap-4">
-              {list.map((record) => {
-                return (
-                  <SignRecord key={record.uuid} ICPSignResponse={record} />
-                );
-              })}
+              {list.length ? (
+                list.map((record) => {
+                  return (
+                    <SignRecord key={record.uuid} ICPSignResponse={record} />
+                  );
+                })
+              ) : (
+                <div>No signature record</div>
+              )}
             </div>
 
             <div className="border-t"></div>
