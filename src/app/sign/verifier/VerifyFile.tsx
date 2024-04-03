@@ -57,7 +57,7 @@ export default function VerifyFile(props: {
   return (
     <>
       <ActionModal
-        title="Verify Result"
+        title="Verification Resut"
         open={openModal}
         closeByModal
         onClose={props.onClose}
