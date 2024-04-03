@@ -36,12 +36,8 @@ export default observer(function Signer() {
   );
 
   const clearAutorun = autorun(() => {
-    if (!User.profile) {
+    if (!User.name) {
       navigate("/login");
-      return undefined;
-    }
-    if (!User.profile?.public_key) {
-      navigate("/id/profile/edit");
       return undefined;
     }
   });
@@ -63,7 +59,7 @@ export default observer(function Signer() {
   }, [ICPSignResult, signCont]);
 
   const handleSign = async () => {
-    if (!User.id) {
+    if (!User.name) {
       return navigate("/login");
     }
     setLoading(true);

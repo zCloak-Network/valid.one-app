@@ -37,6 +37,7 @@ export default (function RegistWithName({
 
       const options = JSON.parse((response as any)["Ok"]).publicKey;
       const registrationResult = await startRegistration(options);
+      console.log("registrationResult", registrationResult);
       const registReturn = await actor.finish_register_name(
         JSON.stringify(registrationResult)
       );
