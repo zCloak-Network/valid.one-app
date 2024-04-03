@@ -111,6 +111,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
         [],
       ),
+    'user_profile_get' : IDL.Func(
+        [IDL.Nat32],
+        [IDL.Opt(UserProfile)],
+        ['query'],
+      ),
     'user_profile_get_by_name' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(UserProfile)],

@@ -80,6 +80,7 @@ export interface _SERVICE {
     { 'Ok' : string } |
       { 'Err' : string }
   >,
+  'user_profile_get' : ActorMethod<[number], [] | [UserProfile]>,
   'user_profile_get_by_name' : ActorMethod<[string], [] | [UserProfile]>,
   'user_profile_get_by_pub_key' : ActorMethod<[string], [] | [UserProfile]>,
   'user_profile_insert' : ActorMethod<[string], [] | [UserProfile]>,
@@ -90,4 +91,4 @@ export interface _SERVICE {
   >,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
