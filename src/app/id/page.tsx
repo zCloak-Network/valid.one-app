@@ -8,7 +8,7 @@ export default observer(function Id() {
 
   return (
     <div className="flex-1 px-6 pt-6">
-      {User.profile?.name ? (
+      {User.profile?.public_key ? (
         <>
           <Main />
           <Quick />

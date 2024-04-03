@@ -10,12 +10,15 @@ import { useParams } from "react-router-dom";
 import { SignatureResponse } from "@/types";
 import { signatureResultTemplate } from "@/constants";
 import { getString } from "@/api";
+import { useToast } from "@/components";
 
 export default (function Verifier() {
+  const toast = useToast();
   const [type, setType] = useState<number>(1);
   const [signatureResult, setSignatureResult] = useState("");
   const [userInputMessage, setUserInputMessage] = useState("");
   const [showUserInputMessage, setShowUserInputMessage] = useState(false);
+  const userInputRef = useRef<HTMLTextAreaElement>(null);
   const [openMessageModal, setOpenMessageModal] = useState(false);
   const [openFileModal, setOpenFileModal] = useState(false);
   const [fileSHA256, setFileSHA256] = useState("");
@@ -61,56 +64,64 @@ export default (function Verifier() {
             } as SignatureResponse);
 
             setType(response.sign_type);
-
-            const profile = await getProfileById(response.created_by);
-            console;
-            if (profile) {
-              if (response.sign_type === 1) {
-                // message valid link
-                if (response.content_key) {
-                  // TODO load content
-                  getString(response.content_key).then((res) => {
-                    console.log("get string", res);
-                    if (res.data?.content) {
-                      setSignatureResult(
-                        signatureResultTemplate(
-                          profile?.public_key,
-                          response.hash,
-                          response.signature,
-                          res.data.content
-                        )
-                      );
-                      setLoading(false);
-                      setOpenMessageModal(true);
-                    } else {
-                      console.warn("get string fail, get:", res);
-                      setLoading(false);
-                    }
-                  });
-                } else {
-                  setSignatureResult(
-                    signatureResultTemplate(
-                      profile?.public_key,
-                      response.hash,
-                      response.signature
-                    )
-                  );
-                  setLoading(false);
-                  setShowUserInputMessage(true);
-                  setSwitchUserInput(true);
+            getProfileById(response.created_by)
+              .then((profile) => {
+                console.log(profile, response);
+                if (!profile) {
+                  toast &&
+                    toast({
+                      type: "error",
+                      message: "Profile not found",
+                    });
+                  return;
                 }
-              } else if (response.sign_type === 2) {
-                // TODO file valid link
+                if (response.sign_type === 1) {
+                  // message valid link
+                  if (response.content_key) {
+                    // TODO load content
+                    getString(response.content_key).then((res) => {
+                      console.log("get string", res);
+                      if (res.data?.content) {
+                        setSignatureResult(
+                          signatureResultTemplate(
+                            profile.public_key,
+                            response.hash,
+                            response.signature,
+                            res.data.content
+                          )
+                        );
+                        setLoading(false);
+                        setOpenMessageModal(true);
+                      } else {
+                        console.warn("get string fail, get:", res);
+                        setLoading(false);
+                      }
+                    });
+                  } else {
+                    setSignatureResult(
+                      signatureResultTemplate(
+                        profile.public_key,
+                        response.hash,
+                        response.signature
+                      )
+                    );
+                    setLoading(false);
+                    setShowUserInputMessage(true);
+                    setSwitchUserInput(true);
+                  }
+                } else if (response.sign_type === 2) {
+                  // TODO file valid link
+                  setLoading(false);
+                  setOpenMessageModal(true);
+                }
+              })
+              .catch(() => {
+                console.warn(
+                  "get profile error by valid id:",
+                  response.created_by
+                );
                 setLoading(false);
-                setOpenMessageModal(true);
-              }
-            } else {
-              console.warn(
-                "get profile error by valid id:",
-                response.created_by
-              );
-              setLoading(false);
-            }
+              });
           }
         })
         .catch(() => {
@@ -118,6 +129,12 @@ export default (function Verifier() {
         });
     }
   }, [params.uuid]);
+
+  useEffect(() => {
+    if (showUserInputMessage) {
+      userInputRef.current?.focus();
+    }
+  }, [showUserInputMessage]);
 
   const { valid } = useValid();
 
@@ -234,7 +251,8 @@ sig:signature value`}
                     className="tab-content bg-base-100 border-base-300 rounded-box p-2"
                   >
                     <textarea
-                      className="textarea h-60 leading-normal w-full"
+                      ref={userInputRef}
+                      className="textarea h-60 leading-normal w-full textarea-warning"
                       placeholder={`Please input the message here`}
                       value={userInputMessage}
                       onChange={(e) => setUserInputMessage(e.target.value)}

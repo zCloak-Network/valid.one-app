@@ -1,91 +1,76 @@
-import { default as useStore, observer } from "@/store";
-import { useCallback } from "react";
-import { startRegistration } from "@simplewebauthn/browser";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import LoginBg from "@/assets/images/loginBg.png";
 import OnBoarding from "@/assets/svg/onboarding.svg";
-import { actor } from "@/utils/canister";
-import { useSearchParam, useToggle } from "react-use";
 import { ResponseLayout } from "../layout";
-import LoadingButton from "@/components/LoadingButton";
-import LoginWithPasskey from "./LoginWithPasskey";
-import { useToast } from "@/components";
+import LoginWithName from "./LoginWithName";
+import RegistWithName from "./RegistWithName";
+import { ToastProvider } from "@/components";
 
-export default observer(function HomePage() {
-  const store = useStore();
-  const navigate = useNavigate();
-  const [loading, toggle] = useToggle(false);
-  const searchParams = useSearchParam("redirect") || "/id";
-  const toast = useToast();
-
-  const handleRegister = useCallback(async () => {
-    toggle();
-    try {
-      const response = await actor.start_register_new();
-      const options = JSON.parse(response).publicKey;
-      const registrationResult = await startRegistration(options);
-      const finish_register_result = await actor.finish_register_new(
-        JSON.stringify(registrationResult)
-      );
-
-      store.User.login(finish_register_result);
-      toggle();
-      navigate(searchParams);
-    } catch (error) {
-      toggle();
-      console.warn(`startRegistration`, error);
-      toast &&
-        toast({
-          message: "Something went wrong, please try again later. code:0001",
-          type: "error",
-        });
-      return;
-    }
-  }, [store, navigate, toggle]);
+export default (function HomePage() {
+  const [showModal, toggleModal] = useState<0 | 1 | 2>(0);
 
   return (
-    <ResponseLayout>
-      <div
-        className="relative mx-auto h-full w-full bg-white"
-        style={{
-          backgroundImage: `url(${OnBoarding})`,
-          backgroundPosition: "center top 10%",
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "inherit",
-        }}
-      >
+    <ToastProvider>
+      <ResponseLayout>
         <div
-          className="absolute bottom-0 flex h-[440px] sm:h-[65%] w-full  flex-col items-center justify-between px-6 py-10 bg-contain sm:bg-cover"
+          className="bg-white h-full mx-auto w-full relative"
           style={{
-            backgroundImage: `url(${LoginBg})`,
+            backgroundImage: `url(${OnBoarding})`,
+            backgroundPosition: "center top 10%",
             backgroundRepeat: "no-repeat",
+            backgroundSize: "inherit",
           }}
         >
-          <div className="">
-            <div className="text-center font-['Poppins'] text-2xl font-semibold text-white">
-              Defending trust and privacy in the age of AGI.
-            </div>
-          </div>
-          <div className="h-24 w-72 text-center font-['Poppins'] text-sm font-medium text-neutral-400">
-            Valid ID weaves together your online identity, serving as your
-            passport to the digital universe. Share who you are with others, and
-            connect with trusted friends to create a network of trust.
-          </div>
-
-          <LoadingButton
-            className={`btn w-full ${loading ? "bg-white" : ""}`}
-            onClick={handleRegister}
-            loading={loading}
+          <div
+            className="bg-contain flex flex-col h-[440px] w-full py-10  px-6 bottom-0 absolute items-center justify-between sm:bg-cover sm:h-[65%]"
+            style={{
+              backgroundImage: `url(${LoginBg})`,
+              backgroundRepeat: "no-repeat",
+            }}
           >
-            Create an account
-          </LoadingButton>
-          <LoginWithPasskey />
+            <div className="">
+              <div className="text-center 'Poppins'] text-2xl font-semibold text-white">
+                Defending trust and privacy in the age of AGI.
+              </div>
+            </div>
+            <div className="h-24 text-center w-72 'Poppins'] text-sm font-medium text-neutral-400">
+              Valid ID weaves together your online identity, serving as your
+              passport to the digital universe. Share who you are with others,
+              and connect with trusted friends to create a network of trust.
+            </div>
 
-          <div className="text-center font-['Poppins'] text-sm font-normal text-zinc-500">
-            it takes as little as 10s
+            {showModal === 0 && (
+              <>
+                <button
+                  className={`btn w-full `}
+                  onClick={() => toggleModal(1)}
+                >
+                  Create an account
+                </button>
+
+                <button
+                  className={`btn btn-primary w-full `}
+                  onClick={() => toggleModal(2)}
+                >
+                  Login with username
+                </button>
+
+                <div className="text-center 'Poppins'] text-sm font-normal text-zinc-500">
+                  it takes as little as 10s
+                </div>
+              </>
+            )}
+
+            {showModal === 1 && (
+              <RegistWithName onCancel={() => toggleModal(0)} />
+            )}
+
+            {showModal === 2 && (
+              <LoginWithName onCancel={() => toggleModal(0)} />
+            )}
           </div>
         </div>
-      </div>
-    </ResponseLayout>
+      </ResponseLayout>
+    </ToastProvider>
   );
 });

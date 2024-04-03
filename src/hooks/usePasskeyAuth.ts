@@ -9,11 +9,11 @@ export function usePasskeyAuth() {
   const { User } = useStore();
 
   const auth = useCallback(async () => {
-    if (!User.id) {
+    if (!User.name) {
       throw new Error("User not found");
     }
 
-    let response = await actor.start_authentication_new(User.id);
+    let response = await actor.start_authentication_name(User.name);
     console.log("[response]", response);
     const authOptions = JSON.parse(response).publicKey;
 

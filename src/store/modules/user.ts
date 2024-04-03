@@ -1,22 +1,22 @@
-import { USER_VALID_ID } from "@/constants";
-import { getProfileById } from "@/hooks";
-import { UserProfile } from "@/types";
+import { USER_STORAGE_KEY } from "@/constants";
+import { getProfileByName } from "@/hooks";
+import { UserProfileData } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
 
-export type UserData = Omit<UserProfile, "create_time" | "modify_time"> & {
+export type UserData = Omit<UserProfileData, "create_time" | "modify_time"> & {
   create_time: number;
   modify_time: number;
 };
 
 export default class User {
   id: number | null;
+  name: string | null;
   profile: UserData | null;
-  users: number[];
 
   constructor() {
     this.id = null;
+    this.name = null;
     this.profile = null;
-    this.users = [];
 
     makeAutoObservable(this);
 
@@ -24,21 +24,23 @@ export default class User {
   }
 
   async initUser() {
-    const localId = localStorage.getItem(USER_VALID_ID);
-    this.id = localId ? (JSON.parse(localId) as number) : null;
+    const localKey = localStorage.getItem(USER_STORAGE_KEY);
+    this.name = localKey || null;
 
-    if (this.id) {
+    if (this.name) {
       await this.getProfile();
     }
   }
 
   async getProfile() {
-    if (!this.id) {
+    if (!this.name) {
+      this.id = null;
       this.profile = null;
+
       return;
     }
 
-    const result = await getProfileById(this.id);
+    const result = await getProfileByName(this.name);
     if (result) {
       runInAction(() => {
         let data: UserData = {
@@ -47,7 +49,9 @@ export default class User {
           modify_time: Number(result.modify_time),
         };
 
+        this.id = data.id;
         this.profile = data;
+
         console.log("update profile", this.id, result);
       });
     } else {
@@ -55,29 +59,19 @@ export default class User {
     }
   }
 
-  async switchUser(id: number) {
-    if (this.users.includes(id)) {
-      this.id = id;
-      await this.getProfile();
-    }
-  }
-
-  private saveCurrentUser(userId: number) {
-    localStorage.setItem(USER_VALID_ID, JSON.stringify(userId));
+  private saveCurrentUser(userName: string) {
+    localStorage.setItem(USER_STORAGE_KEY, userName);
   }
 
   logout() {
     this.id = null;
     this.profile = null;
-    localStorage.removeItem(USER_VALID_ID);
+    localStorage.removeItem(USER_STORAGE_KEY);
   }
 
-  async login(id: number) {
-    if (!this.users.includes(id)) {
-      this.users.push(id);
-    }
-    this.id = id;
-    this.saveCurrentUser(id);
+  async login(name: string) {
+    this.name = name;
+    this.saveCurrentUser(name);
     await this.getProfile();
   }
 }

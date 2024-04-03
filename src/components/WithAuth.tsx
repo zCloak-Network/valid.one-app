@@ -6,10 +6,15 @@ const WithAuth: React.FC<PropsWithChildren> = ({ children }) => {
   const store = useStore();
   const location = useLocation();
 
-  return store.User.id ? (
+  return store.User.name ? (
     <>{children}</>
   ) : (
-    <Navigate to={{ pathname: "/login", search: `?redirect=${location.pathname}${location.search}` }} />
+    <Navigate
+      to={{
+        pathname: "/login",
+        search: `?redirect=${location.pathname}${location.search}`,
+      }}
+    />
   );
 };
 export default WithAuth;
