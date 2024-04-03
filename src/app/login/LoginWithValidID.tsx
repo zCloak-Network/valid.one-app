@@ -15,9 +15,7 @@ export default observer(function LoginWithValidID() {
 
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value.trim();
-
-    const ValidID = isNaN(Number(id)) ? undefined : Number(id);
-    console.log(ValidID);
+    const ValidID = !id || isNaN(Number(id)) ? undefined : Number(id);
     setInputValidID(ValidID);
   };
 
@@ -37,7 +35,7 @@ export default observer(function LoginWithValidID() {
       <label
         className={
           "flex w-full gap-2 input input-bordered items-center" +
-          (ValidIDIsReady ? "" : " input-warning")
+          (ValidIDIsReady || inputValidID === undefined ? "" : " input-warning")
         }
       >
         <input
@@ -48,7 +46,10 @@ export default observer(function LoginWithValidID() {
           onChange={handleInputChange}
         />
         <span
-          className="cursor-pointer flex h-8 -mr-4 opacity-70 px-4 items-center justify-center hover:opacity-100"
+          className={
+            "flex h-8 -mr-4 opacity-70 px-4 items-center justify-center hover:opacity-100" +
+            (ValidIDIsReady ? " cursor-pointer" : " cursor-not-allowed")
+          }
           onClick={handleLogin}
         >
           <FaArrowRight className="h-5 w-5" />

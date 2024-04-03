@@ -10,6 +10,7 @@ import { useParams } from "react-router-dom";
 import { SignatureResponse } from "@/types";
 import { signatureResultTemplate } from "@/constants";
 import { getString } from "@/api";
+import { profile } from "console";
 
 export default (function Verifier() {
   const [type, setType] = useState<number>(1);
@@ -61,56 +62,55 @@ export default (function Verifier() {
             } as SignatureResponse);
 
             setType(response.sign_type);
-
-            const profile = await getProfileById(response.created_by);
-            console;
-            if (profile) {
-              if (response.sign_type === 1) {
-                // message valid link
-                if (response.content_key) {
-                  // TODO load content
-                  getString(response.content_key).then((res) => {
-                    console.log("get string", res);
-                    if (res.data?.content) {
-                      setSignatureResult(
-                        signatureResultTemplate(
-                          profile?.public_key,
-                          response.hash,
-                          response.signature,
-                          res.data.content
-                        )
-                      );
-                      setLoading(false);
-                      setOpenMessageModal(true);
-                    } else {
-                      console.warn("get string fail, get:", res);
-                      setLoading(false);
-                    }
-                  });
-                } else {
-                  setSignatureResult(
-                    signatureResultTemplate(
-                      profile?.public_key,
-                      response.hash,
-                      response.signature
-                    )
-                  );
+            getProfileById(response.created_by)
+              .then((profile) => {
+                if (response.sign_type === 1) {
+                  // message valid link
+                  if (response.content_key) {
+                    // TODO load content
+                    getString(response.content_key).then((res) => {
+                      console.log("get string", res);
+                      if (res.data?.content) {
+                        setSignatureResult(
+                          signatureResultTemplate(
+                            profile?.public_key,
+                            response.hash,
+                            response.signature,
+                            res.data.content
+                          )
+                        );
+                        setLoading(false);
+                        setOpenMessageModal(true);
+                      } else {
+                        console.warn("get string fail, get:", res);
+                        setLoading(false);
+                      }
+                    });
+                  } else {
+                    setSignatureResult(
+                      signatureResultTemplate(
+                        profile?.public_key,
+                        response.hash,
+                        response.signature
+                      )
+                    );
+                    setLoading(false);
+                    setShowUserInputMessage(true);
+                    setSwitchUserInput(true);
+                  }
+                } else if (response.sign_type === 2) {
+                  // TODO file valid link
                   setLoading(false);
-                  setShowUserInputMessage(true);
-                  setSwitchUserInput(true);
+                  setOpenMessageModal(true);
                 }
-              } else if (response.sign_type === 2) {
-                // TODO file valid link
+              })
+              .catch(() => {
+                console.warn(
+                  "get profile error by valid id:",
+                  response.created_by
+                );
                 setLoading(false);
-                setOpenMessageModal(true);
-              }
-            } else {
-              console.warn(
-                "get profile error by valid id:",
-                response.created_by
-              );
-              setLoading(false);
-            }
+              });
           }
         })
         .catch(() => {

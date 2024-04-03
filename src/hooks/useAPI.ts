@@ -3,6 +3,10 @@ export async function getProfileById(id: number) {
   return (await actor.user_profile_get(id))[0] || null;
 }
 
+export async function getProfileByName(name: string) {
+  return (await actor.user_profile_get_by_name(name))[0] || null;
+}
+
 export async function getProfileByPublicKey(publicKey: string) {
   return (await actor.user_profile_get_by_pub_key(publicKey))[0] || null;
 }

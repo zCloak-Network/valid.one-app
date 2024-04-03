@@ -83,11 +83,10 @@ export default observer(function Signer() {
         }
       }
     }
-    const [authRequest, challenge] = await auth();
+    const [authRequest] = await auth();
 
     const res = await actor.sign_insert(
       authRequest,
-      challenge,
       signType,
       signCont,
       publicContentKey

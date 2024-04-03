@@ -1,4 +1,11 @@
 export const idlFactory = ({ IDL }) => {
+  const City = IDL.Record({
+    'id' : IDL.Nat32,
+    'name' : IDL.Opt(IDL.Text),
+    'name2' : IDL.Opt(IDL.Text),
+    'name3' : IDL.Opt(IDL.Text),
+    'name4' : IDL.Opt(IDL.Text),
+  });
   const Sign = IDL.Record({
     'modify_time' : IDL.Nat64,
     'signature' : IDL.Text,
@@ -23,20 +30,23 @@ export const idlFactory = ({ IDL }) => {
     'avatar' : IDL.Text,
   });
   return IDL.Service({
-    'finish_authentication_new' : IDL.Func(
-        [IDL.Text, IDL.Opt(IDL.Text)],
-        [IDL.Nat32],
+    'city_get' : IDL.Func([IDL.Nat32], [IDL.Opt(City)], ['query']),
+    'city_insert' : IDL.Func([IDL.Nat32, IDL.Text, IDL.Text, IDL.Text], [], []),
+    'city_length' : IDL.Func([], [IDL.Nat64], ['query']),
+    'finish_authentication_name' : IDL.Func([IDL.Text], [IDL.Text], []),
+    'finish_register_name' : IDL.Func(
+        [IDL.Text],
+        [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
         [],
       ),
-    'finish_register_new' : IDL.Func([IDL.Text], [IDL.Nat32], []),
-    'get_allow_credentials' : IDL.Func(
-        [IDL.Nat32],
+    'get_allow_credentials_name' : IDL.Func(
+        [IDL.Text],
         [IDL.Opt(IDL.Text)],
         ['query'],
       ),
-    'get_valid_id_by_credential' : IDL.Func(
+    'get_name_by_credential' : IDL.Func(
         [IDL.Text],
-        [IDL.Opt(IDL.Nat32)],
+        [IDL.Opt(IDL.Text)],
         ['query'],
       ),
     'greet' : IDL.Func(
@@ -84,22 +94,25 @@ export const idlFactory = ({ IDL }) => {
     'sign_get_by_signature' : IDL.Func([IDL.Text], [IDL.Opt(Sign)], ['query']),
     'sign_get_by_uuid' : IDL.Func([IDL.Text], [IDL.Opt(Sign)], ['query']),
     'sign_insert' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Nat8, IDL.Text, IDL.Text],
+        [IDL.Text, IDL.Nat8, IDL.Text, IDL.Text],
         [IDL.Variant({ 'Ok' : Sign, 'Err' : IDL.Text })],
         [],
       ),
     'sign_paginate' : IDL.Func([IDL.Nat32, IDL.Nat32], [SignResult], ['query']),
-    'start_authentication_new' : IDL.Func([IDL.Nat32], [IDL.Text], []),
-    'start_authentication_new_without_id' : IDL.Func([], [IDL.Text], []),
-    'start_register_new' : IDL.Func([], [IDL.Text], []),
-    'user_current_id' : IDL.Func([], [IDL.Nat32], ['query']),
-    'user_profile_edit' : IDL.Func(
-        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+    'start_authentication_name' : IDL.Func([IDL.Text], [IDL.Text], []),
+    'start_register_name' : IDL.Func(
+        [IDL.Text],
         [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
         [],
       ),
-    'user_profile_get' : IDL.Func(
-        [IDL.Nat32],
+    'user_current_id' : IDL.Func([], [IDL.Nat32], ['query']),
+    'user_profile_edit' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
+        [],
+      ),
+    'user_profile_get_by_name' : IDL.Func(
+        [IDL.Text],
         [IDL.Opt(UserProfile)],
         ['query'],
       ),

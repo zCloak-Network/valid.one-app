@@ -31,7 +31,7 @@ const EditProfile = () => {
   const handelSave = useCallback(async () => {
     try {
       toggle();
-      const [authRequest, challenge] = await auth();
+      const [authRequest] = await auth();
       let avatarResult = User.profile?.avatar;
       if (avatarFile) {
         const formData = new FormData();
@@ -48,10 +48,8 @@ const EditProfile = () => {
       }
 
       // if (!avatarResult) return alert("Avatar is required.");
-      console.log(authRequest, challenge, avatarResult || "", name, bio);
       const data = await actor.user_profile_edit(
         authRequest,
-        challenge,
         avatarResult || "",
         name,
         bio

@@ -22,7 +22,6 @@ const initialState: AlertConfig = { type: "info", message: "" };
 
 function reducer(state: AlertConfig, action: StoreDispatch) {
   const alertType = action.type || "info";
-  console.log(state, action);
   const alertParam = {
     type: alertType,
     message: "",
