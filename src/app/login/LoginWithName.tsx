@@ -96,7 +96,7 @@ export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
       </label>
 
       <div className="mt-4 text-sm text-gray-500">
-        Regist Valid One with a username.
+        You can use your username to login.
         <button className="btn btn-link" onClick={onCancel}>
           Cancel
         </button>

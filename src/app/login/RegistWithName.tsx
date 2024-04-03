@@ -107,7 +107,7 @@ export default (function RegistWithName({
       </label>
 
       <div className="mt-4 text-sm text-gray-500">
-        You can use your username to login.{" "}
+        Regist Valid One with a username.
         <button className="btn btn-link" onClick={onCancel}>
           Cancel
         </button>
