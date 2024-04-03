@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import { startRegistration } from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
 import { actor } from "@/utils/canister";
-import { FaArrowRight } from "react-icons/fa";
 import { useStore } from "@/hooks";
 import { useSearchParam } from "react-use";
 import { useToast } from "@/components";

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import LoginBg from "@/assets/images/loginBg.png";
-import OnBoarding from "@/assets/svg/onboarding.svg";
+import OnBoarding from "@/assets/images/login_bg.png";
 import { ResponseLayout } from "../layout";
 import LoginWithName from "./LoginWithName";
 import RegistWithName from "./RegistWithName";
@@ -18,7 +18,7 @@ export default (function HomePage() {
             backgroundImage: `url(${OnBoarding})`,
             backgroundPosition: "center top 10%",
             backgroundRepeat: "no-repeat",
-            backgroundSize: "inherit",
+            backgroundSize: "70% auto",
           }}
         >
           <div
