@@ -178,7 +178,7 @@ ${signatureResult.trim()}`;
   }, [signatureResult, userInputMessage, showUserInputMessage]);
 
   return (
-    <div className="rounded-xl bg-[#F9FAFB] p-4">
+    <div className="rounded-xl bg-[#F9FAFB] p-4 flex-1 overflow-auto">
       <div className="mb-4 flex flex-col gap-4">
         <div className=" self-stretch text-sm  text-zinc-500">
           What do you want to verify?

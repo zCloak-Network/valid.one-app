@@ -68,7 +68,7 @@ function HeadTab(
 
 export default function SignLayout() {
   return (
-    <div className="p-4 flex-1">
+    <div className="p-4 flex-1 overflow-hidden flex flex-col">
       <HeadTab className="my-4 px-8" />
       <Outlet />
     </div>

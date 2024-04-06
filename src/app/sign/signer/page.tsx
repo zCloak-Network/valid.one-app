@@ -129,7 +129,7 @@ export default observer(function Signer() {
   };
 
   return (
-    <div className="rounded-xl bg-[#F9FAFB] p-4">
+    <div className="rounded-xl bg-[#F9FAFB] p-4 flex-1 overflow-auto">
       <div className="border rounded-xl flex border-zinc-200 h-[52px] mb-4 p-4 gap-2 items-center">
         <div className="h-6 w-6 relative">
           {User.profile?.avatar && (
