@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDropzone, DropzoneOptions } from "react-dropzone";
 import EditAvatar from "@/assets/svg/icon/icon_edit_ava.svg?react";
 
@@ -11,25 +11,25 @@ interface Props {
 const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
   const [previewUrls, setPreviewUrls] = useState<string | undefined>(); // 存储图片预览 URL
 
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      setPreviewUrls(URL.createObjectURL(new Blob(acceptedFiles)));
-      onChange(acceptedFiles[0]);
-    },
-    [onChange, setPreviewUrls]
-  );
-
   const options: DropzoneOptions = {
-    onDrop,
+    maxFiles: 1,
 
     accept: {
-      "image/*": [],
+      "image/jpeg": [],
+      "image/png": [],
     },
     maxSize: 1024 * 1024 * 2,
     onError,
   };
 
-  const { getRootProps, getInputProps } = useDropzone(options);
+  const { getRootProps, getInputProps, acceptedFiles } = useDropzone(options);
+
+  useEffect(() => {
+    if (acceptedFiles.length) {
+      setPreviewUrls(URL.createObjectURL(new Blob(acceptedFiles)));
+      onChange(acceptedFiles[0]);
+    }
+  }, [acceptedFiles]);
 
   return (
     <div
