@@ -5,7 +5,7 @@ export const InputWithCopy = function (props: {
   value?: string | number | null;
   label?: string;
 }) {
-  const { copy } = useCopy();
+  const { copy, copyState } = useCopy();
   const valueString =
     props.value === null || props.value === undefined
       ? ""
@@ -23,10 +23,13 @@ export const InputWithCopy = function (props: {
       <label className="input input-bordered flex items-center gap-2">
         {props.label}
         <input type="text" className="grow" value={valueString} readOnly />
-        <MdOutlineCopyAll
-          className="w-6 h-6 opacity-70"
+        <span
+          className={"w-6 h-6 cursor-pointer" + (copyState ? " tooltip" : "")}
+          data-tip={copyState ? "Copied" : ""}
           onClick={() => handleCopy()}
-        />
+        >
+          <MdOutlineCopyAll className="opacity-70 w-6 h-6" />
+        </span>
       </label>
     </>
   );
