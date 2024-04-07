@@ -32,7 +32,7 @@ export default observer(function Signer() {
   }, [messageCont]);
 
   const messageSHA256 = useMemo(() => {
-    return sha256OfString(messageContTrim)?.replace(/^0x/, "") || "";
+    return sha256OfString(messageContTrim);
   }, [messageContTrim]);
 
   const signCont = useMemo(

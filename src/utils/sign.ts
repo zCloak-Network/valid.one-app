@@ -24,7 +24,8 @@ export const sha256OfFile: (file: File) => Promise<string> = (file: File) => {
 };
 
 export const sha256OfString: (str: string) => string = (str: string) => {
-  const wordArray = new TextEncoder().encode(str);
-  const hash = sha256AsU8a(wordArray);
-  return u8aToHex(hash);
+  // const wordArray = new TextEncoder().encode(str);
+  // const hash = sha256AsU8a(wordArray);
+  // return u8aToHex(hash);
+  return Buffer.from(sha256AsU8a(str)).toString("hex");
 };

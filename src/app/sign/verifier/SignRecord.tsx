@@ -7,7 +7,6 @@ import { Link } from "react-router-dom";
 import type { SignatureResponse } from "@/types";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import { ethereumEncode } from "@zcloak/crypto";
 
 dayjs.extend(relativeTime);
 
@@ -30,7 +29,7 @@ export default function SignRecord(props: {
             }
           >{`${props.ICPSignResponse?.created_by || ""}(${
             props.signatureObject?.signer
-              ? shortString(ethereumEncode(props.signatureObject.signer))
+              ? shortString(props.signatureObject.signer)
               : "Valid User"
           }) `}</Link>
           has signed this message at

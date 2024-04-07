@@ -1,3 +1,5 @@
+import { ethereumEncode } from "@zcloak/crypto";
+
 type SignType = "message" | "file";
 
 export const signTypes: Array<{
@@ -30,5 +32,5 @@ export const signatureResultTemplate = (
   `===
 Valid Sign from Valid One
 ===
-signer:0x${public_key},
+signer:${ethereumEncode(`0x${public_key}`)},
 sig:0x${hex}`;
