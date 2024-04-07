@@ -1,4 +1,4 @@
-import { USER_STORAGE_KEY } from "@/constants";
+import { USER_STORAGE_KEY, USER_HISTORY_KEY } from "@/constants";
 import { getProfileByName } from "@/hooks";
 import { UserProfileData } from "@/types";
 import { makeAutoObservable, runInAction } from "mobx";
@@ -61,6 +61,7 @@ export default class User {
 
   private saveCurrentUser(userName: string) {
     localStorage.setItem(USER_STORAGE_KEY, userName);
+    localStorage.setItem(USER_HISTORY_KEY, userName);
   }
 
   logout() {

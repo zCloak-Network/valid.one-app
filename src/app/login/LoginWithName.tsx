@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { startAuthentication } from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
 import { actor } from "@/utils/canister";
 import { FaArrowRight } from "react-icons/fa";
-import { USERNAME_REG } from "@/constants";
+import { USERNAME_REG, USER_HISTORY_KEY } from "@/constants";
 import { useToast } from "@/components";
 import { useStore } from "@/hooks";
 
@@ -14,7 +14,15 @@ export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
   const toast = useToast();
   const { User } = useStore();
 
-  const handleLogin = async () => {
+  useEffect(() => {
+    const history = localStorage.getItem(USER_HISTORY_KEY);
+    if (history) {
+      setName(history);
+    }
+  }, []);
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (loading) {
       return null;
     }
@@ -64,7 +72,7 @@ export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
   }, [username]);
 
   return (
-    <div>
+    <form onSubmit={handleLogin}>
       <label
         className={
           "flex w-full gap-2 input input-bordered items-center" +
@@ -80,19 +88,19 @@ export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
           maxLength={20}
           onChange={(e) => setName(e.target.value.trim())}
         />
-        <span
+        <button
           className={
             "flex h-8 -mr-4 opacity-70 px-4 items-center justify-center hover:opacity-100" +
             (nameIsValid ? " cursor-pointer" : " cursor-not-allowed")
           }
-          onClick={handleLogin}
+          type="submit"
         >
           {loading ? (
             <span className="loading loading-spinner "></span>
           ) : (
             <FaArrowRight className="h-5 w-5" />
           )}
-        </span>
+        </button>
       </label>
 
       <div className="mt-4 text-sm text-gray-500">
@@ -101,6 +109,6 @@ export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
           Cancel
         </button>
       </div>
-    </div>
+    </form>
   );
 });
