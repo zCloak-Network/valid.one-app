@@ -71,7 +71,7 @@ export default function VerifyMessage(props: {
   return (
     <>
       <ActionModal
-        title="Verification Resut"
+        title="Verification Result"
         open={openModal}
         closeByModal
         onClose={props.onClose}
