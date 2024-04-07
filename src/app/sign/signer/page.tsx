@@ -65,6 +65,11 @@ export default observer(function Signer() {
 
   const handleSign = async () => {
     if (!User.profile?.public_key) {
+      toast &&
+        toast({
+          type: "error",
+          message: "Please complete your profile first",
+        });
       return navigate("/id/profile/edit");
     }
     setLoading(true);
