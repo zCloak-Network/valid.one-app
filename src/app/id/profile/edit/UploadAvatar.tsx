@@ -15,10 +15,9 @@ const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
     maxFiles: 1,
 
     accept: {
-      "image/jpeg": [],
-      "image/png": [],
+      "image/*": [],
     },
-    maxSize: 1024 * 1024 * 2,
+    maxSize: 1024 * 1024 * 10,
     onError,
   };
 

@@ -12,10 +12,9 @@ export const DefaultPage = 1;
 export default function Explorer() {
   const [page, setPage] = useState<number>(DefaultPage);
   const { data, loading } = useGetSigs(page, PageSize);
-  const pagesize = useMemo(
-    () => (data?.size ? Math.ceil(data.size / PageSize) : DefaultPage),
-    [data]
-  );
+  const pagesize = useMemo(() => {
+    return data?.size ? Math.ceil(data.size / PageSize) : DefaultPage;
+  }, [data]);
 
   const { uuid } = useParams<{ uuid: string }>();
   const [sigOrUUID, setSigOrUUID] = useState<string | undefined>(uuid);
