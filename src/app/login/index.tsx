@@ -1,9 +1,21 @@
 import LoginPage from "./page";
+import RegistPage from "./register/page";
+import Layout from "./layout";
 
 const routers = [
   {
-    path: "/login",
-    element: <LoginPage />,
+    path: "",
+    element: <Layout />,
+    children: [
+      {
+        path: "/login",
+        element: <LoginPage />,
+      },
+      {
+        path: "/register",
+        element: <RegistPage />,
+      },
+    ],
   },
 ];
 

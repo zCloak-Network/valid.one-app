@@ -8,6 +8,8 @@ import { observer } from "@/store";
 import { useToggle } from "react-use";
 import { upload } from "@/api";
 import { Link, useNavigate } from "react-router-dom";
+import { ChannelHead } from "@/components";
+
 const maxLength = 200;
 
 const EditProfile = () => {
@@ -72,16 +74,8 @@ const EditProfile = () => {
 
   return (
     <div className="flex flex-col flex-1 px-5 overflow-hidden">
-      <div className="flex py-4 items-center relative">
-        <Link
-          className="border rounded-lg border-zinc-300 p-2 absolute"
-          to={"/id"}
-          replace
-        >
-          <IconBack />
-        </Link>
-        <p className="font-bold mx-auto text-lg text-gray-800">Edit Profile</p>
-      </div>
+      <ChannelHead path="/id" title="Edit Profile" />
+
       <div className="flex-1 overflow-auto">
         <p className="font-medium mt-5 text-sm w-full text-neutral-400">
           Here, you'll merge different elements of your digital identity to
