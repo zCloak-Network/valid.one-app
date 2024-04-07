@@ -1,6 +1,6 @@
 import "./globals.css";
-import { Outlet, useLocation } from "react-router-dom";
-import Nav from "./Nav";
+import { Outlet, useLocation, matchPath } from "react-router-dom";
+import { default as Nav, hiddenPaths } from "./Nav";
 import { ToastProvider } from "@/components";
 
 export function ResponseLayout({
@@ -27,8 +27,14 @@ export function ResponseLayout({
 export default function RootLayout() {
   const location = useLocation();
   const pathname = location.pathname;
+  const shouldHideNav = hiddenPaths.some((pathPattern) =>
+    matchPath({ path: pathPattern, end: true }, pathname)
+  );
+
   return (
-    <ResponseLayout className="flex flex-col relative pb-20">
+    <ResponseLayout
+      className={"flex flex-col relative" + (shouldHideNav ? "" : " pb-20")}
+    >
       <ToastProvider>
         <Outlet />
       </ToastProvider>
