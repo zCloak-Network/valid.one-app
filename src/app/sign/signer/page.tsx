@@ -25,10 +25,13 @@ export default observer(function Signer() {
   const [ICPSignResponse, setICPSignResponse] =
     useState<SignatureResponse | null>(null);
   const [publicMode, setPublicMode] = useState(false);
+  const messageContTrim = useMemo(() => {
+    return messageCont.trim();
+  }, [messageCont]);
 
   const messageSHA256 = useMemo(() => {
-    return sha256OfString(messageCont)?.replace(/^0x/, "") || "";
-  }, [messageCont]);
+    return sha256OfString(messageContTrim)?.replace(/^0x/, "") || "";
+  }, [messageContTrim]);
 
   const signCont = useMemo(
     () => (signType === 1 ? messageSHA256 : fileSHA256),
@@ -52,7 +55,7 @@ export default observer(function Signer() {
         User.profile.public_key,
         signCont,
         ICPSignResult,
-        messageCont
+        messageContTrim
       );
     }
     return undefined;
@@ -66,9 +69,9 @@ export default observer(function Signer() {
 
     let publicContentKey = "";
     if (signType === 1) {
-      if (publicMode && messageCont) {
+      if (publicMode && messageContTrim) {
         // TODO send cont to api
-        const saveStringRes = await saveString({ content: messageCont });
+        const saveStringRes = await saveString({ content: messageContTrim });
         if (saveStringRes.data) {
           publicContentKey = saveStringRes.data;
           console.log("save string get key:", publicContentKey);
