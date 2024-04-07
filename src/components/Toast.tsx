@@ -83,7 +83,7 @@ const Toast = () => {
         }`}
       >
         <div
-          className="p-4"
+          className="p-4 text-center"
           style={{
             backgroundColor: colorMap[type].bg,
             color: colorMap[type].color,
