@@ -10,8 +10,10 @@ import { IoIosCloseCircle } from "react-icons/io";
 import { usePasskeyAuth } from "@/hooks";
 import type { SignatureResponse } from "@/types";
 import { saveString } from "@/api";
+import { useToast } from "@/components";
 
 export default observer(function Signer() {
+  const toast = useToast();
   const { auth } = usePasskeyAuth();
   const navigate = useNavigate();
   const { User } = useStore();
@@ -77,7 +79,11 @@ export default observer(function Signer() {
           console.log("save string get key:", publicContentKey);
         } else {
           setLoading(false);
-          console.warn("save string fail, get:", saveStringRes);
+          toast &&
+            toast({
+              type: "error",
+              message: saveStringRes.msg || "save cont fail",
+            });
           return null;
         }
       }
