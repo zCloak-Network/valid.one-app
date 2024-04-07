@@ -249,6 +249,7 @@ export default observer(function Signer() {
         onClose={() => {
           setOpenStatus(false);
           setICPSignResult("");
+          setSelectFile(undefined);
         }}
       />
     </div>
