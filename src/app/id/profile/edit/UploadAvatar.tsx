@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDropzone, DropzoneOptions } from "react-dropzone";
 import EditAvatar from "@/assets/svg/icon/icon_edit_ava.svg?react";
+import { useToast } from "@/components";
 
 interface Props {
   onChange: (files: File) => void;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
+  const toast = useToast();
   const [previewUrls, setPreviewUrls] = useState<string | undefined>(); // 存储图片预览 URL
   // TODO 最大文件大小 5MB
   const maxSize = 1024 * 1024 * 5;
@@ -20,19 +22,10 @@ const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
     },
     maxSize,
     onError,
-    validator(file) {
-      if (file.size > maxSize) {
-        return {
-          code: "file-too-large",
-          message: `File is larger than 5MB`,
-        };
-      }
-
-      return null;
-    },
   };
 
-  const { getRootProps, getInputProps, acceptedFiles } = useDropzone(options);
+  const { getRootProps, getInputProps, acceptedFiles, fileRejections } =
+    useDropzone(options);
 
   useEffect(() => {
     if (acceptedFiles.length) {
@@ -40,6 +33,16 @@ const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
       onChange(acceptedFiles[0]);
     }
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    if (fileRejections.length) {
+      toast &&
+        toast({
+          type: "error",
+          message: fileRejections[0].errors[0]?.message || "upload error",
+        });
+    }
+  }, [fileRejections]);
 
   return (
     <div
