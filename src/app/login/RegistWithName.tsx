@@ -100,13 +100,13 @@ export default (function RegistWithName({
           {loading ? (
             <span className="loading loading-spinner "></span>
           ) : (
-            "Regist"
+            "Register"
           )}
         </span>
       </label>
 
       <div className="mt-4 text-sm text-gray-500">
-        Regist Valid One with a username.
+        Register Valid One with a username.
         <button className="btn btn-link" onClick={onCancel}>
           Cancel
         </button>

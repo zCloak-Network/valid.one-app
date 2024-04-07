@@ -112,7 +112,7 @@ export default (function Register() {
             {loading ? (
               <span className="loading loading-spinner "></span>
             ) : (
-              "Regist"
+              "Register"
             )}
           </button>
           <div className="mt-4 text-sm text-gray-500 text-center">
