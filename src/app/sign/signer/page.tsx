@@ -62,8 +62,8 @@ export default observer(function Signer() {
   }, [ICPSignResult, signCont]);
 
   const handleSign = async () => {
-    if (!User.name) {
-      return navigate("/login");
+    if (!User.profile?.public_key) {
+      return navigate("/id/profile/edit");
     }
     setLoading(true);
 

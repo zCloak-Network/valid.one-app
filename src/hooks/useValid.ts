@@ -38,22 +38,27 @@ export function useValid() {
   const valid = (signatureResult: string) => {
     let result = false;
     const signatureObject = checkSignatureResult(signatureResult);
-    if (signatureObject && signatureObject.message) {
-      const messageSHA256 = sha256OfString(signatureObject.message)?.replace(
-        /^0x/,
-        ""
-      );
-      const messageHash = sha256AsU8a(messageSHA256);
-      const verifyResult = recoverAddress(
-        messageHash,
-        signatureObject.signature
-      );
-      console.log(
-        "verifyResult=",
-        verifyResult,
-        ethereumEncode(signatureObject.signer)
-      );
-      result = verifyResult === ethereumEncode(signatureObject.signer);
+    try {
+      if (signatureObject && signatureObject.message) {
+        const messageSHA256 = sha256OfString(signatureObject.message)?.replace(
+          /^0x/,
+          ""
+        );
+        const messageHash = sha256AsU8a(messageSHA256);
+        const verifyResult = recoverAddress(
+          messageHash,
+          signatureObject.signature
+        );
+        console.log(
+          "verifyResult=",
+          verifyResult,
+          ethereumEncode(signatureObject.signer)
+        );
+        result = verifyResult === ethereumEncode(signatureObject.signer);
+      }
+    } catch (err) {
+      console.warn("signatureObject=", signatureObject);
+      alert(err.message);
     }
 
     return {
