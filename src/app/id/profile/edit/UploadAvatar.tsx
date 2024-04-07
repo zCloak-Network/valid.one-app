@@ -10,15 +10,26 @@ interface Props {
 
 const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
   const [previewUrls, setPreviewUrls] = useState<string | undefined>(); // 存储图片预览 URL
-
+  // TODO 最大文件大小 5MB
+  const maxSize = 1024 * 1024 * 5;
   const options: DropzoneOptions = {
     maxFiles: 1,
 
     accept: {
       "image/*": [],
     },
-    maxSize: 1024 * 1024 * 10,
+    maxSize,
     onError,
+    validator(file) {
+      if (file.size > maxSize) {
+        return {
+          code: "file-too-large",
+          message: `File is larger than 5MB`,
+        };
+      }
+
+      return null;
+    },
   };
 
   const { getRootProps, getInputProps, acceptedFiles } = useDropzone(options);
