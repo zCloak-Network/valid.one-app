@@ -13,7 +13,7 @@ const UploadAvatar: React.FC<Props> = ({ onChange, url, onError }) => {
 
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
-      setPreviewUrls(URL.createObjectURL(acceptedFiles[0]));
+      setPreviewUrls(URL.createObjectURL(new Blob(acceptedFiles)));
       onChange(acceptedFiles[0]);
     },
     [onChange, setPreviewUrls]

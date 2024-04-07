@@ -234,6 +234,7 @@ export default observer(function Signer() {
         signatureResult={signatureResult}
         ICPSignResponse={ICPSignResponse}
         selectFile={selectFile}
+        publicMode={publicMode}
         onClose={() => {
           setOpenStatus(false);
           setICPSignResult("");

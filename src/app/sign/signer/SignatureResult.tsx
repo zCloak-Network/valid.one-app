@@ -15,6 +15,7 @@ export default function SignatureResultObject(props: {
   signatureResult?: string;
   ICPSignResponse: SignatureResponse | null;
   selectFile?: File;
+  publicMode?: boolean;
   onClose: () => void;
 }) {
   const [openModal, setOpenModal] = useState(false);
@@ -77,7 +78,7 @@ export default function SignatureResultObject(props: {
             </label>
             <div className="border-t"></div>
 
-            {validLinkUrl && (
+            {props.publicMode && validLinkUrl && (
               <>
                 <div className="flex px-20 gap-5 justify-between">
                   <div
