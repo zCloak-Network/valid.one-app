@@ -56,7 +56,7 @@ const Nav = () => {
 
   return (
     <div
-      className={`relative z-10 h-20 bg-[#fcfdfd] ${
+      className={`fixed left-0 w-full bottom-0 z-10 h-20 bg-[#fcfdfd] ${
         shouldHideNav ? "hidden" : "block"
       } px-3`}
       style={{

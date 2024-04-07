@@ -28,7 +28,7 @@ export default function RootLayout() {
   const location = useLocation();
   const pathname = location.pathname;
   return (
-    <ResponseLayout className="flex flex-col relative">
+    <ResponseLayout className="flex flex-col relative pb-20">
       <ToastProvider>
         <Outlet />
       </ToastProvider>
