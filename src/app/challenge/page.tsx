@@ -76,6 +76,7 @@ export default observer(function ChallengePage() {
 
       if ((res as any)["Ok"]?.signature) {
         // callback
+        console.log((res as any)["Ok"]);
       } else {
         toast && toast({ type: "error", message: "sign fail" });
       }
@@ -111,22 +112,27 @@ export default observer(function ChallengePage() {
         <button className="btn ]">Valid ID:{User.id}</button>
       </header>
       {challengeData ? (
-        <div className="rounded-lg p-8 bg-white shadow-2xl w-[60%] min-w-[300px] max-w-[640px]">
-          {/* challengeID:{challengeID} */}
-          <div className="mb-8">
-            Your Telegram friend{" "}
-            <span className="badge badge-lg badge-neutral">mayun</span> requests
-            verification of your identity.
+        <div className="rounded-lg bg-white shadow-2xl w-[60%] min-w-[300px] max-w-[640px]">
+          <div className="border-b px-8 py-4 font-semibold">
+            Valid One Telegram Challenge
           </div>
-          <div className="text-center">
-            <button
-              className="btn btn-neutral bg-[#000000]"
-              disabled={!contIsReady()}
-              onClick={handleUserConfirm}
-            >
-              {loading && <span className="loading loading-spinner"></span>}
-              Verify
-            </button>
+          <div className="p-8">
+            {/* challengeID:{challengeID} */}
+            <div className="mb-8">
+              Your Telegram friend{" "}
+              <span className="badge badge-lg badge-neutral">mayun</span>{" "}
+              requests verification of your identity.
+            </div>
+            <div className="text-center">
+              <button
+                className="btn btn-neutral bg-[#000000]"
+                disabled={!contIsReady()}
+                onClick={handleUserConfirm}
+              >
+                {loading && <span className="loading loading-spinner"></span>}
+                Verify
+              </button>
+            </div>
           </div>
         </div>
       ) : (
