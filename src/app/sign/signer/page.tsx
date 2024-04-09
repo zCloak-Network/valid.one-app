@@ -42,7 +42,10 @@ export default observer(function Signer() {
 
   const clearAutorun = autorun(() => {
     if (!User.name) {
-      navigate("/login");
+      navigate({
+        pathname: "/login",
+        search: `?redirect=${encodeURIComponent("/sign/signer")}`,
+      });
       return undefined;
     }
   });
