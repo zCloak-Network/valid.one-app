@@ -3,7 +3,7 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
 import { actor } from "@/utils/canister";
 import { useStore } from "@/hooks";
-import { useSearchParam } from "react-use";
+import { getQueryParams } from "@/utils";
 import { useToast } from "@/components";
 import { USERNAME_REG } from "@/constants";
 
@@ -16,7 +16,7 @@ export default (function RegistWithName({
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [registName, setRegistName] = useState("");
-  const searchParams = useSearchParam("redirect") || "/id";
+  const searchParams = getQueryParams("redirect") || "/id";
   const toast = useToast();
 
   const handleRegister = async () => {

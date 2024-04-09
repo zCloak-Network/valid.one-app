@@ -6,7 +6,7 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
 import { actor } from "@/utils/canister";
 import { useStore } from "@/hooks";
-import { useSearchParam } from "react-use";
+import { getQueryParams } from "@/utils";
 import { USERNAME_REG } from "@/constants";
 
 export default (function Register() {
@@ -14,7 +14,7 @@ export default (function Register() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [registName, setRegistName] = useState("");
-  const searchParams = useSearchParam("redirect") || "/id";
+  const searchParams = getQueryParams("redirect") || "/id";
   const toast = useToast();
 
   const handleRegister = async () => {
@@ -45,7 +45,10 @@ export default (function Register() {
       setLoading(false);
       if ((registReturn as any)["Ok"] === registName) {
         User.login(registName);
-        navigate(searchParams);
+        navigate({
+          pathname: "/id/profile/edit",
+          search: `?redirect=${encodeURIComponent(searchParams)}`,
+        });
       } else {
         toast &&
           toast({

@@ -7,12 +7,14 @@ import { actor } from "@/utils/canister";
 import { observer } from "@/store";
 import { useToggle } from "react-use";
 import { upload } from "@/api";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ChannelHead } from "@/components";
+import { getQueryParams } from "@/utils";
 
 const maxLength = 200;
 
 const EditProfile = () => {
+  const searchParams = getQueryParams("redirect");
   const { User } = useStore();
   const [avatarFile, setAvatarFile] = useState<File>();
   const [bio, setBio] = useState(User.profile?.bio || "");
@@ -57,7 +59,7 @@ const EditProfile = () => {
         bio
       );
       await User.getProfile();
-      navigate("/id");
+      navigate(searchParams || "/id");
       console.log("[ data ] >", data);
       toggle();
     } catch (error) {
@@ -74,7 +76,7 @@ const EditProfile = () => {
 
   return (
     <div className="flex flex-col flex-1 px-5 overflow-hidden">
-      <ChannelHead path="/id" title="Edit Profile" />
+      <ChannelHead path="/id" title="Edit Profile" hideBack={!!searchParams} />
 
       <div className="flex-1 overflow-auto">
         <p className="font-medium mt-5 text-sm w-full text-neutral-400">
