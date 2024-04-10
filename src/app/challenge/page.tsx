@@ -5,6 +5,7 @@ import {
   useLoaderData,
   LoaderFunctionArgs,
   useNavigate,
+  Link,
 } from "react-router-dom";
 import Logo from "@/assets/landing-page/logo.png";
 import Alpha from "@/assets/landing-page/alpha.png";
@@ -40,6 +41,8 @@ export default observer(function ChallengePage() {
   const [challengeData, setChallengeData] = useState<
     challengeData | undefined
   >();
+  const [challengeSuccess, setChallengeSuccess] = useState(false);
+
   const messageSHA256 = useMemo(() => {
     return challengeData?.verifyContent
       ? sha256OfString(challengeData.verifyContent)
@@ -77,6 +80,7 @@ export default observer(function ChallengePage() {
       if ((res as any)["Ok"]?.signature) {
         // callback
         console.log((res as any)["Ok"]);
+        setChallengeSuccess(true);
       } else {
         toast && toast({ type: "error", message: "sign fail" });
       }
@@ -119,19 +123,34 @@ export default observer(function ChallengePage() {
           <div className="p-8">
             {/* challengeID:{challengeID} */}
             <div className="mb-8">
-              Your Telegram friend{" "}
-              <span className="badge badge-lg badge-neutral">mayun</span>{" "}
+              Your Telegram friend
+              <kbd className="kbd mx-1">mayun</kbd>
               requests verification of your identity.
             </div>
             <div className="text-center">
-              <button
-                className="btn btn-neutral bg-[#000000]"
-                disabled={!contIsReady()}
-                onClick={handleUserConfirm}
-              >
-                {loading && <span className="loading loading-spinner"></span>}
-                Verify
-              </button>
+              {challengeSuccess ? (
+                <div className="flex items-center justify-center gap-2">
+                  <button
+                    className="btn btn-sm btn-neutral bg-[#000000]"
+                    disabled={!contIsReady()}
+                    onClick={handleUserConfirm}
+                  >
+                    Back to telegram
+                  </button>
+                  <Link className="btn btn-sm btn-link" to={"/"}>
+                    Valid One
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  className="btn btn-neutral bg-[#000000]"
+                  disabled={!contIsReady()}
+                  onClick={handleUserConfirm}
+                >
+                  {loading && <span className="loading loading-spinner"></span>}
+                  Verify
+                </button>
+              )}
             </div>
           </div>
         </div>
