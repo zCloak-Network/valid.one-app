@@ -164,13 +164,12 @@ export default observer(function ChallengePage() {
                 <div className="text-center">
                   {challengeSuccess ? (
                     <div className="flex items-center justify-center gap-2">
-                      <button
+                      <a
+                        href={import.meta.env.VITE_APP_TELEGRAM_BOT_URL}
                         className="btn btn-sm btn-neutral bg-[#000000]"
-                        disabled={!contIsReady()}
-                        onClick={handleUserConfirm}
                       >
                         Back to telegram
-                      </button>
+                      </a>
                       <Link className="btn btn-sm btn-link" to={"/"}>
                         Valid One
                       </Link>
