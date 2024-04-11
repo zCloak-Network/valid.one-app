@@ -56,6 +56,7 @@ export default class User {
       });
     } else {
       console.warn("get user profile fail", result);
+      this.logout();
     }
   }
 

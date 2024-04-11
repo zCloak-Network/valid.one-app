@@ -1,10 +1,14 @@
 export type challengeData = {
-  challengeID: number;
+  id: string;
+  challenge: string;
   platform: "telegram";
+  from: string;
+  to: string;
   requestUser: {
     name: string;
     avatar: string;
   };
   verifyContent: string;
-  createTime: number;
+  creatTime: number;
+  status: 0 | 1 | 2;
 };

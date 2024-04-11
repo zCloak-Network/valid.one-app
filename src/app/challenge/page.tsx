@@ -13,6 +13,7 @@ import { sha256OfString } from "@/utils";
 import { useToast } from "@/components";
 import initActor, { actor } from "@/utils/canister";
 import type { challengeData } from "@/types";
+import { getChallenge, sendChallenge } from "@/api";
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { challengeID } = params;
@@ -37,6 +38,20 @@ export default observer(function ChallengePage() {
     });
   }
 
+  if (User.profile && !User.id) {
+    navigate({
+      pathname: "/login",
+      search: `?redirect=${encodeURIComponent("/challenge/" + challengeID)}`,
+    });
+  }
+
+  if (User.profile && !User.profile?.public_key) {
+    navigate({
+      pathname: "/id/profile/edit",
+      search: `?redirect=${encodeURIComponent("/challenge/" + challengeID)}`,
+    });
+  }
+
   const [loading, setLoading] = useState(false);
   const [challengeData, setChallengeData] = useState<
     challengeData | undefined
@@ -44,8 +59,8 @@ export default observer(function ChallengePage() {
   const [challengeSuccess, setChallengeSuccess] = useState(false);
 
   const messageSHA256 = useMemo(() => {
-    return challengeData?.verifyContent
-      ? sha256OfString(challengeData.verifyContent)
+    return challengeData?.challenge
+      ? sha256OfString(challengeData.challenge)
       : "";
   }, [challengeData]);
 
@@ -53,25 +68,29 @@ export default observer(function ChallengePage() {
     if (challengeID && !loading) {
       setLoading(true);
       // load cont
-      setTimeout(() => {
-        setChallengeData({
-          challengeID: 1,
-          platform: "telegram",
-          requestUser: {
-            name: "mahuateng",
-            avatar: "",
-          },
-          verifyContent: "fdgwsdg",
-          createTime: 1,
+      getChallenge({ id: challengeID })
+        .then((res) => {
+          if (res.code === 200) {
+            setChallengeData(res.data);
+          } else {
+            toast &&
+              toast({ type: "error", message: res.msg || "get data fail" });
+          }
+
+          setLoading(false);
+        })
+        .catch(() => {
+          setLoading(false);
         });
-        setLoading(false);
-      }, 2000);
     }
   }, [challengeID]);
 
   const sign = async () => {
     setLoading(true);
     try {
+      if (!User.id) {
+        throw new Error("user not login");
+      }
       const [authRequest] = await auth();
 
       const res = await actor.sign_insert(authRequest, 1, messageSHA256, "");
@@ -80,7 +99,18 @@ export default observer(function ChallengePage() {
       if ((res as any)["Ok"]?.signature) {
         // callback
         console.log((res as any)["Ok"]);
-        setChallengeSuccess(true);
+        const challengeRes = await sendChallenge({
+          challengeId: challengeID,
+          validId: User.id,
+          signature: (res as any)["Ok"]?.signature,
+        });
+
+        if (challengeRes.code === 200) {
+          setChallengeSuccess(true);
+        } else {
+          toast &&
+            toast({ type: "error", message: "Verify fail, please try again" });
+        }
       } else {
         toast && toast({ type: "error", message: "sign fail" });
       }
@@ -122,36 +152,48 @@ export default observer(function ChallengePage() {
           </div>
           <div className="p-8">
             {/* challengeID:{challengeID} */}
-            <div className="mb-8">
-              Your Telegram friend
-              <kbd className="kbd mx-1">mayun</kbd>
-              requests verification of your identity.
-            </div>
-            <div className="text-center">
-              {challengeSuccess ? (
-                <div className="flex items-center justify-center gap-2">
-                  <button
-                    className="btn btn-sm btn-neutral bg-[#000000]"
-                    disabled={!contIsReady()}
-                    onClick={handleUserConfirm}
-                  >
-                    Back to telegram
-                  </button>
-                  <Link className="btn btn-sm btn-link" to={"/"}>
-                    Valid One
-                  </Link>
+            {challengeData.status === 0 && (
+              <>
+                <div className="mb-8">
+                  Your Telegram friend
+                  <kbd className="kbd mx-1">
+                    {challengeData.requestUser.name}({challengeData.from})
+                  </kbd>
+                  requests verification of your identity.
                 </div>
-              ) : (
-                <button
-                  className="btn btn-neutral bg-[#000000]"
-                  disabled={!contIsReady()}
-                  onClick={handleUserConfirm}
-                >
-                  {loading && <span className="loading loading-spinner"></span>}
-                  Verify
-                </button>
-              )}
-            </div>
+                <div className="text-center">
+                  {challengeSuccess ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        className="btn btn-sm btn-neutral bg-[#000000]"
+                        disabled={!contIsReady()}
+                        onClick={handleUserConfirm}
+                      >
+                        Back to telegram
+                      </button>
+                      <Link className="btn btn-sm btn-link" to={"/"}>
+                        Valid One
+                      </Link>
+                    </div>
+                  ) : (
+                    <button
+                      className="btn btn-neutral bg-[#000000]"
+                      disabled={!contIsReady()}
+                      onClick={handleUserConfirm}
+                    >
+                      {loading && (
+                        <span className="loading loading-spinner"></span>
+                      )}
+                      Verify
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
+
+            {challengeData.status === 1 && <div>Verification completed</div>}
+
+            {challengeData.status === 2 && <div>Verification expired</div>}
           </div>
         </div>
       ) : (
