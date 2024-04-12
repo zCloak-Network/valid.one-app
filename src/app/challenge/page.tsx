@@ -53,6 +53,7 @@ export default observer(function ChallengePage() {
   }
 
   const [loading, setLoading] = useState(false);
+  // TODO data loading
   const [challengeData, setChallengeData] = useState<
     challengeData | undefined
   >();
@@ -105,7 +106,7 @@ export default observer(function ChallengePage() {
           signature: (res as any)["Ok"]?.signature,
         });
 
-        if (challengeRes.code === 200) {
+        if (challengeRes.data) {
           setChallengeSuccess(true);
         } else {
           toast &&
