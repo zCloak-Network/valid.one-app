@@ -52,6 +52,7 @@ export default observer(function ChallengePage() {
     });
   }
 
+  const [initLoading, setInitLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   // TODO data loading
   const [challengeData, setChallengeData] = useState<
@@ -67,21 +68,21 @@ export default observer(function ChallengePage() {
 
   useEffect(() => {
     if (challengeID && !loading) {
-      setLoading(true);
+      setInitLoading(true);
       // load cont
       getChallenge({ id: challengeID })
         .then((res) => {
-          if (res.code === 200) {
+          if (res.data) {
             setChallengeData(res.data);
           } else {
             toast &&
               toast({ type: "error", message: res.msg || "get data fail" });
           }
 
-          setLoading(false);
+          setInitLoading(false);
         })
         .catch(() => {
-          setLoading(false);
+          setInitLoading(false);
         });
     }
   }, [challengeID]);
@@ -146,56 +147,60 @@ export default observer(function ChallengePage() {
         <div className="flex-1"></div>
         <button className="btn ]">Valid ID:{User.id}</button>
       </header>
-      {challengeData ? (
-        <div className="rounded-lg bg-white shadow-2xl w-[60%] min-w-[300px] max-w-[640px]">
-          <div className="border-b px-8 py-4 font-semibold">
-            Valid One Telegram Challenge
-          </div>
-          <div className="p-8">
-            {/* challengeID:{challengeID} */}
-            {challengeData.status === 0 && (
-              <>
-                <div className="mb-8">
-                  Your Telegram friend
-                  <kbd className="kbd mx-1">
-                    {challengeData.requestUser.name}({challengeData.from})
-                  </kbd>
-                  requests verification of your identity.
-                </div>
-                <div className="text-center">
-                  {challengeSuccess ? (
-                    <div className="flex items-center justify-center gap-2">
-                      <a
-                        href={import.meta.env.VITE_APP_TELEGRAM_BOT_URL}
-                        className="btn btn-sm btn-neutral bg-[#000000]"
+      {!initLoading ? (
+        challengeData ? (
+          <div className="rounded-lg bg-white shadow-2xl w-[60%] min-w-[300px] max-w-[640px]">
+            <div className="border-b px-8 py-4 font-semibold">
+              Valid One Telegram Challenge
+            </div>
+            <div className="p-8">
+              {/* challengeID:{challengeID} */}
+              {challengeData.status === 0 && (
+                <>
+                  <div className="mb-8">
+                    Your Telegram friend
+                    <kbd className="kbd mx-1">
+                      {challengeData.requestUser.name}({challengeData.from})
+                    </kbd>
+                    requests verification of your identity.
+                  </div>
+                  <div className="text-center">
+                    {challengeSuccess ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <a
+                          href={import.meta.env.VITE_APP_TELEGRAM_BOT_URL}
+                          className="btn btn-sm btn-neutral bg-[#000000]"
+                        >
+                          Back to telegram
+                        </a>
+                        <Link className="btn btn-sm btn-link" to={"/"}>
+                          Valid One
+                        </Link>
+                      </div>
+                    ) : (
+                      <button
+                        className="btn btn-neutral bg-[#000000]"
+                        disabled={!contIsReady()}
+                        onClick={handleUserConfirm}
                       >
-                        Back to telegram
-                      </a>
-                      <Link className="btn btn-sm btn-link" to={"/"}>
-                        Valid One
-                      </Link>
-                    </div>
-                  ) : (
-                    <button
-                      className="btn btn-neutral bg-[#000000]"
-                      disabled={!contIsReady()}
-                      onClick={handleUserConfirm}
-                    >
-                      {loading && (
-                        <span className="loading loading-spinner"></span>
-                      )}
-                      Verify
-                    </button>
-                  )}
-                </div>
-              </>
-            )}
+                        {loading && (
+                          <span className="loading loading-spinner"></span>
+                        )}
+                        Verify
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
 
-            {challengeData.status === 1 && <div>Verification completed</div>}
+              {challengeData.status === 1 && <div>Verification completed</div>}
 
-            {challengeData.status === 2 && <div>Verification expired</div>}
+              {challengeData.status === 2 && <div>Verification expired</div>}
+            </div>
           </div>
-        </div>
+        ) : (
+          "Data does not exist"
+        )
       ) : (
         "Loading"
       )}
