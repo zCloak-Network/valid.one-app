@@ -26,19 +26,24 @@ function Item({ label, value }: ItemProps) {
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { validId } = params;
+  let profile: UserData | undefined;
 
   await initActor();
-  const result = validId
-    ? await actor.user_profile_get(parseInt(validId))
-    : null;
+  try {
+    const result = validId
+      ? await actor.user_profile_get(parseInt(validId))
+      : null;
 
-  const profile: UserData | undefined = result?.[0]
-    ? {
-        ...result?.[0],
-        create_time: Number(result[0].create_time),
-        modify_time: Number(result[0].modify_time),
-      }
-    : undefined;
+    profile = result?.[0]
+      ? {
+          ...result?.[0],
+          create_time: Number(result[0].create_time),
+          modify_time: Number(result[0].modify_time),
+        }
+      : undefined;
+  } catch (err) {
+    console.log(err);
+  }
 
   return { validId, profile };
 }

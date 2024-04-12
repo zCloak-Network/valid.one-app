@@ -97,14 +97,18 @@ export default observer(function Signer() {
       }
     }
     const [authRequest] = await auth();
-
-    const res = await actor.sign_insert(
-      authRequest,
-      signType,
-      signCont,
-      publicContentKey
-    );
-    console.log(User.id, signType, signCont, "sign result", res);
+    let res;
+    try {
+      res = await actor.sign_insert(
+        authRequest,
+        signType,
+        signCont,
+        publicContentKey
+      );
+      console.log(User.id, signType, signCont, "sign result", res);
+    } catch (err) {
+      console.log(err);
+    }
 
     if ((res as any)["Ok"]?.signature) {
       setICPSignResult((res as any)["Ok"].signature);
