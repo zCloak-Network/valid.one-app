@@ -160,7 +160,7 @@ export default observer(function ChallengePage() {
                   <div className="mb-8">
                     Your Telegram friend
                     <kbd className="kbd mx-1">
-                      {challengeData.requestUser.name}({challengeData.from})
+                      {challengeData.requestUser.name}
                     </kbd>
                     requests verification of your identity.
                   </div>
