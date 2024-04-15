@@ -68,11 +68,11 @@ export default (function HomePage() {
                 className={`btn btn-primary w-full `}
                 onClick={() => toggleModal(2)}
               >
-                Login with username
+                Sign in with passkey
               </button>
 
               <div className="text-center 'Poppins'] text-sm font-normal text-zinc-500">
-                it takes as little as 10s
+                it takes 5 secs
               </div>
             </>
           )}
