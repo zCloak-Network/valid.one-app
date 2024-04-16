@@ -4,9 +4,17 @@ import { ShortAddress } from "@/components";
 import { getString } from "@/api";
 import { useState } from "react";
 
-export default function Row({ data }: { data: Sign }) {
+export default function Row({
+  data,
+  handlePublicMsg,
+  simple,
+}: {
+  data: Sign;
+  handlePublicMsg?: (msg: string) => void;
+  simple?: boolean;
+}) {
   const [loading, setLoading] = useState(false);
-  const [pubStr, setPubStr] = useState("");
+  // const [pubStr, setPubStr] = useState("");
 
   const handleGetPubMsg = (key: string) => {
     setLoading(true);
@@ -15,7 +23,7 @@ export default function Row({ data }: { data: Sign }) {
         setLoading(false);
         console.log(res);
         if (res?.data?.content) {
-          setPubStr(res.data.content);
+          handlePublicMsg?.(res.data.content);
         }
       })
       .catch(() => {
@@ -44,25 +52,26 @@ export default function Row({ data }: { data: Sign }) {
           clickCopy
         />
       </td>
-      <td>
-        {data.content_key ? (
-          <a
-            className="link link-info tooltip"
-            data-tip={pubStr ? `Content: ${pubStr}` : "Click to show content"}
-            onClick={() => handleGetPubMsg(data.content_key)}
-          >
-            {loading ? (
-              <button className="btn btn-square btn-xs">
-                <span className="loading loading-spinner"></span>
-              </button>
-            ) : (
-              "Public"
-            )}
-          </a>
-        ) : (
-          "Private"
-        )}
-      </td>
+      {!simple && (
+        <td>
+          {data.content_key ? (
+            <a
+              className="link link-info"
+              onClick={() => handleGetPubMsg(data.content_key)}
+            >
+              {loading ? (
+                <button className="btn btn-square btn-xs">
+                  <span className="loading loading-spinner"></span>
+                </button>
+              ) : (
+                "Public"
+              )}
+            </a>
+          ) : (
+            "Private"
+          )}
+        </td>
+      )}
     </tr>
   );
 }
@@ -71,7 +80,7 @@ export function SkeletonRows() {
   return (
     <>
       {Array.from({ length: 10 }, (_, index) => (
-        <tr className="skeleton h-10" key={index}>
+        <tr className="h-10 skeleton" key={index}>
           {Array.from({ length: 5 }).map((_, idx) => (
             <td key={idx + index} />
           ))}

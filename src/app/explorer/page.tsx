@@ -5,6 +5,8 @@ import { Link, useParams } from "react-router-dom";
 import { useGetSigs, useQuerySigs } from "@/hooks";
 import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
+import { ResponseDrawer } from "@/components";
+import { Sign } from "@/utils/canister/valid_one_backend/valid_one_backend.did";
 
 export const PageSize = 10;
 export const DefaultPage = 1;
@@ -36,33 +38,36 @@ export default function Explorer() {
   const { loading: queryLoading, data: queryData } =
     useQuerySigs(debouncedValue);
 
+  const [publicCont, setPublicCont] = useState("");
+  const [currentRow, setCurrentRow] = useState<Sign | null>(null);
+
   return (
     <div className="flex flex-col h-[100vh]">
-      <div className="w-full h-20 bg-white border-b border-zinc-100 flex items-center px-4 sm:px-10">
+      <div className="bg-white border-b flex border-zinc-100 h-20 w-full px-4 items-center sm:px-10">
         <Link to={"/"}>
           <Logo />
         </Link>
       </div>
-      <div className="w-full px-4 sm:px-20 pt-8 flex-1 overflow-hidden flex flex-col">
-        <div className="flex sm:items-center justify-between flex-col sm:flex-row mb-4 sm:mb-0">
+      <div className="flex flex-col flex-1 w-full px-4 pt-8 overflow-hidden sm:px-20">
+        <div className="flex flex-col mb-4 justify-between sm:flex-row sm:mb-0 sm:items-center">
           <div>
             <Link
               to="/explorer"
-              className="text-neutral-900 text-3xl font-extrabold leading-10"
+              className="font-extrabold text-neutral-900 text-3xl leading-10"
             >
               Valid Explorer
             </Link>
-            <div className="text-gray-500 text-sm font-normal mt-3 leading-tight py-4 sm:py-8">
+            <div className="font-normal mt-3 text-sm leading-tight py-4 text-gray-500 sm:py-8">
               Explore recent signatures posted from Valid Sign
             </div>
           </div>
           <div className="sm:w-[40%]">
-            <label className="input input-bordered flex focus:outline-none items-center gap-2">
+            <label className="flex gap-2 input input-bordered items-center focus:outline-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 16 16"
                 fill="currentColor"
-                className="w-4 h-4 opacity-70"
+                className="h-4 opacity-70 w-4"
               >
                 <path
                   fillRule="evenodd"
@@ -84,7 +89,7 @@ export default function Explorer() {
           </div>
         </div>
         <div className="flex-1 overflow-auto">
-          <table className="table table-pin-rows table-pin-cols min-w-[700px]">
+          <table className="min-w-[700px] table table-pin-rows table-pin-cols">
             <thead>
               <tr className="bg-neutral-50">
                 <td>Time</td>
@@ -103,7 +108,13 @@ export default function Explorer() {
                   {uuid || debouncedValue ? (
                     <>
                       {queryData ? (
-                        <Row data={queryData} />
+                        <Row
+                          data={queryData}
+                          handlePublicMsg={(msg) => {
+                            setPublicCont(msg);
+                            setCurrentRow(queryData);
+                          }}
+                        />
                       ) : (
                         <div className="py-6 text-gray-400">No Data.</div>
                       )}
@@ -111,7 +122,14 @@ export default function Explorer() {
                   ) : (
                     <>
                       {data?.result.map((item) => (
-                        <Row key={item.uuid} data={item} />
+                        <Row
+                          key={item.uuid}
+                          data={item}
+                          handlePublicMsg={(msg) => {
+                            setPublicCont(msg);
+                            setCurrentRow(item);
+                          }}
+                        />
                       ))}
                     </>
                   )}
@@ -121,7 +139,7 @@ export default function Explorer() {
           </table>
         </div>
         {!uuid && (
-          <div className="flex items-center gap-5 py-8">
+          <div className="flex py-8 gap-5 items-center">
             {/* <div className="text-sm text-gray-500">
               Showing {data?.result.length} of {data?.size}
             </div> */}
@@ -135,6 +153,39 @@ export default function Explorer() {
           </div>
         )}
       </div>
+
+      <ResponseDrawer
+        closeByModal
+        open={!!publicCont}
+        onClose={() => {
+          setPublicCont("");
+          setCurrentRow(null);
+        }}
+        title="Sgin Message"
+      >
+        <div className="sm:p-8 sm:w-[480px]">
+          {currentRow && (
+            <div className="w-full overflow-x-auto overflow-y-visible">
+              <table className="w-full min-w-[640px] table overflow-visible">
+                <thead>
+                  <tr className="bg-neutral-50">
+                    <td>Time</td>
+                    <td>Signer</td>
+                    <td>Signature</td>
+                    <td>Object Type</td>
+                    <td>Object Hash</td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <Row simple data={currentRow} />
+                </tbody>
+              </table>
+            </div>
+          )}
+          <div className="text-lg py-4">Message Content</div>
+          {publicCont}
+        </div>
+      </ResponseDrawer>
     </div>
   );
 }
