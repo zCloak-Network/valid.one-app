@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useDebounce } from "react-use";
 import { ResponseDrawer } from "@/components";
 import { Sign } from "@/utils/canister/valid_one_backend/valid_one_backend.did";
+import { CgLoadbarDoc } from "react-icons/cg";
 
 export const PageSize = 10;
 export const DefaultPage = 1;
@@ -165,25 +166,24 @@ export default function Explorer() {
       >
         <div className="sm:p-8 sm:w-[480px]">
           {currentRow && (
-            <div className="w-full overflow-x-auto overflow-y-visible">
-              <table className="w-full min-w-[640px] table overflow-visible">
-                <thead>
-                  <tr className="bg-neutral-50">
-                    <td>Time</td>
-                    <td>Signer</td>
-                    <td>Signature</td>
-                    <td>Object Type</td>
-                    <td>Object Hash</td>
-                  </tr>
-                </thead>
-                <tbody>
-                  <Row simple data={currentRow} />
-                </tbody>
-              </table>
-            </div>
+            <table className="w-full table overflow-visible">
+              <thead>
+                <tr>
+                  <td>Time</td>
+                  <td>Signer</td>
+                  <td>Signature</td>
+                </tr>
+              </thead>
+              <tbody>
+                <Row simple data={currentRow} />
+              </tbody>
+            </table>
           )}
-          <div className="text-lg py-4">Message Content</div>
-          {publicCont}
+          <div className="flex font-semibold py-4 gap-2 items-center sm:mt-10">
+            <CgLoadbarDoc className="h-6 w-6" />
+            Message Content
+          </div>
+          <div className="pl-8 text-gray-500">{publicCont}</div>
         </div>
       </ResponseDrawer>
     </div>

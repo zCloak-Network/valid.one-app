@@ -43,15 +43,17 @@ export default function Row({
           clickCopy
         />
       </td>
-      <td>{data.sign_type === 1 ? "Message" : "File"}</td>
-      <td>
-        <ShortAddress
-          value={data.hash}
-          showTip
-          className="break-words"
-          clickCopy
-        />
-      </td>
+      {!simple && <td>{data.sign_type === 1 ? "Message" : "File"}</td>}
+      {!simple && (
+        <td>
+          <ShortAddress
+            value={data.hash}
+            showTip
+            className="break-words"
+            clickCopy
+          />
+        </td>
+      )}
       {!simple && (
         <td>
           {data.content_key ? (
