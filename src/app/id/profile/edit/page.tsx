@@ -1,4 +1,3 @@
-import IconBack from "@/assets/svg/icon/icon_back.svg?react";
 import UploadAvatar from "./UploadAvatar";
 import { useCallback, useEffect, useState } from "react";
 import LoadingButton from "@/components/LoadingButton";
@@ -8,12 +7,13 @@ import { observer } from "@/store";
 import { useToggle } from "react-use";
 import { upload } from "@/api";
 import { useNavigate } from "react-router-dom";
-import { ChannelHead } from "@/components";
+import { ChannelHead, useToast } from "@/components";
 import { getQueryParams } from "@/utils";
 
 const maxLength = 200;
 
 const EditProfile = () => {
+  const toast = useToast();
   const searchParams = getQueryParams("redirect");
   const { User } = useStore();
   const [avatarFile, setAvatarFile] = useState<File>();
@@ -64,6 +64,11 @@ const EditProfile = () => {
       toggle();
     } catch (error) {
       console.log(error);
+      toast &&
+        toast({
+          type: "error",
+          message: (error as Error).message || "Edit profile error!",
+        });
     }
   }, [auth, avatarFile, name, bio, toggle, navigate]);
 
