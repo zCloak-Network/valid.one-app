@@ -29,7 +29,9 @@ export default observer(function Bind() {
     return steps[step].title;
   }, [step]);
 
-  const messageContTrim = `I (Valid ID: ${User.id}) hereby declare that I hold full ownership of the account from which this message is posted`;
+  const messageContTrim = User.id
+    ? `I hereby declare ${User.id} is my Valid ID.`
+    : "";
 
   const signCont = useMemo(() => {
     return sha256OfString(messageContTrim);
@@ -89,18 +91,43 @@ export default observer(function Bind() {
     setLoading(false);
   };
 
+  const [tweetUrl, setTweetUrl] = useState("");
+  const [loadingVerify, setLoadingVerify] = useState(false);
+  const handleVerify = async () => {};
+
   return (
     <div className="bg-white flex flex-col h-full w-full p-6">
       <ChannelHead path="/id" title={title} />
 
       <div className="flex-1 my-4 overflow-auto">
-        {/* <BindStep1 cont={messageContTrim} /> */}
-        <BindStep2 cont={messageContTrim} />
+        {step === 0 && <BindStep1 cont={messageContTrim} />}
+        {step === 1 && signatureResult && (
+          <BindStep2 cont={signatureResult} onChange={setTweetUrl} />
+        )}
       </div>
 
-      <button className="mb-4 btn btn-block btn-neutral" onClick={handleSign}>
-        {loading ? <span className="loading loading-spinner "></span> : "Sign"}
-      </button>
+      {step === 0 && (
+        <button className="mb-4 btn btn-block btn-neutral" onClick={handleSign}>
+          {loading ? (
+            <span className="loading loading-spinner "></span>
+          ) : (
+            "Sign"
+          )}
+        </button>
+      )}
+      {step === 1 && (
+        <button
+          className="mb-4 btn btn-block btn-neutral"
+          disabled={!tweetUrl}
+          onClick={handleVerify}
+        >
+          {loadingVerify ? (
+            <span className="loading loading-spinner "></span>
+          ) : (
+            "Verify"
+          )}
+        </button>
+      )}
     </div>
   );
 });

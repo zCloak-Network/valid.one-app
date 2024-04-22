@@ -1,6 +1,24 @@
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
+import { useState } from "react";
+import { TextareaWithCopy } from "@/components";
 
-export default (function BindStep2(props: { cont: string }) {
+export default (function BindStep2(props: {
+  cont: string;
+  onChange: (v: string) => void;
+}) {
+  const [tweetUrl, setTweetUrl] = useState("");
+
+  const retweet = (text: string) => {
+    window.open(
+      `https://twitter.com/intent/post?text=${encodeURIComponent(text)}`
+    );
+  };
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTweetUrl(e.target.value.trim());
+    props.onChange(e.target.value.trim());
+  };
+
   return (
     <div className="flex flex-col gap-6 ">
       <div className="flex-col flex gap-4">
@@ -12,11 +30,12 @@ export default (function BindStep2(props: { cont: string }) {
           post
         </div>
       </div>
-      <div className=" bg-gray-50 rounded-2xl text-sm p-4 text-gray-500 self-stretch">
-        {props.cont}
-      </div>
+      <TextareaWithCopy value={props.cont} rows={10} />
 
-      <div className="flex flex-col gap-2 items-center justify-center">
+      <div
+        className="cursor-pointer flex flex-col gap-2 items-center justify-center"
+        onClick={() => retweet(props.cont)}
+      >
         <div className="flex m-auto bg-blue-700 rounded-[100px] h-14 w-14 justify-center items-center">
           <XIcon className="h-6 w-6" />
         </div>
@@ -31,6 +50,8 @@ export default (function BindStep2(props: { cont: string }) {
         </div>
         <input
           type="text"
+          value={tweetUrl}
+          onChange={handleUrlChange}
           placeholder="e.g.: https://x.com/username/status/"
           className=" w-full input input-bordered"
         />
