@@ -53,7 +53,7 @@ export default (function BindStep2(props: {
         </div>
       </div>
 
-      <div className="border-dashed flex flex-col border-t-2 border-[#CDD7E7] mt-4 pt-4 gap-4">
+      <div className="border-dashed flex flex-col border-t-2 border-[#CDD7E7] mt-4 pt-4 gap-4 px-1 pb-1">
         <div className="font-bold leading-relaxed tracking-wide  text-slate-900 self-stretch">
           Link to the post
         </div>

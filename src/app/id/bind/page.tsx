@@ -95,16 +95,34 @@ export default observer(function Bind() {
   const [loadingVerify, setLoadingVerify] = useState(false);
   const handleVerify = async () => {
     setLoadingVerify(true);
-    const result = await twitterVerify(tweetUrl).catch((e: Error) => {
+    const response = await twitterVerify(tweetUrl).catch((e: Error) => {
       console.warn(e);
       toast &&
         toast({
           type: "error",
-          message: e.message || "Verify error",
+          message: e.message || "Verify twitter error",
         });
     });
-    setLoadingVerify(false);
-    console.log("result", result);
+
+    console.log("response", response);
+    if ((response as any)["Err"]) {
+      setLoadingVerify(false);
+      toast &&
+        toast({
+          type: "error",
+          message: "Verify twitter fail",
+        });
+    } else {
+      await User.getProfile().catch((e: Error) => {
+        toast &&
+          toast({
+            type: "error",
+            message: e.message || "Update profile error",
+          });
+      });
+      setLoadingVerify(false);
+      navigate("/id");
+    }
   };
 
   return (
