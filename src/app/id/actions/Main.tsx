@@ -1,14 +1,18 @@
 import { useStore } from "@/hooks";
 // import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
-// import XIcon from "@/assets/svg/icon/icon_x.svg?react";
+import XIcon from "@/assets/svg/icon/icon_x.svg?react";
 // import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
 // import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SocialData from "./SocialData";
 import Qr from "./Qr";
 import Share from "./Share";
+
 export default function () {
   const { User } = useStore();
+  const hasBindTwitter = User.profile?.twitter_handle.length;
+  const navigate = useNavigate();
+
   return (
     <div className="bg-gray-800 rounded-3xl shadow w-full p-4">
       <div className="flex items-center justify-between">
@@ -28,18 +32,15 @@ export default function () {
               {User.profile?.name}
             </span>
             <div className="flex gap-2">
-              <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                {/* <MediumIcon /> */}
-              </a>
-              <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                {/* <XIcon /> */}
-              </a>
-              <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                {/* <InsIcon /> */}
-              </a>
-              <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                {/* <DyIcon /> */}
-              </a>
+              <div
+                className="bg-white rounded-full p-[2px] pr-2 flex items-center text-xs gap-1 cursor-pointer"
+                onClick={() => navigate("/id/bind")}
+              >
+                <a className="border-none bg-gray-600 btn btn-circle btn-xs">
+                  <XIcon />
+                </a>
+                {hasBindTwitter ? "Verify X" : "Verify X"}
+              </div>
             </div>
           </div>
         </div>

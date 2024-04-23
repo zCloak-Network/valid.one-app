@@ -1,7 +1,7 @@
 import { default as useStore, observer } from "@/store";
 
 import { ChannelHead, useToast } from "@/components";
-import { usePasskeyAuth } from "@/hooks";
+import { usePasskeyAuth, twitterVerify } from "@/hooks";
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { actor } from "@/utils/canister";
@@ -93,7 +93,19 @@ export default observer(function Bind() {
 
   const [tweetUrl, setTweetUrl] = useState("");
   const [loadingVerify, setLoadingVerify] = useState(false);
-  const handleVerify = async () => {};
+  const handleVerify = async () => {
+    setLoadingVerify(true);
+    const result = await twitterVerify(tweetUrl).catch((e: Error) => {
+      console.warn(e);
+      toast &&
+        toast({
+          type: "error",
+          message: e.message || "Verify error",
+        });
+    });
+    setLoadingVerify(false);
+    console.log("result", result);
+  };
 
   return (
     <div className="bg-white flex flex-col h-full w-full p-6">

@@ -3,3 +3,9 @@ export const getQueryParams = (key: string) => {
   const params = new URLSearchParams(search);
   return params.get(key);
 };
+
+export const validTwitterUrl = (url: string) => {
+  const regex = /^https:\/\/twitter\.com\/.+\/status\/(\d+)$/;
+  const result = url.match(regex);
+  return result ? result[1] : null;
+};

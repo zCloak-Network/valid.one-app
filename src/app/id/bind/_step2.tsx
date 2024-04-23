@@ -1,6 +1,7 @@
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
-import { useState } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { TextareaWithCopy } from "@/components";
+import { validTwitterUrl } from "@/utils";
 
 export default (function BindStep2(props: {
   cont: string;
@@ -14,10 +15,18 @@ export default (function BindStep2(props: {
     );
   };
 
-  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTweetUrl(e.target.value.trim());
-    props.onChange(e.target.value.trim());
-  };
+  const twitterValided = useMemo(() => {
+    if (tweetUrl.length === 0) return false;
+    return validTwitterUrl(tweetUrl);
+  }, [tweetUrl]);
+
+  useEffect(() => {
+    if (twitterValided) {
+      props.onChange(twitterValided);
+    } else {
+      props.onChange("");
+    }
+  }, [twitterValided]);
 
   return (
     <div className="flex flex-col gap-6 ">
@@ -51,9 +60,11 @@ export default (function BindStep2(props: {
         <input
           type="text"
           value={tweetUrl}
-          onChange={handleUrlChange}
+          onChange={(e) => setTweetUrl(e.target.value.trim())}
           placeholder="e.g.: https://x.com/username/status/"
-          className=" w-full input input-bordered"
+          className={`w-full input input-bordered${
+            twitterValided === null ? " input-warning" : ""
+          }`}
         />
       </div>
     </div>
