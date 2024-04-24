@@ -27,6 +27,7 @@ export const idlFactory = ({ IDL }) => {
     'public_key' : IDL.Text,
     'name' : IDL.Text,
     'create_time' : IDL.Nat64,
+    'twitter_handle' : IDL.Opt(IDL.Text),
     'avatar' : IDL.Text,
   });
   return IDL.Service({
@@ -44,6 +45,7 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(IDL.Text)],
         ['query'],
       ),
+    'get_config' : IDL.Func([], [IDL.Text], ['query']),
     'get_name_by_credential' : IDL.Func(
         [IDL.Text],
         [IDL.Opt(IDL.Text)],
@@ -66,26 +68,6 @@ export const idlFactory = ({ IDL }) => {
         ],
         [],
       ),
-    'sign' : IDL.Func(
-        [IDL.Nat32, IDL.Text],
-        [
-          IDL.Variant({
-            'Ok' : IDL.Record({ 'signature_hex' : IDL.Text }),
-            'Err' : IDL.Text,
-          }),
-        ],
-        [],
-      ),
-    'sign_bytes65' : IDL.Func(
-        [IDL.Nat32, IDL.Text],
-        [
-          IDL.Variant({
-            'Ok' : IDL.Record({ 'signature_hex' : IDL.Text }),
-            'Err' : IDL.Text,
-          }),
-        ],
-        [],
-      ),
     'sign_get_by_hash' : IDL.Func(
         [IDL.Text, IDL.Opt(IDL.Nat32)],
         [IDL.Opt(IDL.Vec(Sign))],
@@ -101,6 +83,11 @@ export const idlFactory = ({ IDL }) => {
     'sign_paginate' : IDL.Func([IDL.Nat32, IDL.Nat32], [SignResult], ['query']),
     'start_authentication_name' : IDL.Func([IDL.Text], [IDL.Text], []),
     'start_register_name' : IDL.Func(
+        [IDL.Text],
+        [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
+        [],
+      ),
+    'twitter_verify' : IDL.Func(
         [IDL.Text],
         [IDL.Variant({ 'Ok' : IDL.Text, 'Err' : IDL.Text })],
         [],
@@ -128,6 +115,16 @@ export const idlFactory = ({ IDL }) => {
       ),
     'user_profile_insert' : IDL.Func([IDL.Text], [IDL.Opt(UserProfile)], []),
     'verify' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [
+          IDL.Variant({
+            'Ok' : IDL.Record({ 'is_signature_valid' : IDL.Bool }),
+            'Err' : IDL.Text,
+          }),
+        ],
+        [],
+      ),
+    'verify_bytes65' : IDL.Func(
         [IDL.Text, IDL.Text, IDL.Text],
         [
           IDL.Variant({

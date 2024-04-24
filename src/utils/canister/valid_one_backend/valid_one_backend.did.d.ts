@@ -27,6 +27,7 @@ export interface UserProfile {
   'public_key' : string,
   'name' : string,
   'create_time' : bigint,
+  'twitter_handle' : [] | [string],
   'avatar' : string,
 }
 export interface _SERVICE {
@@ -40,6 +41,7 @@ export interface _SERVICE {
       { 'Err' : string }
   >,
   'get_allow_credentials_name' : ActorMethod<[string], [] | [string]>,
+  'get_config' : ActorMethod<[], string>,
   'get_name_by_credential' : ActorMethod<[string], [] | [string]>,
   'greet' : ActorMethod<[string], { 'Ok' : string } | { 'Err' : string }>,
   'map_get' : ActorMethod<[bigint], [] | [bigint]>,
@@ -47,16 +49,6 @@ export interface _SERVICE {
   'public_key' : ActorMethod<
     [number],
     { 'Ok' : { 'public_key_hex' : string } } |
-      { 'Err' : string }
-  >,
-  'sign' : ActorMethod<
-    [number, string],
-    { 'Ok' : { 'signature_hex' : string } } |
-      { 'Err' : string }
-  >,
-  'sign_bytes65' : ActorMethod<
-    [number, string],
-    { 'Ok' : { 'signature_hex' : string } } |
       { 'Err' : string }
   >,
   'sign_get_by_hash' : ActorMethod<[string, [] | [number]], [] | [Array<Sign>]>,
@@ -70,6 +62,11 @@ export interface _SERVICE {
   'sign_paginate' : ActorMethod<[number, number], SignResult>,
   'start_authentication_name' : ActorMethod<[string], string>,
   'start_register_name' : ActorMethod<
+    [string],
+    { 'Ok' : string } |
+      { 'Err' : string }
+  >,
+  'twitter_verify' : ActorMethod<
     [string],
     { 'Ok' : string } |
       { 'Err' : string }
@@ -89,6 +86,11 @@ export interface _SERVICE {
     { 'Ok' : { 'is_signature_valid' : boolean } } |
       { 'Err' : string }
   >,
+  'verify_bytes65' : ActorMethod<
+    [string, string, string],
+    { 'Ok' : { 'is_signature_valid' : boolean } } |
+      { 'Err' : string }
+  >,
 }
 export declare const idlFactory: IDL.InterfaceFactory;
-export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[];
+export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[];
