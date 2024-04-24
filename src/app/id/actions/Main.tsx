@@ -10,7 +10,7 @@ import Share from "./Share";
 
 export default function () {
   const { User } = useStore();
-  const hasBindTwitter = User.profile?.twitter_handle.length;
+  const hasBindTwitter = User.profile?.twitter_handle[0];
   const navigate = useNavigate();
 
   return (
@@ -33,13 +33,19 @@ export default function () {
             </span>
             <div className="flex gap-2">
               <div
-                className="bg-white rounded-full p-[2px] pr-2 flex items-center text-xs gap-1 cursor-pointer"
-                onClick={() => navigate("/id/bind")}
+                className={`${
+                  hasBindTwitter ? "" : "bg-white"
+                } rounded-full p-[2px] pr-2 flex items-center text-xs gap-1 cursor-pointer`}
+                onClick={() =>
+                  hasBindTwitter
+                    ? window.open(`https://twitter.com/${hasBindTwitter}`)
+                    : navigate("/id/bind")
+                }
               >
                 <a className="border-none bg-gray-600 btn btn-circle btn-xs">
                   <XIcon />
                 </a>
-                {hasBindTwitter ? "Verify X" : "Verify X"}
+                {hasBindTwitter ? "" : "Verify X"}
               </div>
             </div>
           </div>
