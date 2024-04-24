@@ -43,7 +43,7 @@ export default function Explorer() {
   const [currentRow, setCurrentRow] = useState<Sign | null>(null);
 
   return (
-    <div className="flex flex-col h-[100vh]">
+    <div className="flex flex-col h-100vh">
       <div className="bg-white border-b flex border-zinc-100 h-20 w-full px-4 items-center sm:px-10">
         <Link to={"/"}>
           <Logo />

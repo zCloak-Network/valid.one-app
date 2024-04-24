@@ -142,7 +142,7 @@ export default observer(function ChallengePage() {
 
   return (
     <ToastProvider>
-      <div className="h-[100vh] pt-20 flex flex-col items-center justify-center">
+      <div className="h-100vh pt-20 flex flex-col items-center justify-center">
         <header className="absolute left-0 w-full top-0 h-20 flex items-center px-4 bg-[#fafbff] z-10 shadow-lg">
           <img src={Logo} alt="logo" className="h-[28px] w-[28px]" />
           <img src={Alpha} alt="alpha" className="h-[24px] ml-2" />

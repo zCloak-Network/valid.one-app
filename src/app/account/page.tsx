@@ -14,7 +14,7 @@ export default observer(function AccountPage() {
     navigate("/login");
   }, [User]);
   return (
-    <div className="h-[100vh] pb-20">
+    <div className="h-100vh pb-20">
       <div className="flex flex-col bg-[#273238] h-[350px] w-full p-5 gap-8 items-center">
         <div className="font-extrabold text-center text-white text-lg">
           Account
