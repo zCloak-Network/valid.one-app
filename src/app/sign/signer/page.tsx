@@ -96,18 +96,21 @@ export default observer(function Signer() {
         }
       }
     }
-    const authRequest = await auth();
+    const authRequest = await auth().catch(() => {
+      setLoading(false);
+    });
     let res;
-    try {
-      res = await actor.sign_insert(
-        authRequest,
-        signType,
-        signCont,
-        publicContentKey
-      );
+    if (authRequest) {
+      res = await actor
+        .sign_insert(authRequest, signType, signCont, publicContentKey)
+        .catch(() => {
+          toast &&
+            toast({
+              type: "error",
+              message: "sign fail",
+            });
+        });
       console.log(User.id, signType, signCont, "sign result", res);
-    } catch (err) {
-      console.log(err);
     }
 
     if ((res as any)["Ok"]?.signature) {

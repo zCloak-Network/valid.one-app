@@ -93,29 +93,34 @@ export default observer(function ChallengePage() {
       if (!User.id) {
         throw new Error("user not login");
       }
-      const authRequest = await auth();
+      const authRequest = await auth().catch(() => setLoading(false));
+      if (authRequest) {
+        const res = await actor
+          .sign_insert(authRequest, 1, messageSHA256, "")
+          .catch(() => {
+            setLoading(false);
+          });
+        console.log(User.id, challengeData, messageSHA256, "sign result", res);
 
-      const res = await actor.sign_insert(authRequest, 1, messageSHA256, "");
-      console.log(User.id, challengeData, messageSHA256, "sign result", res);
+        if ((res as any)["Ok"]?.signature) {
+          // callback
+          console.log((res as any)["Ok"]);
+          const challengeRes = await sendChallenge({
+            challengeId: challengeID,
+            validId: User.id,
+            signature: (res as any)["Ok"]?.signature,
+          });
 
-      if ((res as any)["Ok"]?.signature) {
-        // callback
-        console.log((res as any)["Ok"]);
-        const challengeRes = await sendChallenge({
-          challengeId: challengeID,
-          validId: User.id,
-          signature: (res as any)["Ok"]?.signature,
-        });
-
-        if (challengeRes.code === 200) {
-          setChallengeStatus(1);
+          if (challengeRes.code === 200) {
+            setChallengeStatus(1);
+          } else {
+            setChallengeStatus(
+              challengeRes.msg || "Verify fail, please try again"
+            );
+          }
         } else {
-          setChallengeStatus(
-            challengeRes.msg || "Verify fail, please try again"
-          );
+          toast && toast({ type: "error", message: "sign fail" });
         }
-      } else {
-        toast && toast({ type: "error", message: "sign fail" });
       }
 
       setLoading(false);
