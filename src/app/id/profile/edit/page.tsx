@@ -35,7 +35,7 @@ const EditProfile = () => {
   const handelSave = useCallback(async () => {
     try {
       toggle();
-      const [authRequest] = await auth();
+      const authRequest = await auth();
       let avatarResult = User.profile?.avatar;
       if (avatarFile) {
         const formData = new FormData();

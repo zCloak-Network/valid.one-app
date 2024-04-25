@@ -93,7 +93,7 @@ export default observer(function ChallengePage() {
       if (!User.id) {
         throw new Error("user not login");
       }
-      const [authRequest] = await auth();
+      const authRequest = await auth();
 
       const res = await actor.sign_insert(authRequest, 1, messageSHA256, "");
       console.log(User.id, challengeData, messageSHA256, "sign result", res);

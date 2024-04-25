@@ -16,7 +16,7 @@ export const TextareaWithCopy = function (props: {
 
   return (
     <>
-      <div className="relative mt-4 overflow-hidden rounded-lg border ">
+      <div className="relative overflow-hidden rounded-lg border ">
         <textarea
           className={"textarea textarea-bordered block w-full leading-normal"}
           rows={props.rows || 8}

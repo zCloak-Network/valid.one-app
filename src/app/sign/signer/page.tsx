@@ -96,7 +96,7 @@ export default observer(function Signer() {
         }
       }
     }
-    const [authRequest] = await auth();
+    const authRequest = await auth();
     let res;
     try {
       res = await actor.sign_insert(

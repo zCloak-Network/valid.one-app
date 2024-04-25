@@ -28,7 +28,7 @@ export default (function Register() {
     try {
       const response = await actor.start_register_name(registName);
       console.log("response", response);
-      if ((response as any)["Err"]) {
+      if ((response as any)?.["Err"]) {
         throw new Error((response as any)["Err"]);
       }
 
@@ -39,7 +39,7 @@ export default (function Register() {
         JSON.stringify(registrationResult)
       );
       console.log("registReturn", registReturn);
-      if ((registReturn as any)["Err"]) {
+      if ((registReturn as any)?.["Err"]) {
         throw new Error((registReturn as any)["Err"]);
       }
       setLoading(false);
