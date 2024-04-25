@@ -1,7 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getProfileById, getProfileByPublicKey } from "@/hooks";
-import { UserProfile } from "@/types";
+import type { UserProfile } from "@/utils/canister/valid_one_backend/valid_one_backend.did";
+import XIcon from "@/assets/svg/icon/icon_x.svg?react";
 
 export default function UserCard(props: {
   validId?: number;
@@ -10,6 +11,7 @@ export default function UserCard(props: {
 }) {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const hasBindTwitter = useMemo(() => profile?.twitter_handle[0], [profile]);
 
   useEffect(() => {
     if (props.signerProfile) {
@@ -52,10 +54,18 @@ export default function UserCard(props: {
           </div>
 
           <div className="flex w-full gap-2">
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
+            {hasBindTwitter ? (
+              <a
+                className="border-none bg-gray-600 btn btn-circle btn-xs"
+                onClick={() =>
+                  window.open(`https://twitter.com/${hasBindTwitter}`)
+                }
+              >
+                <XIcon />
+              </a>
+            ) : (
+              <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
+            )}
           </div>
         </div>
       </div>

@@ -4,7 +4,7 @@ import XIcon from "@/assets/svg/icon/icon_x.svg?react";
 // import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
 // import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
 import { Link, useNavigate } from "react-router-dom";
-import SocialData from "./SocialData";
+// import SocialData from "./SocialData";
 import Qr from "./Qr";
 import Share from "./Share";
 
