@@ -11,6 +11,7 @@ export default (function BindStep3(props: { onChange: (v: string) => void }) {
 
   useEffect(() => {
     if (twitterValided) {
+      console.log("get tw:", twitterValided);
       props.onChange(twitterValided);
     } else {
       props.onChange("");

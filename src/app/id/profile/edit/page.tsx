@@ -70,7 +70,8 @@ const EditProfile = () => {
         toggle();
       }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
+      toggle();
       toast &&
         toast({
           type: "error",

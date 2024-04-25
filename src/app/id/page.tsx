@@ -8,13 +8,13 @@ export default observer(function Id() {
 
   return (
     <div className="flex-1 px-6 pt-6">
-      {User.profile?.public_key ? (
+      {User.profile?.id && !User.profile.public_key ? (
+        <SetProfile />
+      ) : (
         <>
           <Main />
           <Quick />
         </>
-      ) : (
-        <SetProfile />
       )}
     </div>
   );
