@@ -22,15 +22,15 @@ export function usePasskeyAuth() {
     })
       .then((asseResp) => {
         console.log("usePasskeyAuth [asseResp]", asseResp);
-        return [JSON.stringify(asseResp), authOptions.challenge];
+        return JSON.stringify(asseResp);
       })
       .catch((error) => {
         toast &&
           toast({
-            message: "Something went wrong, please try again later. code:0002",
+            message: "Auth failed, please try again later.",
             type: "error",
           });
-        return error;
+        throw error;
       });
   }, [User]);
 

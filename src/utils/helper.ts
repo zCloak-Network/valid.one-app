@@ -5,7 +5,7 @@ export const getQueryParams = (key: string) => {
 };
 
 export const validTwitterUrl = (url: string) => {
-  const regex = /^https:\/\/twitter\.com\/.+\/status\/(\d+)$/;
+  const regex = /^https:\/\/(twitter|x)\.com\/.+\/status\/(\d+)/;
   const result = url.match(regex);
-  return result ? result[1] : null;
+  return result ? result[2] : null;
 };

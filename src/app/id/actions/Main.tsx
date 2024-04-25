@@ -57,10 +57,10 @@ export default function () {
           Edit
         </Link>
       </div>
-      <div className="mt-8 mb-4">
+      {/* <div className="mt-8">
         <SocialData />
-      </div>
-      <div className="flex flex-row mb w-full gap-4 items-center">
+      </div> */}
+      <div className=" mt-4 flex flex-row mb w-full gap-4 items-center">
         <Qr />
         <Share />
       </div>

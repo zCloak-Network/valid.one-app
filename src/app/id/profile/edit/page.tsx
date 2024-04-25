@@ -35,7 +35,9 @@ const EditProfile = () => {
   const handelSave = useCallback(async () => {
     try {
       toggle();
-      const [authRequest] = await auth();
+      const authRequest = await auth().catch(() => {
+        toggle();
+      });
       let avatarResult = User.profile?.avatar;
       if (avatarFile) {
         const formData = new FormData();
@@ -51,19 +53,25 @@ const EditProfile = () => {
           });
       }
 
-      // if (!avatarResult) return alert("Avatar is required.");
-      const data = await actor.user_profile_edit(
-        authRequest,
-        avatarResult || "",
-        name,
-        bio
-      );
-      await User.getProfile();
-      navigate(searchParams || "/id");
-      console.log("[ data ] >", data);
-      toggle();
+      if (authRequest) {
+        const data = await actor
+          .user_profile_edit(authRequest, avatarResult || "", name, bio)
+          .catch(() => {
+            toggle();
+            toast &&
+              toast({
+                type: "error",
+                message: "Edit profile error!",
+              });
+          });
+        await User.getProfile();
+        navigate(searchParams || "/id");
+        console.log("[ data ] >", data);
+        toggle();
+      }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
+      toggle();
       toast &&
         toast({
           type: "error",
