@@ -1,12 +1,10 @@
 import { useLoaderData, LoaderFunctionArgs, Link } from "react-router-dom";
 import IconBack from "@/assets/svg/icon/icon_back.svg?react";
 import { observer } from "@/store";
-import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
-import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
-import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
 import { UserData } from "@/store/modules/user";
 import initActor, { actor } from "@/utils/canister";
+import { useMemo } from "react";
 
 interface ItemProps {
   label: string;
@@ -54,6 +52,10 @@ export default observer(function User() {
     profile: UserData | undefined;
   };
 
+  const hasBindTwitter = useMemo(() => {
+    return profile?.twitter_handle[0];
+  }, [profile]);
+
   return (
     <div className="h-full bg-gray-50 w-full p-6">
       <div>
@@ -82,18 +84,16 @@ export default observer(function User() {
           {profile?.bio}
         </div>
         <div className="flex gap-2">
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <MediumIcon /> */}
-          </a>
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <XIcon /> */}
-          </a>
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <InsIcon /> */}
-          </a>
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <DyIcon /> */}
-          </a>
+          {hasBindTwitter && (
+            <a
+              className="border-none bg-gray-600 btn btn-circle btn-xs"
+              onClick={() =>
+                window.open(`https://twitter.com/${hasBindTwitter}`)
+              }
+            >
+              <XIcon />
+            </a>
+          )}
         </div>
         <div className="border h-px border-gray-100"></div>
         <div className="flex gap-4 items-center justify-between">

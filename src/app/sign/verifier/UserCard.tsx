@@ -11,7 +11,9 @@ export default function UserCard(props: {
 }) {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const hasBindTwitter = useMemo(() => profile?.twitter_handle[0], [profile]);
+  const hasBindTwitter = useMemo(() => {
+    return profile?.twitter_handle[0];
+  }, [profile]);
 
   useEffect(() => {
     if (props.signerProfile) {
