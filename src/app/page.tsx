@@ -27,25 +27,25 @@ export default (function HomePage() {
   // main.js
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   useEffect(() => {
-    const installButton = document.querySelector("#launchapp");
-
     window.addEventListener("beforeinstallprompt", (event) => {
       event.preventDefault();
       setInstallPrompt(event);
-      installButton?.removeAttribute("disabled");
     });
   }, []);
 
   // main.js
 
   const handleInstallButton = async () => {
-    if (installPrompt) {
-      const result = await installPrompt.prompt();
-      console.log(`Install prompt was: ${result.outcome}`);
-      setInstallPrompt(null);
-    }
-
+    console.log(1111);
     navigate("/id/");
+    if (!installPrompt) {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 2000);
+      });
+    }
+    const result = await installPrompt.prompt();
+    console.log(`Install prompt was: ${result.outcome}`);
+    setInstallPrompt(null);
   };
 
   return (
@@ -56,7 +56,6 @@ export default (function HomePage() {
         <div className="flex-1"></div>
         <button
           id="launchapp"
-          disabled
           className="btn btn-neutral bg-[#000000]"
           onClick={handleInstallButton}
         >
