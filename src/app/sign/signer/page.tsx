@@ -163,7 +163,10 @@ export default observer(function Signer() {
             />
           )}
         </div>
-        <div className="font-medium text-sm text-gray-900">{User.id}</div>
+        <div className="font-medium text-sm text-gray-900">
+          <p className="font-semibold">{User.name}</p>
+          Valid ID: {User.id}
+        </div>
       </div>
 
       <div className="flex flex-col mb-4 gap-4">

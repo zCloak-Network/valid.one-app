@@ -27,11 +27,11 @@ export default function SignRecord(props: {
                 ? `/id/${props.ICPSignResponse.created_by}`
                 : ""
             }
-          >{`${props.ICPSignResponse?.created_by || ""}(${
+          >{`Valid ID ${props.ICPSignResponse?.created_by || ""} ${
             props.signatureObject?.signer
-              ? shortString(props.signatureObject.signer)
-              : "Valid User"
-          }) `}</Link>
+              ? "(" + shortString(props.signatureObject.signer) + ") "
+              : " "
+          }`}</Link>
           has signed this message at
         </div>
         <div className="flex text-xs text-neutral-400 gap-1 items-center">
