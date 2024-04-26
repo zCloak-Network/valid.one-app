@@ -12,6 +12,10 @@ export default defineConfig({
     svgr(),
     nodePolyfills(),
     VitePWA({
+      devOptions: {
+        enabled: true,
+        /* other options */
+      },
       registerType: "autoUpdate",
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg}"],

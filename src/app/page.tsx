@@ -1,7 +1,7 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-
+import { useEffect, useState } from "react";
 import Logo from "@/assets/landing-page/logo.png";
 import Alpha from "@/assets/landing-page/alpha.png";
 import HeroBG from "@/assets/landing-page/home_bg_privacy.jpg";
@@ -23,6 +23,30 @@ import { RiLinkedinBoxFill } from "react-icons/ri";
 
 export default (function HomePage() {
   const navigate = useNavigate();
+  // TODO install pwa
+  // main.js
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+  useEffect(() => {
+    const installButton = document.querySelector("#launchapp");
+
+    window.addEventListener("beforeinstallprompt", (event) => {
+      event.preventDefault();
+      setInstallPrompt(event);
+      installButton?.removeAttribute("disabled");
+    });
+  }, []);
+
+  // main.js
+
+  const handleInstallButton = async () => {
+    if (installPrompt) {
+      const result = await installPrompt.prompt();
+      console.log(`Install prompt was: ${result.outcome}`);
+      setInstallPrompt(null);
+    }
+
+    navigate("/id/");
+  };
 
   return (
     <main className="h-full bg-[#fafbff]">
@@ -31,8 +55,10 @@ export default (function HomePage() {
         <img src={Alpha} alt="alpha" className="h-[24px] ml-2" />
         <div className="flex-1"></div>
         <button
+          id="launchapp"
+          disabled
           className="btn btn-neutral bg-[#000000]"
-          onClick={() => navigate("/id/")}
+          onClick={handleInstallButton}
         >
           Launch App
         </button>
