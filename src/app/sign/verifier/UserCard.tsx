@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { getProfileById, getProfileByPublicKey } from "@/hooks";
 import type { UserProfile } from "@/utils/canister/valid_one_backend/valid_one_backend.did";
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default function UserCard(props: {
   validId?: number;
@@ -43,12 +44,10 @@ export default function UserCard(props: {
       </div>
       <div className="flex gap-2 items-center">
         <div className="border rounded-full border-neutral-400 h-[60px] p-[2px] w-[60px]">
-          {profile?.avatar && (
-            <img
-              className="rounded-full h-full object-cover w-full"
-              src={profile?.avatar}
-            />
-          )}
+          <img
+            className="rounded-full h-full object-cover w-full"
+            src={profile?.avatar || DefaultAvatar}
+          />
         </div>
         <div className="flex flex-col flex-1 gap-2">
           <div className="font-bold text-white w-full text-[15px]">

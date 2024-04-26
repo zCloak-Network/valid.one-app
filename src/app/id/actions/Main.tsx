@@ -1,12 +1,10 @@
 import { useStore } from "@/hooks";
-// import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
-// import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
-// import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
 import { Link, useNavigate } from "react-router-dom";
 // import SocialData from "./SocialData";
 import Qr from "./Qr";
 import Share from "./Share";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default function () {
   const { User } = useStore();
@@ -24,7 +22,7 @@ export default function () {
         <div className="flex gap-3 items-center">
           <div className="avatar">
             <div className="border rounded-full border-neutral-400 w-14">
-              {User.profile?.avatar && <img src={User.profile?.avatar} />}
+              <img src={User.profile?.avatar || DefaultAvatar} />
             </div>
           </div>
           <div className="flex flex-col gap-2">

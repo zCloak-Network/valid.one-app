@@ -11,6 +11,7 @@ import { usePasskeyAuth } from "@/hooks";
 import type { SignatureResponse } from "@/types";
 import { saveString } from "@/api";
 import { useToast } from "@/components";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default observer(function Signer() {
   const toast = useToast();
@@ -156,12 +157,10 @@ export default observer(function Signer() {
     <div className="rounded-xl bg-[#F9FAFB] p-4 flex-1 overflow-auto">
       <div className="border rounded-xl flex border-zinc-200 h-[52px] mb-4 p-4 gap-2 items-center">
         <div className="h-6 w-6 relative">
-          {User.profile?.avatar && (
-            <img
-              src={User.profile?.avatar}
-              className="rounded-full bg-zinc-300 h-[22px] top-[1px] left-[1px] w-[22px] absolute"
-            />
-          )}
+          <img
+            src={User.profile?.avatar || DefaultAvatar}
+            className="rounded-full bg-zinc-300 h-[22px] top-[1px] left-[1px] w-[22px] absolute"
+          />
         </div>
         <div className="font-medium text-sm text-gray-900">
           <p className="font-semibold">{User.name}</p>

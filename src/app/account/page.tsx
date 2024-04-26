@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { ethereumEncode } from "@zcloak/crypto";
 import { FEEDBACK_FORM_URL } from "@/constants";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default observer(function AccountPage() {
   const { User } = useStore();
@@ -21,7 +22,7 @@ export default observer(function AccountPage() {
         </div>
         <div className="avatar">
           <div className="rounded-full border-4 border-neutral-400 w-20">
-            {User.profile?.avatar && <img src={User.profile?.avatar} />}
+            <img src={User.profile?.avatar || DefaultAvatar} />
           </div>
         </div>
         <div className="font-bold h-4 text-center text-white text-base leading-relaxed w-64">
