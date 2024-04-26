@@ -30,7 +30,9 @@ export default defineConfig({
         description: "An easy-onboard, secure identity management solution",
         theme_color: "#ffffff",
         start_url: "./?utm_source=web_app_manifest",
+        id: "./?utm_source=web_app_manifest",
         display: "standalone",
+        scope: "/",
         icons: [
           {
             src: "pwa-192x192.png",
@@ -53,6 +55,20 @@ export default defineConfig({
             sizes: "512x512",
             type: "image/png",
             purpose: "maskable",
+          },
+        ],
+        screenshots: [
+          {
+            src: "/images/narrow.png",
+            type: "image/png",
+            sizes: "540x720",
+            form_factor: "narrow",
+          },
+          {
+            src: "/images/wide.png",
+            type: "image/png",
+            sizes: "720x500",
+            form_factor: "wide",
           },
         ],
       },
