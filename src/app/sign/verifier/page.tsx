@@ -137,6 +137,20 @@ export default (function Verifier() {
   }, [showUserInputMessage]);
 
   const { valid } = useValid();
+  const [originalContentValided, setOriginalContentValided] = useState(true);
+  const handleOriginalContentChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const { result, signatureObject } = valid(e.target.value);
+    if (result && signatureObject) {
+      setOriginalContentValided(true);
+      console.log("valid", result, signatureObject);
+      setSignatureResult(signatureObject.original_content);
+    } else {
+      setOriginalContentValided(false);
+      setSignatureResult(e.target.value);
+    }
+  };
 
   useEffect(() => {
     if (signatureResult) {
@@ -220,17 +234,18 @@ ${signatureResult.trim()}`;
                 className="tab-content bg-base-100 border-base-300 rounded-box p-2"
               >
                 <textarea
-                  className="textarea h-60 leading-normal w-full"
+                  className={`textarea h-60 leading-normal w-full${
+                    originalContentValided ? "" : " textarea-warning"
+                  }`}
                   placeholder={`Please paste the signature here
-e.g
+e.g:
 Message
-===
-Valid Sign from Valid One
-===
-signer:signer address,
-sig:signature value`}
+————
+Signed with Valid Sign powered by Valid.One
+Signer:signer address,
+Signature:signature value`}
                   value={signatureResult}
-                  onChange={(e) => setSignatureResult(e.target.value)}
+                  onChange={handleOriginalContentChange}
                 ></textarea>
               </div>
 

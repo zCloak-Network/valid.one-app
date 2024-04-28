@@ -4,14 +4,12 @@ import { useCopy } from "@/hooks";
 export const TextareaWithCopy = function (props: {
   value: string;
   rows?: number;
+  copyValue?: string;
 }) {
   const { copy, copyState } = useCopy();
 
   const handleCopy = () => {
-    if (!props.value) {
-      return console.warn("no text to copy", props.value);
-    }
-    copy(props.value);
+    copy(props.copyValue || props.value);
   };
 
   return (

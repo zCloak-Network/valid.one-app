@@ -6,14 +6,14 @@ import { sha256OfString } from "@/utils";
 export function useValid() {
   const checkSignatureResult = (signatureResult: string) => {
     const data = signatureResult.match(
-      /^([\S\n]*)\n?————\nSigned with Valid Sign powered by Valid.One\nSigner:(\w+)\nSignature:(\w+)/
+      /^([\S\n]*)————\nSigned with Valid Sign powered by Valid.One\nSigner:(\w+)\nSignature:(0x\w{130})/
     );
 
     if (data?.length !== 4) {
       console.warn("Not a Valid Sign content[1].");
       return null;
     }
-    const [_original, message, signer, signature] = data;
+    const [original_content, message, signer, signature] = data;
 
     if (!isHexString(signer) || !isHexString(signature)) {
       console.warn("Not a Valid Sign content[2].");
@@ -21,6 +21,7 @@ export function useValid() {
     }
 
     return {
+      original_content,
       signature: signature.trim(),
       signer,
       message: message.trim(),

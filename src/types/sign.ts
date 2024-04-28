@@ -1,4 +1,5 @@
 export type SignatureResultObject = {
+  original_content: string;
   signer: string;
   signature: string;
   message: string;

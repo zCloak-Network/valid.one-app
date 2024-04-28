@@ -76,7 +76,14 @@ export default function SignatureResultObject(props: {
         ) : (
           <>
             <label className="form-control">
-              <TextareaWithCopy value={signature} />
+              <TextareaWithCopy
+                value={signature}
+                copyValue={`${signature}
+————
+To verify this signature, please paste the entire message to ${
+                  import.meta.env.VITE_APP_CANISTER_HOST
+                }/#/sign/verifier`}
+              />
             </label>
             <div className="border-t"></div>
 
