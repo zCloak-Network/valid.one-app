@@ -7,7 +7,7 @@ import { useMemo, useRef } from "react";
 // import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
 // import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
 import { siteConfig } from "@/constants";
-// import { siteConfig } from "@/constants";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default function () {
   const modalRef = useRef<HTMLDialogElement>(null);
@@ -42,31 +42,14 @@ export default function () {
             <div className="flex flex-col gap-2 items-center">
               <div className="avatar">
                 <div className="border rounded-full border-neutral-400 w-16">
-                  {User.profile?.avatar && <img src={User.profile?.avatar} />}
+                  <img src={User.profile?.avatar || DefaultAvatar} />
                 </div>
               </div>
               <span className="font-semibold text-base text-gray-800">
                 {User.profile?.name}
               </span>
-              <div className="flex gap-2">
-                <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                  {/* <MediumIcon /> */}
-                </a>
-                <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                  {/* <XIcon /> */}
-                </a>
-                <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                  {/* <InsIcon /> */}
-                </a>
-                <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-                  {/* <DyIcon /> */}
-                </a>
-              </div>
-              <span className="font-bold text-white text-base">
-                {User.profile?.name}
-              </span>
+              <div className="flex gap-2"></div>
             </div>
-            <hr className="border-dashed border-t-2 border-gray-200 w-72" />
 
             <QRCodeGenerator cellSize={180} url={qrLink} />
           </div>

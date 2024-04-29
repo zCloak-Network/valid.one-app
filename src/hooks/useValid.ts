@@ -6,7 +6,7 @@ import { sha256OfString } from "@/utils";
 export function useValid() {
   const checkSignatureResult = (signatureResult: string) => {
     const data = signatureResult.match(
-      /^([\S\n]*)————\nSigned with Valid Sign powered by Valid.One\nSigner:(\w+)\nSignature:(0x\w{130})/
+      /^([\S\n]*)————\nPowered by Valid One\nSigner:(\w+)\nSignature:(0x\w{130})/
     );
 
     if (data?.length !== 4) {

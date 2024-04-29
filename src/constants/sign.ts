@@ -30,6 +30,6 @@ export const signatureResultTemplate = (
 `
     : "") +
   `————
-Signed with Valid Sign powered by Valid.One
+Powered by Valid One
 Signer:${ethereumEncode(`0x${public_key}`)}
 Signature:0x${hex}`;

@@ -241,7 +241,7 @@ ${signatureResult.trim()}`;
 e.g:
 Message
 ————
-Signed with Valid Sign powered by Valid.One
+Powered by Valid One
 Signer:signer address,
 Signature:signature value`}
                   value={signatureResult}
