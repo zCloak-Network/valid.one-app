@@ -141,14 +141,15 @@ export default (function Verifier() {
   const handleOriginalContentChange = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    const { result, signatureObject } = valid(e.target.value);
+    const inputContent = e.target.value.trim();
+    const { result, signatureObject } = valid(inputContent);
     if (result && signatureObject) {
       setOriginalContentValided(true);
       console.log("valid", result, signatureObject);
       setSignatureResult(signatureObject.original_content);
     } else {
       setOriginalContentValided(false);
-      setSignatureResult(e.target.value);
+      setSignatureResult(inputContent);
     }
   };
 
