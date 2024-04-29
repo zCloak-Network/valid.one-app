@@ -10,13 +10,13 @@ export function useValid() {
     );
 
     if (data?.length !== 4) {
-      console.warn("Not a Valid Sign content[1].");
+      alert("Not a Valid Sign content[1].");
       return null;
     }
     const [original_content, message, signer, signature] = data;
 
     if (!isHexString(signer) || !isHexString(signature)) {
-      console.warn("Not a Valid Sign content[2].");
+      alert("Not a Valid Sign content[2].");
       return null;
     }
 
@@ -53,7 +53,7 @@ export function useValid() {
           recoveredAddress.toLowerCase() ===
           signatureObject.signer.toLowerCase();
       } else {
-        console.warn("Not a Valid Sign content[3].", signatureObject);
+        alert("Not a Valid Sign content[3].");
       }
     } catch (err) {
       console.warn("signatureObject=", signatureObject);

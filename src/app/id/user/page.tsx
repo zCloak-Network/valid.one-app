@@ -5,6 +5,7 @@ import XIcon from "@/assets/svg/icon/icon_x.svg?react";
 import { UserData } from "@/store/modules/user";
 import initActor, { actor } from "@/utils/canister";
 import { useMemo } from "react";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 interface ItemProps {
   label: string;
@@ -71,7 +72,7 @@ export default observer(function User() {
         <div className="flex items-center justify-between">
           <div className="avatar">
             <div className="border rounded-full border-neutral-400 w-[72px]">
-              {profile?.avatar && <img src={profile?.avatar} />}
+              <img src={profile?.avatar || DefaultAvatar} />
             </div>
           </div>
           {/* <button className="rounded-xl bg-gray-800 text-white btn">+Follow</button> */}
@@ -96,13 +97,13 @@ export default observer(function User() {
           )}
         </div>
         <div className="border h-px border-gray-100"></div>
-        <div className="flex gap-4 items-center justify-between">
+        {/* <div className="flex gap-4 items-center justify-between">
           <Item value="0" label="Followers" />
           <div className="border h-px border-slate-200 origin-center w-7 rotate-90"></div>
           <Item value="0" label="Following" />
           <div className="border h-px border-slate-200 origin-center w-7 rotate-90"></div>
           <Item value="0" label="Connected" />
-        </div>
+        </div> */}
         {/* <div className="bg-white rounded-xl flex h-16 shadow mt-5 w-full px-3 items-center">
           <div className="rounded-full bg-blue-700 bg-opacity-20 h-7 w-8" />
           <div className="h-7 -left-4 w-11 relative">

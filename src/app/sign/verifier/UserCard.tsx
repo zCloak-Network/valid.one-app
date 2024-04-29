@@ -64,9 +64,7 @@ export default function UserCard(props: {
               >
                 <XIcon />
               </a>
-            ) : (
-              <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            )}
+            ) : null}
           </div>
         </div>
       </div>

@@ -9,6 +9,7 @@ import { upload } from "@/api";
 import { useNavigate } from "react-router-dom";
 import { ChannelHead, useToast } from "@/components";
 import { getQueryParams } from "@/utils";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 const maxLength = 200;
 
@@ -101,7 +102,7 @@ const EditProfile = () => {
         <div className="flex mt-8 w-full justify-center">
           <UploadAvatar
             onChange={setAvatarFile}
-            url={avatarUrl}
+            url={avatarUrl || DefaultAvatar}
             onError={(err) => {
               alert("select avatar error:" + err.message);
             }}

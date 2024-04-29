@@ -216,23 +216,38 @@ ${signatureResult.trim()}`;
         </div>
       </div>
 
-      <div className="mb-4 flex flex-col gap-4">
+      <div className="mb-4 grid overflow-hidden">
         {type === 1 && (
           <>
-            <div role="tablist" className="tabs tabs-lifted">
-              <input
-                type="radio"
-                name="my_tabs_1"
+            <div role="tablist" className="tabs tabs-bordered mb-2">
+              <a
                 role="tab"
-                className="tab"
-                checked={!switchUserInput}
-                onChange={() => setSwitchUserInput(!switchUserInput)}
-                aria-label="Signature"
-              />
-              <div
-                role="tabpanel"
-                className="tab-content bg-base-100 border-base-300 rounded-box p-2"
+                className={`tab${switchUserInput ? "" : " tab-active"}`}
+                onClick={() => setSwitchUserInput(false)}
               >
+                Signature
+              </a>
+
+              {showUserInputMessage && (
+                <a
+                  role="tab"
+                  className={`tab${!switchUserInput ? "" : " tab-active"}`}
+                  onClick={() => setSwitchUserInput(true)}
+                >
+                  Message
+                </a>
+              )}
+            </div>
+            <div className="p-1">
+              {switchUserInput ? (
+                <textarea
+                  ref={userInputRef}
+                  className="textarea h-60 leading-normal w-full textarea-warning"
+                  placeholder={`Please input the message here`}
+                  value={userInputMessage}
+                  onChange={(e) => setUserInputMessage(e.target.value)}
+                ></textarea>
+              ) : (
                 <textarea
                   className={`textarea h-60 leading-normal w-full${
                     originalContentValided ? "" : " textarea-warning"
@@ -247,33 +262,6 @@ Signature:signature value`}
                   value={signatureResult}
                   onChange={handleOriginalContentChange}
                 ></textarea>
-              </div>
-
-              {showUserInputMessage && (
-                <>
-                  <input
-                    type="radio"
-                    name="my_tabs_1"
-                    role="tab"
-                    className="tab"
-                    checked={switchUserInput}
-                    onChange={() => setSwitchUserInput(!switchUserInput)}
-                    aria-label="Message"
-                  />
-
-                  <div
-                    role="tabpanel"
-                    className="tab-content bg-base-100 border-base-300 rounded-box p-2"
-                  >
-                    <textarea
-                      ref={userInputRef}
-                      className="textarea h-60 leading-normal w-full textarea-warning"
-                      placeholder={`Please input the message here`}
-                      value={userInputMessage}
-                      onChange={(e) => setUserInputMessage(e.target.value)}
-                    ></textarea>
-                  </div>
-                </>
               )}
             </div>
           </>
