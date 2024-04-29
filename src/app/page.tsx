@@ -30,7 +30,6 @@ export default (function HomePage() {
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   useEffect(() => {
     window.addEventListener("beforeinstallprompt", (event) => {
-      event.preventDefault();
       setInstallPrompt(event);
     });
   }, []);

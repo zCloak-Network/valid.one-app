@@ -4,7 +4,7 @@ import { TextareaWithCopy } from "@/components";
 export default (function BindStep2(props: { cont: string }) {
   const retweet = (text: string) => {
     window.open(
-      `https://twitter.com/intent/post?text=${encodeURIComponent(text)}`
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`
     );
   };
 
