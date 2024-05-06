@@ -194,7 +194,7 @@ export default observer(function Signer() {
       <div className="mb-4">
         {signType === 1 && (
           <textarea
-            className="w-full textarea-border textarea"
+            className="w-full textarea-border textarea resize-y"
             placeholder="Please enter your message here"
             rows={6}
             value={messageCont}
