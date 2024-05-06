@@ -166,9 +166,11 @@ export default (function Verifier() {
 
   const validContIsReady = () => {
     if (type === 1) {
-      return showUserInputMessage
-        ? userInputMessage.length > 0
-        : signatureResult.length > 0;
+      return (
+        (showUserInputMessage
+          ? userInputMessage.length > 0
+          : signatureResult.length > 0) && originalContentValided
+      );
     } else {
       return fileSHA256.length > 0;
     }
