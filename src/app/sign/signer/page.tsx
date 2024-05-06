@@ -196,6 +196,7 @@ export default observer(function Signer() {
           <textarea
             className="w-full textarea-border textarea"
             placeholder="Please enter your message here"
+            rows={6}
             value={messageCont}
             onChange={(e) => setMessageCont(e.target.value)}
           ></textarea>

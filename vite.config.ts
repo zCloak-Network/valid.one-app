@@ -35,8 +35,8 @@ export default defineConfig(({ mode }) => {
           short_name: "Valid.One",
           description: "An easy-onboard, secure identity management solution",
           theme_color: "#ffffff",
-          start_url: "./?utm_source=web_app_manifest",
-          id: "./?utm_source=web_app_manifest",
+          start_url: "./#/id?utm_source=web_app_manifest",
+          id: "./#/id?utm_source=web_app_manifest",
           display: "standalone",
           scope: "/",
           icons: [
