@@ -21,17 +21,25 @@ export default function SignRecord(props: {
       <div className="flex flex-col flex-1 gap-1 items-start">
         <div className="text-sm leading-tight">
           <Link
-            className="text-neutral-400 link"
+            className={`link${
+              props.ICPSignResponse?.created_by
+                ? " text-neutral-400"
+                : " link-hover"
+            }`}
             to={
               props.ICPSignResponse?.created_by
                 ? `/id/${props.ICPSignResponse.created_by}`
                 : ""
             }
-          >{`${props.ICPSignResponse?.created_by || ""}(${
+          >{`${
+            props.ICPSignResponse?.created_by
+              ? "Valid ID " + props.ICPSignResponse?.created_by
+              : ""
+          } ${
             props.signatureObject?.signer
-              ? shortString(props.signatureObject.signer)
-              : "Valid User"
-          }) `}</Link>
+              ? "(" + shortString(props.signatureObject.signer) + ") "
+              : " "
+          }`}</Link>
           has signed this message at
         </div>
         <div className="flex text-xs text-neutral-400 gap-1 items-center">

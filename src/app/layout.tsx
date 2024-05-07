@@ -11,7 +11,7 @@ export function ResponseLayout({
   className?: string;
 }) {
   return (
-    <div className="h-[100vh] sm:w-full sm:bg-[#f5f5f5] sm:flex sm:items-center sm:justify-center">
+    <div className="h-100vh sm:w-full sm:bg-[#f5f5f5] sm:flex sm:items-center sm:justify-center">
       <div
         className={
           "w-full sm:max-w-[460px] h-full sm:h-[700px]  bg-white sm:rounded-2xl overflow-hidden sm:shadow-2xl " +
@@ -39,6 +39,26 @@ export default function RootLayout() {
         <Outlet />
       </ToastProvider>
       {pathname !== "/" && <Nav />}
+      {/* ios modal */}
+      <dialog id="IOSInstallDialog" className="modal">
+        <div className="modal-box">
+          <h3 className="font-bold text-lg">Install Valid One PWA</h3>
+          <p className="py-4 whitespace-pre-wrap leading-loose">
+            {`1. Share Menu
+   Tap the share icon at the bottom of the Safari window.
+2. Add to Home Screen
+   Scroll down in the share menu and tap ‘Add to Home Screen’.
+3. Confirm
+   Name the app as you want it to appear on your home screen and tap ‘Add’.`}
+          </p>
+          <div className="modal-action">
+            <form method="dialog">
+              {/* if there is a button in form, it will close the modal */}
+              <button className="btn">Close</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </ResponseLayout>
   );
 }

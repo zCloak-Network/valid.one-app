@@ -10,7 +10,7 @@ declare module "axios" {
 // 创建请求实例
 export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_APP_VALID_ID_URL,
-  timeout: 10000,
+  timeout: 20000,
   headers: {
     "Content-Type": "application/json",
   },

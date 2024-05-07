@@ -1,4 +1,3 @@
-import IconBack from "@/assets/svg/icon/icon_back.svg?react";
 import UploadAvatar from "./UploadAvatar";
 import { useCallback, useEffect, useState } from "react";
 import LoadingButton from "@/components/LoadingButton";
@@ -7,12 +6,16 @@ import { actor } from "@/utils/canister";
 import { observer } from "@/store";
 import { useToggle } from "react-use";
 import { upload } from "@/api";
-import { Link, useNavigate } from "react-router-dom";
-import { ChannelHead } from "@/components";
+import { useNavigate } from "react-router-dom";
+import { ChannelHead, useToast } from "@/components";
+import { getQueryParams } from "@/utils";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 const maxLength = 200;
 
 const EditProfile = () => {
+  const toast = useToast();
+  const searchParams = getQueryParams("redirect");
   const { User } = useStore();
   const [avatarFile, setAvatarFile] = useState<File>();
   const [bio, setBio] = useState(User.profile?.bio || "");
@@ -33,7 +36,9 @@ const EditProfile = () => {
   const handelSave = useCallback(async () => {
     try {
       toggle();
-      const [authRequest] = await auth();
+      const authRequest = await auth().catch(() => {
+        toggle();
+      });
       let avatarResult = User.profile?.avatar;
       if (avatarFile) {
         const formData = new FormData();
@@ -49,19 +54,30 @@ const EditProfile = () => {
           });
       }
 
-      // if (!avatarResult) return alert("Avatar is required.");
-      const data = await actor.user_profile_edit(
-        authRequest,
-        avatarResult || "",
-        name,
-        bio
-      );
-      await User.getProfile();
-      navigate("/id");
-      console.log("[ data ] >", data);
-      toggle();
+      if (authRequest) {
+        const data = await actor
+          .user_profile_edit(authRequest, avatarResult || "", name, bio)
+          .catch(() => {
+            toggle();
+            toast &&
+              toast({
+                type: "error",
+                message: "Edit profile error!",
+              });
+          });
+        await User.getProfile();
+        navigate(searchParams || "/id");
+        console.log("[ data ] >", data);
+        toggle();
+      }
     } catch (error) {
-      console.log(error);
+      console.warn(error);
+      toggle();
+      toast &&
+        toast({
+          type: "error",
+          message: (error as Error).message || "Edit profile error!",
+        });
     }
   }, [auth, avatarFile, name, bio, toggle, navigate]);
 
@@ -74,7 +90,7 @@ const EditProfile = () => {
 
   return (
     <div className="flex flex-col flex-1 px-5 overflow-hidden">
-      <ChannelHead path="/id" title="Edit Profile" />
+      <ChannelHead path="/id" title="Edit Profile" hideBack={!!searchParams} />
 
       <div className="flex-1 overflow-auto">
         <p className="font-medium mt-5 text-sm w-full text-neutral-400">
@@ -86,7 +102,7 @@ const EditProfile = () => {
         <div className="flex mt-8 w-full justify-center">
           <UploadAvatar
             onChange={setAvatarFile}
-            url={avatarUrl}
+            url={avatarUrl || DefaultAvatar}
             onError={(err) => {
               alert("select avatar error:" + err.message);
             }}

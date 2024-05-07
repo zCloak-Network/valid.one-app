@@ -3,12 +3,14 @@ import LoginBg from "@/assets/images/loginBg.png";
 import OnBoarding from "@/assets/images/login_bg.png";
 import { ResponseLayout } from "../layout";
 import LoginWithName from "./LoginWithName";
-import RegistWithName from "./RegistWithName";
 import { useNavigate } from "react-router-dom";
+import { getQueryParams } from "@/utils";
 
 export default (function HomePage() {
   const [showModal, toggleModal] = useState<0 | 1 | 2>(0);
   const navigate = useNavigate();
+  const searchParams = getQueryParams("redirect");
+  console.log("searchParams=", searchParams);
 
   return (
     <ResponseLayout>
@@ -43,7 +45,21 @@ export default (function HomePage() {
             <>
               <button
                 className={`btn w-full `}
-                onClick={() => navigate("/register")}
+                onClick={() =>
+                  navigate(
+                    {
+                      pathname: "/register",
+                      search: `${
+                        searchParams
+                          ? `?redirect=${encodeURIComponent(searchParams)}`
+                          : ""
+                      }`,
+                    },
+                    {
+                      replace: true,
+                    }
+                  )
+                }
               >
                 Create an account
               </button>
@@ -52,20 +68,21 @@ export default (function HomePage() {
                 className={`btn btn-primary w-full `}
                 onClick={() => toggleModal(2)}
               >
-                Login with username
+                Sign in with passkey
               </button>
 
               <div className="text-center 'Poppins'] text-sm font-normal text-zinc-500">
-                it takes as little as 10s
+                it takes 5 secs
               </div>
             </>
           )}
 
-          {showModal === 1 && (
-            <RegistWithName onCancel={() => toggleModal(0)} />
+          {showModal === 2 && (
+            <LoginWithName
+              redirectPath={searchParams || "/id"}
+              onCancel={() => toggleModal(0)}
+            />
           )}
-
-          {showModal === 2 && <LoginWithName onCancel={() => toggleModal(0)} />}
         </div>
       </div>
     </ResponseLayout>

@@ -11,6 +11,7 @@ import { usePasskeyAuth } from "@/hooks";
 import type { SignatureResponse } from "@/types";
 import { saveString } from "@/api";
 import { useToast } from "@/components";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default observer(function Signer() {
   const toast = useToast();
@@ -42,7 +43,10 @@ export default observer(function Signer() {
 
   const clearAutorun = autorun(() => {
     if (!User.name) {
-      navigate("/login");
+      navigate({
+        pathname: "/login",
+        search: `?redirect=${encodeURIComponent("/sign/signer")}`,
+      });
       return undefined;
     }
   });
@@ -93,15 +97,22 @@ export default observer(function Signer() {
         }
       }
     }
-    const [authRequest] = await auth();
-
-    const res = await actor.sign_insert(
-      authRequest,
-      signType,
-      signCont,
-      publicContentKey
-    );
-    console.log(User.id, signType, signCont, "sign result", res);
+    const authRequest = await auth().catch(() => {
+      setLoading(false);
+    });
+    let res;
+    if (authRequest) {
+      res = await actor
+        .sign_insert(authRequest, signType, signCont, publicContentKey)
+        .catch(() => {
+          toast &&
+            toast({
+              type: "error",
+              message: "sign fail",
+            });
+        });
+      console.log(User.id, signType, signCont, "sign result", res);
+    }
 
     if ((res as any)["Ok"]?.signature) {
       setICPSignResult((res as any)["Ok"].signature);
@@ -144,16 +155,17 @@ export default observer(function Signer() {
 
   return (
     <div className="rounded-xl bg-[#F9FAFB] p-4 flex-1 overflow-auto">
-      <div className="border rounded-xl flex border-zinc-200 h-[52px] mb-4 p-4 gap-2 items-center">
-        <div className="h-6 w-6 relative">
-          {User.profile?.avatar && (
-            <img
-              src={User.profile?.avatar}
-              className="rounded-full bg-zinc-300 h-[22px] top-[1px] left-[1px] w-[22px] absolute"
-            />
-          )}
+      <div className="border rounded-xl flex border-zinc-200 h-[52px] mb-4 p-2 gap-2 items-center">
+        <div className="h-7 w-7 relative">
+          <img
+            src={User.profile?.avatar || DefaultAvatar}
+            className="rounded-full bg-zinc-300 h-7 top-[1px] left-[1px] w-7 absolute"
+          />
         </div>
-        <div className="font-medium text-sm text-gray-900">{User.id}</div>
+        <div className="font-medium text-sm text-gray-900">
+          <p className="font-semibold">{User.name}</p>
+          Valid ID: {User.id}
+        </div>
       </div>
 
       <div className="flex flex-col mb-4 gap-4">
@@ -182,8 +194,9 @@ export default observer(function Signer() {
       <div className="mb-4">
         {signType === 1 && (
           <textarea
-            className="w-full textarea-border textarea"
+            className="w-full textarea-border textarea resize-y"
             placeholder="Please enter your message here"
+            rows={6}
             value={messageCont}
             onChange={(e) => setMessageCont(e.target.value)}
           ></textarea>

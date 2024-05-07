@@ -7,6 +7,7 @@ import Id from "./id";
 import Sign from "./sign";
 import Account from "./account";
 import Explorer from "./explorer";
+import Challenge from "./challenge";
 
 const rootRouter = [
   {
@@ -24,6 +25,7 @@ const rootRouter = [
     ],
   },
   ...Login,
+  ...Challenge,
   {
     path: "*",
     element: <NoFound />,

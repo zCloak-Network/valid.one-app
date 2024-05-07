@@ -3,7 +3,7 @@ import { startRegistration } from "@simplewebauthn/browser";
 import { useNavigate } from "react-router-dom";
 import { actor } from "@/utils/canister";
 import { useStore } from "@/hooks";
-import { useSearchParam } from "react-use";
+import { getQueryParams } from "@/utils";
 import { useToast } from "@/components";
 import { USERNAME_REG } from "@/constants";
 
@@ -16,7 +16,7 @@ export default (function RegistWithName({
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [registName, setRegistName] = useState("");
-  const searchParams = useSearchParam("redirect") || "/id";
+  const searchParams = getQueryParams("redirect") || "/id";
   const toast = useToast();
 
   const handleRegister = async () => {
@@ -30,7 +30,7 @@ export default (function RegistWithName({
     try {
       const response = await actor.start_register_name(registName);
       console.log("response", response);
-      if ((response as any)["Err"]) {
+      if ((response as any)?.["Err"]) {
         throw new Error((response as any)["Err"]);
       }
 
@@ -41,7 +41,7 @@ export default (function RegistWithName({
         JSON.stringify(registrationResult)
       );
       console.log("registReturn", registReturn);
-      if ((registReturn as any)["Err"]) {
+      if ((registReturn as any)?.["Err"]) {
         throw new Error((registReturn as any)["Err"]);
       }
       setLoading(false);

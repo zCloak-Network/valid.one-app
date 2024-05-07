@@ -1,12 +1,11 @@
 import { useLoaderData, LoaderFunctionArgs, Link } from "react-router-dom";
 import IconBack from "@/assets/svg/icon/icon_back.svg?react";
 import { observer } from "@/store";
-import MediumIcon from "@/assets/svg/icon/icon_medium.svg?react";
 import XIcon from "@/assets/svg/icon/icon_x.svg?react";
-import InsIcon from "@/assets/svg/icon/icon_ins.svg?react";
-import DyIcon from "@/assets/svg/icon/icon_dy.svg?react";
 import { UserData } from "@/store/modules/user";
 import initActor, { actor } from "@/utils/canister";
+import { useMemo } from "react";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 interface ItemProps {
   label: string;
@@ -26,19 +25,24 @@ function Item({ label, value }: ItemProps) {
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const { validId } = params;
+  let profile: UserData | undefined;
 
   await initActor();
-  const result = validId
-    ? await actor.user_profile_get(parseInt(validId))
-    : null;
+  try {
+    const result = validId
+      ? await actor.user_profile_get(parseInt(validId))
+      : null;
 
-  const profile: UserData | undefined = result?.[0]
-    ? {
-        ...result?.[0],
-        create_time: Number(result[0].create_time),
-        modify_time: Number(result[0].modify_time),
-      }
-    : undefined;
+    profile = result?.[0]
+      ? {
+          ...result?.[0],
+          create_time: Number(result[0].create_time),
+          modify_time: Number(result[0].modify_time),
+        }
+      : undefined;
+  } catch (err) {
+    console.log(err);
+  }
 
   return { validId, profile };
 }
@@ -48,6 +52,10 @@ export default observer(function User() {
     validId: string;
     profile: UserData | undefined;
   };
+
+  const hasBindTwitter = useMemo(() => {
+    return profile?.twitter_handle[0];
+  }, [profile]);
 
   return (
     <div className="h-full bg-gray-50 w-full p-6">
@@ -64,7 +72,7 @@ export default observer(function User() {
         <div className="flex items-center justify-between">
           <div className="avatar">
             <div className="border rounded-full border-neutral-400 w-[72px]">
-              {profile?.avatar && <img src={profile?.avatar} />}
+              <img src={profile?.avatar || DefaultAvatar} />
             </div>
           </div>
           {/* <button className="rounded-xl bg-gray-800 text-white btn">+Follow</button> */}
@@ -77,27 +85,25 @@ export default observer(function User() {
           {profile?.bio}
         </div>
         <div className="flex gap-2">
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <MediumIcon /> */}
-          </a>
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <XIcon /> */}
-          </a>
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <InsIcon /> */}
-          </a>
-          <a className="border-none bg-gray-600 btn btn-circle btn-xs">
-            {/* <DyIcon /> */}
-          </a>
+          {hasBindTwitter && (
+            <a
+              className="border-none bg-gray-600 btn btn-circle btn-xs"
+              onClick={() =>
+                window.open(`https://twitter.com/${hasBindTwitter}`)
+              }
+            >
+              <XIcon />
+            </a>
+          )}
         </div>
         <div className="border h-px border-gray-100"></div>
-        <div className="flex gap-4 items-center justify-between">
+        {/* <div className="flex gap-4 items-center justify-between">
           <Item value="0" label="Followers" />
           <div className="border h-px border-slate-200 origin-center w-7 rotate-90"></div>
           <Item value="0" label="Following" />
           <div className="border h-px border-slate-200 origin-center w-7 rotate-90"></div>
           <Item value="0" label="Connected" />
-        </div>
+        </div> */}
         {/* <div className="bg-white rounded-xl flex h-16 shadow mt-5 w-full px-3 items-center">
           <div className="rounded-full bg-blue-700 bg-opacity-20 h-7 w-8" />
           <div className="h-7 -left-4 w-11 relative">

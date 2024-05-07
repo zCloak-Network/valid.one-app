@@ -25,3 +25,7 @@ export function getAllSigs(page: number, size: number) {
 export function getSigsByHash(hash: string, validid?: number) {
   return actor.sign_get_by_hash(hash, validid ? [validid] : []);
 }
+
+export function twitterVerify(link: string) {
+  return actor.twitter_verify(link);
+}

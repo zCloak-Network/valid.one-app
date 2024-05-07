@@ -7,7 +7,13 @@ import { USERNAME_REG, USER_HISTORY_KEY } from "@/constants";
 import { useToast } from "@/components";
 import { useStore } from "@/hooks";
 
-export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
+export default (function LoginWithName({
+  redirectPath,
+  onCancel,
+}: {
+  redirectPath: string;
+  onCancel: () => void;
+}) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [username, setName] = useState("");
@@ -53,7 +59,8 @@ export default (function LoginWithName({ onCancel }: { onCancel: () => void }) {
       setLoading(false);
       if (auth_result === username) {
         User.login(username);
-        navigate("/id");
+
+        navigate(redirectPath);
       } else {
         console.warn("auth_result error:", auth_result);
       }

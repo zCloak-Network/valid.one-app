@@ -4,19 +4,17 @@ import { useCopy } from "@/hooks";
 export const TextareaWithCopy = function (props: {
   value: string;
   rows?: number;
+  copyValue?: string;
 }) {
   const { copy, copyState } = useCopy();
 
   const handleCopy = () => {
-    if (!props.value) {
-      return console.warn("no text to copy", props.value);
-    }
-    copy(props.value);
+    copy(props.copyValue || props.value);
   };
 
   return (
     <>
-      <div className="relative mt-4 overflow-hidden rounded-lg border ">
+      <div className="relative overflow-hidden rounded-lg border ">
         <textarea
           className={"textarea textarea-bordered block w-full leading-normal"}
           rows={props.rows || 8}

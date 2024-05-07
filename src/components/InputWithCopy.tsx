@@ -21,7 +21,7 @@ export const InputWithCopy = function (props: {
   return (
     <>
       <label className="input input-bordered flex items-center gap-2">
-        {props.label}
+        <span className="text-gray-500">{props.label}</span>
         <input type="text" className="grow" value={valueString} readOnly />
         <span
           className={"w-6 h-6 cursor-pointer" + (copyState ? " tooltip" : "")}

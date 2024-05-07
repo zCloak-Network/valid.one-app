@@ -5,31 +5,26 @@ import { sha256OfString } from "@/utils";
 
 export function useValid() {
   const checkSignatureResult = (signatureResult: string) => {
-    const data = signatureResult.split("===");
+    const data = signatureResult.match(
+      /^([\w\W]*)\n---\nPowered by Valid One\nSigner:(\w+)\nSignature:(0x\w{130})/
+    );
 
-    let message, didSig;
-
-    if (data.length === 3) {
-      message = data[0].trim();
-
-      didSig = data[2].trim().split(",");
-    } else {
-      console.warn("Not a Valid Sign content.");
+    if (data?.length !== 4) {
+      console.warn("Not a Valid Sign content[1].");
       return null;
     }
+    const [original_content, message, signer, signature] = data;
 
-    const signer = didSig[0].replace("signer:", "");
-    const sig = didSig[1].replace("sig:", "").trim();
-
-    if (!isHexString(signer) || !isHexString(sig)) {
-      console.warn("Not a Valid Sign content.");
+    if (!isHexString(signer) || !isHexString(signature)) {
+      console.warn("Not a Valid Sign content[2].");
       return null;
     }
 
     return {
-      signature: sig,
+      original_content,
+      signature: signature.trim(),
       signer,
-      message,
+      message: message.trim(),
     } as SignatureResultObject;
   };
 
@@ -51,16 +46,17 @@ export function useValid() {
           "recoveredAddress=",
           recoveredAddress,
           "by ",
-          signatureObject.signer
+          signatureObject
         );
 
         result =
           recoveredAddress.toLowerCase() ===
           signatureObject.signer.toLowerCase();
+      } else {
+        console.warn("Not a Valid Sign content[3].");
       }
     } catch (err) {
-      console.warn("signatureObject=", signatureObject);
-      alert((err as Error)?.message || "valid error");
+      console.warn((err as Error)?.message || "valid error", signatureObject);
     }
 
     return {

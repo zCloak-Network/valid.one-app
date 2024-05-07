@@ -137,6 +137,21 @@ export default (function Verifier() {
   }, [showUserInputMessage]);
 
   const { valid } = useValid();
+  const [originalContentValided, setOriginalContentValided] = useState(true);
+  const handleOriginalContentChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    const inputContent = e.target.value.trim();
+    const { result, signatureObject } = valid(inputContent);
+    if (result && signatureObject) {
+      setOriginalContentValided(true);
+      console.log("valid", result, signatureObject);
+      setSignatureResult(signatureObject.original_content);
+    } else {
+      setOriginalContentValided(false);
+      setSignatureResult(inputContent);
+    }
+  };
 
   useEffect(() => {
     if (signatureResult) {
@@ -151,9 +166,11 @@ export default (function Verifier() {
 
   const validContIsReady = () => {
     if (type === 1) {
-      return showUserInputMessage
-        ? userInputMessage.length > 0
-        : signatureResult.length > 0;
+      return (
+        (showUserInputMessage
+          ? userInputMessage.length > 0
+          : signatureResult.length > 0) && originalContentValided
+      );
     } else {
       return fileSHA256.length > 0;
     }
@@ -202,63 +219,52 @@ ${signatureResult.trim()}`;
         </div>
       </div>
 
-      <div className="mb-4 flex flex-col gap-4">
+      <div className="mb-4 grid overflow-hidden">
         {type === 1 && (
           <>
-            <div role="tablist" className="tabs tabs-lifted">
-              <input
-                type="radio"
-                name="my_tabs_1"
+            <div role="tablist" className="tabs tabs-bordered mb-2">
+              <a
                 role="tab"
-                className="tab"
-                checked={!switchUserInput}
-                onChange={() => setSwitchUserInput(!switchUserInput)}
-                aria-label="Signature"
-              />
-              <div
-                role="tabpanel"
-                className="tab-content bg-base-100 border-base-300 rounded-box p-2"
+                className={`tab${switchUserInput ? "" : " tab-active"}`}
+                onClick={() => setSwitchUserInput(false)}
               >
-                <textarea
-                  className="textarea h-60 leading-normal w-full"
-                  placeholder={`Please paste the signature here
-e.g
-Message
-===
-Valid Sign from Valid One
-===
-signer:signer address,
-sig:signature value`}
-                  value={signatureResult}
-                  onChange={(e) => setSignatureResult(e.target.value)}
-                ></textarea>
-              </div>
+                Signature
+              </a>
 
               {showUserInputMessage && (
-                <>
-                  <input
-                    type="radio"
-                    name="my_tabs_1"
-                    role="tab"
-                    className="tab"
-                    checked={switchUserInput}
-                    onChange={() => setSwitchUserInput(!switchUserInput)}
-                    aria-label="Message"
-                  />
-
-                  <div
-                    role="tabpanel"
-                    className="tab-content bg-base-100 border-base-300 rounded-box p-2"
-                  >
-                    <textarea
-                      ref={userInputRef}
-                      className="textarea h-60 leading-normal w-full textarea-warning"
-                      placeholder={`Please input the message here`}
-                      value={userInputMessage}
-                      onChange={(e) => setUserInputMessage(e.target.value)}
-                    ></textarea>
-                  </div>
-                </>
+                <a
+                  role="tab"
+                  className={`tab${!switchUserInput ? "" : " tab-active"}`}
+                  onClick={() => setSwitchUserInput(true)}
+                >
+                  Message
+                </a>
+              )}
+            </div>
+            <div className="p-1">
+              {switchUserInput ? (
+                <textarea
+                  ref={userInputRef}
+                  className="textarea h-60 leading-normal w-full textarea-warning"
+                  placeholder={`Please input the message here`}
+                  value={userInputMessage}
+                  onChange={(e) => setUserInputMessage(e.target.value)}
+                ></textarea>
+              ) : (
+                <textarea
+                  className={`textarea h-60 leading-normal w-full${
+                    originalContentValided ? "" : " textarea-warning"
+                  }`}
+                  placeholder={`Please paste the signature here
+e.g:
+Message
+---
+Powered by Valid One
+Signer:signer address,
+Signature:signature value`}
+                  value={signatureResult}
+                  onChange={handleOriginalContentChange}
+                ></textarea>
               )}
             </div>
           </>

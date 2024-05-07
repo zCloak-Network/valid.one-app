@@ -29,8 +29,7 @@ export const signatureResultTemplate = (
     ? `${publicCont}
 `
     : "") +
-  `===
-Valid Sign from Valid One
-===
-signer:${ethereumEncode(`0x${public_key}`)},
-sig:0x${hex}`;
+  `---
+Powered by Valid One
+Signer:${ethereumEncode(`0x${public_key}`)}
+Signature:0x${hex}`;

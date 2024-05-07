@@ -1,7 +1,9 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { getProfileById, getProfileByPublicKey } from "@/hooks";
-import { UserProfile } from "@/types";
+import type { UserProfile } from "@/utils/canister/valid_one_backend/valid_one_backend.did";
+import XIcon from "@/assets/svg/icon/icon_x.svg?react";
+import DefaultAvatar from "@/assets/images/avatar.jpg";
 
 export default function UserCard(props: {
   validId?: number;
@@ -10,6 +12,9 @@ export default function UserCard(props: {
 }) {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const hasBindTwitter = useMemo(() => {
+    return profile?.twitter_handle[0];
+  }, [profile]);
 
   useEffect(() => {
     if (props.signerProfile) {
@@ -39,12 +44,10 @@ export default function UserCard(props: {
       </div>
       <div className="flex gap-2 items-center">
         <div className="border rounded-full border-neutral-400 h-[60px] p-[2px] w-[60px]">
-          {profile?.avatar && (
-            <img
-              className="rounded-full h-full object-cover w-full"
-              src={profile?.avatar}
-            />
-          )}
+          <img
+            className="rounded-full h-full object-cover w-full"
+            src={profile?.avatar || DefaultAvatar}
+          />
         </div>
         <div className="flex flex-col flex-1 gap-2">
           <div className="font-bold text-white w-full text-[15px]">
@@ -52,10 +55,16 @@ export default function UserCard(props: {
           </div>
 
           <div className="flex w-full gap-2">
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
-            <div className="bg-gray-600 rounded-[15px] h-5 w-5 relative"></div>
+            {hasBindTwitter ? (
+              <a
+                className="border-none bg-gray-600 btn btn-circle btn-xs"
+                onClick={() =>
+                  window.open(`https://twitter.com/${hasBindTwitter}`)
+                }
+              >
+                <XIcon />
+              </a>
+            ) : null}
           </div>
         </div>
       </div>
