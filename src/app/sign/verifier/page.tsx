@@ -258,7 +258,7 @@ ${signatureResult.trim()}`;
                   placeholder={`Please paste the signature here
 e.g:
 Message
----
+===
 Powered by Valid One
 Signer:signer address,
 Signature:signature value`}

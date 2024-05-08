@@ -79,7 +79,7 @@ export default function SignatureResultObject(props: {
               <TextareaWithCopy
                 value={signature}
                 copyValue={`${signature}
----
+===
 To verify this signature, please paste the entire message to ${
                   import.meta.env.VITE_APP_CANISTER_HOST
                 }/#/sign/verifier`}
