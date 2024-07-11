@@ -148,7 +148,7 @@ export default (function HomePage() {
               Register here
             </div>
             <img src={FooterQR} className="mb-8" />
-            <div className=" my-4 text-lg opacity-80 text-blue-700">
+            {/* <div className=" my-4 text-lg opacity-80 text-blue-700">
               Contact us
             </div>
             <div className="flex gap-4 items-center">
@@ -183,7 +183,7 @@ export default (function HomePage() {
               >
                 <RiLinkedinBoxFill className="h-6 w-6" />
               </a>
-            </div>
+            </div> */}
           </footer>
         </div>
       </main>
