@@ -53,21 +53,27 @@ export default function UserCard(props: {
           <div className="font-bold text-white w-full text-[15px]">
             {loading ? "loading" : profile?.name || "Unkonwn"}
           </div>
-
-          <div className="flex w-full gap-2">
-            {hasBindTwitter ? (
-              <a
-                className="border-none bg-gray-600 btn btn-circle btn-xs"
-                onClick={() =>
-                  window.open(`https://twitter.com/${hasBindTwitter}`)
-                }
-              >
-                <XIcon />
-              </a>
-            ) : null}
+          <div className="text-white text-xs leading-tight">
+            {
+              hasBindTwitter ?
+                <span>✅ This DID has been verified by the following social media accounts.</span>
+                : <span>⚠️ Warning! This DID has not been verified by any real world identity.</span>
+            }
           </div>
+
+          {hasBindTwitter ? (
+            <a
+              className="border-none bg-gray-600 btn btn-circle btn-xs"
+              onClick={() =>
+                window.open(`https://twitter.com/${hasBindTwitter}`)
+              }
+            >
+              <XIcon />
+            </a>
+          ) : null}
         </div>
       </div>
     </div>
+
   );
 }
