@@ -61,16 +61,18 @@ export default function UserCard(props: {
             }
           </div>
 
-          {hasBindTwitter ? (
-            <a
-              className="border-none bg-gray-600 btn btn-circle btn-xs"
-              onClick={() =>
-                window.open(`https://twitter.com/${hasBindTwitter}`)
-              }
-            >
-              <XIcon />
-            </a>
-          ) : null}
+          <div className="flex w-full gap-2">
+            {hasBindTwitter ? (
+              <a
+                className="border-none bg-gray-600 btn btn-circle btn-xs"
+                onClick={() =>
+                  window.open(`https://twitter.com/${hasBindTwitter}`)
+                }
+              >
+                <XIcon />
+              </a>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
